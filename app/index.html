@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TEAM GO!</title>
+<meta name="description" content="Seu app do TEAM GO!: treino, sequência, medalhas e o time.">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="TEAM GO!">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icones/favicon-32.png">
+<link rel="apple-touch-icon" href="icones/apple-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Libre+Franklin:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Página de entrada do app TEAM GO!: dá ícone, nome e tela cheia ao app, que continua morando no Google (dentro do quadro). */
+:root{--bg:#111111;--card:#1B1B1B;--line:rgba(247,243,239,.13);--txt:#F7F3EF;--mut:#B8ACA9;--red:#F4001A;--redt:#FF3B4A;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);font-family:'Libre Franklin',Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+body{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+#app{flex:1;position:relative;min-height:0}
+#quadro{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:var(--bg)}
+/* abertura com a marca enquanto o app carrega */
+#abre{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 70% at 50% 20%,#3a0710 0,#141011 55%,#0d0d0d 100%);transition:opacity .35s ease;z-index:2}
+#abre.sai{opacity:0;pointer-events:none}
+.marca{font-family:'Big Shoulders Display','Arial Narrow',Arial,sans-serif;font-weight:900;text-align:center;line-height:.9;text-transform:uppercase}
+.marca small{display:block;font-weight:800;font-size:28px;letter-spacing:.2em;color:var(--txt)}
+.marca b{display:block;font-size:96px;color:var(--red)}
+.pulsa{animation:pulsa 1.4s ease-in-out infinite}
+@keyframes pulsa{50%{opacity:.55}}
+/* telas próprias (sem link, sem internet) */
+.tela{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px max(20px,env(safe-area-inset-right)) 24px max(20px,env(safe-area-inset-left));text-align:center;background:radial-gradient(120% 70% at 50% 10%,#2a0a0e 0,#111 60%)}
+.tela h1{font-family:'Big Shoulders Display','Arial Narrow',Arial,sans-serif;font-weight:900;font-size:30px;text-transform:uppercase;margin:0;letter-spacing:.02em}
+.tela p{margin:0;color:var(--mut);max-width:34ch;line-height:1.5;font-size:15px}
+.caixa{width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px}
+input{width:100%;font:inherit;font-size:16px;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--txt)}
+input:focus{outline:2px solid var(--redt);outline-offset:1px}
+.btn{font:inherit;font-weight:700;font-size:16px;padding:14px 18px;border-radius:12px;border:0;background:linear-gradient(180deg,#FF2A3B,#C80016);color:#fff;cursor:pointer}
+.btn.gh{background:transparent;border:1px solid var(--line);color:var(--txt)}
+.erro{color:var(--redt);font-size:14px;min-height:1em}
+/* convite pra instalar (só no navegador, nunca no app instalado) */
+#instala{display:none;align-items:center;gap:12px;padding:12px max(16px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));background:#1B1B1B;border-top:1px solid var(--line)}
+#instala.on{display:flex}
+#instala img{width:40px;height:40px;border-radius:10px;flex:none}
+#instala .tx{flex:1;min-width:0;font-size:13.5px;line-height:1.35;color:var(--mut)}
+#instala .tx b{color:var(--txt);display:block;font-size:14.5px}
+#instala .btn{padding:10px 14px;font-size:14px;flex:none}
+#instala .x{background:none;border:0;color:var(--mut);font-size:22px;line-height:1;padding:6px;cursor:pointer;flex:none}
+.comp{display:inline-block;width:14px;height:16px;vertical-align:-3px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="abre"><div class="marca pulsa"><small>Team</small><b>GO!</b></div></div>
+</div>
+<div id="instala" role="region" aria-label="Instalar o app">
+  <img src="icones/icone-192.png" alt="">
+  <div class="tx" id="instalaTx"><b>Instale o app TEAM GO!</b>Fica na tela do celular e abre em tela cheia.</div>
+  <button class="btn" id="instalaBtn" type="button">Instalar</button>
+  <button class="x" id="instalaX" type="button" aria-label="Agora não">×</button>
+</div>
+<script>
+(function () {
+  // Endereço do app no Google (o mesmo de sempre). A página só dá a "casca" de app instalável.
+  var APP = 'https://script.google.com/macros/s/AKfycbx0Nq7NgEz5-_1kDIpmm-yf4k_HPLKCGJ4eCAELk3SKQgDJ-_yGpruULFlOK1RsEPi9/exec';
+  var CHAVE = 'tg_codigo', ADIA = 'tg_instala_depois';
+  var $ = function (id) { return document.getElementById(id); };
+  var guarda = {
+    ler: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    por: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+  var valido = function (c) { return /^[A-Za-z0-9_-]{4,60}$/.test(String(c || '')); };
+  var doLink = function (t) {
+    t = String(t || '').trim();
+    var m = /[?&#]a=([A-Za-z0-9_-]{4,60})/.exec(t);
+    if (m) return m[1];
+    return valido(t) ? t : '';
+  };
+  var instalado = function () {
+    return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+  };
+
+  // 1) qual aluno: o código vem no link pessoal (?a=...) e fica guardado no celular
+  var url = new URL(location.href), codigo = url.searchParams.get('a');
+  if (valido(codigo)) guarda.por(CHAVE, codigo);
+  else {
+    codigo = guarda.ler(CHAVE);
+    // deixa o código no endereço, pra que "Adicionar à tela inicial" já leve o aluno certo
+    if (valido(codigo)) { url.searchParams.set('a', codigo); history.replaceState(null, '', url.pathname + url.search + url.hash); }
+  }
+  if (!valido(codigo)) return semLink();
+  if (navigator.onLine === false) return semInternet();
+  abrirApp();
+  convite();
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
+
+  function abrirApp() {
+    var f = document.createElement('iframe');
+    f.id = 'quadro';
+    f.title = 'TEAM GO!';
+    f.allow = 'clipboard-read; clipboard-write; fullscreen; camera';
+    f.src = APP + '?a=' + encodeURIComponent(codigo);
+    f.addEventListener('load', function () { $('abre').classList.add('sai'); });
+    // se o Google demorar, tira a abertura mesmo assim (o próprio app mostra o carregamento)
+    setTimeout(function () { $('abre').classList.add('sai'); }, 6000);
+    $('app').appendChild(f);
+  }
+  function tela(html) {
+    $('abre').classList.add('sai');
+    var d = document.createElement('div');
+    d.className = 'tela';
+    d.innerHTML = html;
+    $('app').appendChild(d);
+    return d;
+  }
+  function semLink() {
+    var d = tela('<div class="marca"><small>Team</small><b>GO!</b></div><h1>Bem-vindo ao seu app</h1>' +
+      '<p>Abra pelo link que o Gui te mandou no WhatsApp. Se preferir, cole o link aqui embaixo.</p>' +
+      '<form class="caixa" id="f"><input id="lk" inputmode="url" autocomplete="off" placeholder="Cole aqui o seu link" aria-label="Seu link do app">' +
+      '<button class="btn" type="submit">Entrar</button><div class="erro" id="er" role="alert"></div></form>');
+    d.querySelector('#f').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var c = doLink(d.querySelector('#lk').value);
+      if (!c) { d.querySelector('#er').textContent = 'Esse não parece ser o seu link. Confere a mensagem do Gui.'; return; }
+      guarda.por(CHAVE, c);
+      location.replace(location.pathname + '?a=' + encodeURIComponent(c));
+    });
+  }
+  function semInternet() {
+    var d = tela('<div class="marca"><small>Team</small><b>GO!</b></div><h1>Sem internet</h1>' +
+      '<p>O app precisa de internet pra abrir. Assim que o sinal voltar, ele abre sozinho.</p>' +
+      '<button class="btn gh" type="button" id="de">Tentar de novo</button>');
+    d.querySelector('#de').addEventListener('click', function () { location.reload(); });
+    window.addEventListener('online', function () { location.reload(); });
+  }
+
+  // 2) convite pra instalar: só no navegador, uma vez por semana no máximo
+  function convite() {
+    if (instalado()) return;
+    var adiado = +(guarda.ler(ADIA) || 0);
+    if (adiado && Date.now() - adiado < 7 * 864e5) return;
+    var barra = $('instala'), btn = $('instalaBtn'), pedido = null;
+    var fecha = function () { barra.classList.remove('on'); guarda.por(ADIA, String(Date.now())); };
+    $('instalaX').addEventListener('click', fecha);
+    var ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (ios) {
+      $('instalaTx').innerHTML = '<b>Instale o app TEAM GO!</b>Toque em <svg class="comp" viewBox="0 0 14 16" aria-label="Compartilhar"><path d="M7 1v9M3.5 4.5 7 1l3.5 3.5M2 7.5V14h10V7.5" fill="none" stroke="#F7F3EF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> e depois em “Adicionar à Tela de Início”.';
+      btn.style.display = 'none';
+      barra.classList.add('on');
+      return;
+    }
+    window.addEventListener('beforeinstallprompt', function (ev) {
+      ev.preventDefault();
+      pedido = ev;
+      barra.classList.add('on');
+    });
+    btn.addEventListener('click', function () {
+      if (!pedido) return;
+      pedido.prompt();
+      pedido.userChoice.then(function (r) { if (r && r.outcome !== 'accepted') fecha(); else barra.classList.remove('on'); pedido = null; });
+    });
+    window.addEventListener('appinstalled', function () { barra.classList.remove('on'); });
+  }
+})();
+</script>
+</body>
+</html>
