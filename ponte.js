@@ -25,6 +25,11 @@
       });
   }
 
+  // v20: resposta que já veio junto com outra conversa (ex.: os dados do aluno chegam com as telas, em "abrir").
+  // A primeira chamada com esse nome usa a resposta guardada em vez de ir ao Google de novo.
+  var pre = {};
+  function preCarregar(nome, promessa) { pre[nome] = promessa; }
+
   // Imita o google.script.run do Google: google.script.run.withSuccessHandler(ok).withFailureHandler(f).funcao(args)
   function runner(ok, falha, uo) {
     return new Proxy({}, {
@@ -34,8 +39,9 @@
         if (nome === 'withFailureHandler') return function (fn) { return runner(ok, fn, uo); };
         if (nome === 'withUserObject') return function (o) { return runner(ok, falha, o); };
         return function () {
-          var a = Array.prototype.slice.call(arguments);
-          porta(nome, a).then(function (r) { if (ok) ok(r, uo); }, function (e) { if (falha) falha(e, uo); else if (window.console) console.warn(e); });
+          var a = Array.prototype.slice.call(arguments), p = pre[nome];
+          if (p) delete pre[nome];
+          (p || porta(nome, a)).then(function (r) { if (ok) ok(r, uo); }, function (e) { if (falha) falha(e, uo); else if (window.console) console.warn(e); });
         };
       }
     });
@@ -87,5 +93,5 @@
     tira: function (k) { try { localStorage.removeItem(k); } catch (e) {} }
   };
 
-  window.TGPonte = { APP: APP, porta: porta, SemPorta: SemPorta, instalarGoogle: instalarGoogle, montar: montar, guarda: guarda };
+  window.TGPonte = { APP: APP, porta: porta, SemPorta: SemPorta, instalarGoogle: instalarGoogle, montar: montar, guarda: guarda, preCarregar: preCarregar };
 })();

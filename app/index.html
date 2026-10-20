@@ -111,24 +111,39 @@ html.tgs-convite:not(.tgs-q) body{padding-bottom:var(--tgs-barra,0px)}
     if (!guarda.por(CASCA, JSON.stringify({ v: r.v, cod: codigo, html: r.html }))) guarda.tira(CASCA);
   }
 
-  // 2) o app: monta aqui mesmo (rápido, sem o bloqueio do Google). Sem a porta nova, usa o quadro (plano B).
+  // 2) o app: monta aqui mesmo (rápido, sem o bloqueio do Google). Uma conversa só ("abrir") traz as telas
+  //    (ou "igual", se a cópia guardada ainda vale) e os dados do aluno. Sem a porta nova, usa o quadro (plano B).
   function abrirApp() {
     P.instalarGoogle();
     var c = cascaGuardada();
+    var conversa = P.porta('abrir', [codigo, c ? c.v : '']).catch(function (e) {
+      // Google sem o "abrir" (versão anterior no ar): telas e dados em duas conversas, como na v19
+      if (e && e.servidor && /inválida/.test(e.message)) return P.porta('casca', [codigo, c ? c.v : '']).then(function (cas) { return { casca: cas, velho: true }; });
+      throw e;
+    });
+    // os dados que chegam junto respondem a primeira pergunta do app (alunoDados), sem ir de novo ao Google
+    var dados = conversa.then(function (r) {
+      if (r.velho) return P.porta('alunoDados', [codigo]);
+      if (r.dados && r.dados.erro) { var er = new Error(r.dados.erro); er.servidor = true; throw er; }
+      return r.dados ? r.dados.r : null;
+    });
+    dados.catch(function () {});
+    P.preCarregar('alunoDados', dados);
     if (c) {
-      // abre na hora com o código guardado; confere em segundo plano se saiu versão nova
+      // abre na hora com as telas guardadas; se saiu versão nova, guarda e (no comecinho) já recarrega
       P.montar(c.html, $('tgs-abre')); sai(); window.TG_MODO = 'direto';
-      P.porta('casca', [codigo, c.v]).then(function (r) {
-        if (r && !r.igual && r.html) {
-          guardarCasca(r);
-          if (Date.now() - t0 < 6000 && !tocou) location.reload(); // ainda no comecinho: já abre a versão nova
+      conversa.then(function (r) {
+        var cas = r && r.casca;
+        if (cas && !cas.igual && cas.html) {
+          guardarCasca(cas);
+          if (Date.now() - t0 < 6000 && !tocou) location.reload();
         }
       }, function () {});
       return;
     }
-    P.porta('casca', [codigo]).then(function (r) {
-      guardarCasca(r);
-      P.montar(r.html, $('tgs-abre')); sai(); window.TG_MODO = 'direto';
+    conversa.then(function (r) {
+      guardarCasca(r.casca);
+      P.montar(r.casca.html, $('tgs-abre')); sai(); window.TG_MODO = 'direto';
     }, function (e) {
       if (e && e.servidor) return naoAchou(e.message);
       quadro();
