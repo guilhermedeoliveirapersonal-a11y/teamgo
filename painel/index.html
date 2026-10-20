@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel TEAM GO!</title>
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Painel GO!">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="../app/icones/favicon-32.png">
+<link rel="apple-touch-icon" href="../app/icones/apple-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://script.google.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Libre+Franklin:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Página do painel do treinador (v19). A chave do painel chega depois do # (o navegador nunca manda essa parte
+   pra internet), fica guardada no celular e sai do endereço. Tudo da página tem o prefixo tgs-. */
+html{background:#111111}
+#tgs-abre{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 70% at 50% 20%,#3a0710 0,#141011 55%,#0d0d0d 100%);transition:opacity .35s ease;z-index:9000}
+#tgs-abre.sai{opacity:0;pointer-events:none}
+.tgs-marca{font-family:'Big Shoulders Display','Arial Narrow',Arial,sans-serif;font-weight:900;text-align:center;line-height:.9;text-transform:uppercase;color:#F7F3EF}
+.tgs-marca small{display:block;font-weight:800;font-size:22px;letter-spacing:.2em}
+.tgs-marca b{display:block;font-size:80px;color:#F4001A}
+.tgs-marca i{display:block;font-style:normal;font-weight:800;font-size:18px;letter-spacing:.3em;color:#B8ACA9;margin-top:8px}
+.tgs-pulsa{animation:tgsPulsa 1.4s ease-in-out infinite}
+@keyframes tgsPulsa{50%{opacity:.55}}
+.tgs-tela{position:fixed;inset:0;z-index:8000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px max(20px,env(safe-area-inset-right)) 24px max(20px,env(safe-area-inset-left));text-align:center;background:radial-gradient(120% 70% at 50% 10%,#2a0a0e 0,#111 60%);color:#F7F3EF;font-family:'Libre Franklin',Arial,sans-serif;box-sizing:border-box}
+.tgs-tela h1{font-family:'Big Shoulders Display','Arial Narrow',Arial,sans-serif;font-weight:900;font-size:30px;text-transform:uppercase;margin:0}
+.tgs-tela p{margin:0;color:#B8ACA9;max-width:36ch;line-height:1.5;font-size:15px}
+.tgs-caixa{width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+.tgs-caixa input{box-sizing:border-box;width:100%;font:inherit;font-size:16px;padding:14px;border-radius:12px;border:1px solid rgba(247,243,239,.13);background:#1B1B1B;color:#F7F3EF}
+.tgs-btn{font:inherit;font-weight:700;font-size:16px;padding:14px 18px;border-radius:12px;border:0;background:linear-gradient(180deg,#FF2A3B,#C80016);color:#fff;cursor:pointer}
+.tgs-btn.gh{background:transparent;border:1px solid rgba(247,243,239,.13);color:#F7F3EF}
+.tgs-erro{color:#FF3B4A;font-size:14px;min-height:1em}
+</style>
+<script src="../ponte.js"></script>
+</head>
+<body>
+<div id="tgs-abre"><div class="tgs-marca tgs-pulsa"><small>Team</small><b>GO!</b><i>Painel</i></div></div>
+<script>
+(function () {
+  var P = window.TGPonte, guarda = P.guarda, CHAVE = 'tg_painel_k';
+  var $ = function (id) { return document.getElementById(id); };
+  var sai = function () { $('tgs-abre').classList.add('sai'); };
+  var MARCA = '<div class="tgs-marca"><small>Team</small><b>GO!</b><i>Painel</i></div>';
+  var valida = function (k) { return /^[A-Za-z0-9_-]{8,64}$/.test(String(k || '')); };
+  var doLink = function (t) {
+    t = String(t || '').trim();
+    var m = /[?&#]k=([A-Za-z0-9_-]{8,64})/.exec(t);
+    if (m) return m[1];
+    return valida(t) ? t : '';
+  };
+
+  // a chave: do #k=... (link do e-mail) ou a guardada no celular; tira do endereço na hora
+  var k = doLink(location.hash);
+  if (k) { guarda.por(CHAVE, k); history.replaceState(null, '', location.pathname); }
+  else k = guarda.ler(CHAVE);
+  if (!valida(k)) return pedirLink('Abra pelo botão "Abrir meu painel" do e-mail "Seu painel TEAM GO!", ou cole o link do painel aqui.');
+  if (navigator.onLine === false) return semInternet();
+  P.instalarGoogle();
+  P.porta('cascaPainel', [k]).then(function (r) {
+    P.montar(r.html, $('tgs-abre')); sai(); window.TG_MODO = 'direto';
+  }, function (e) {
+    if (e && e.servidor) { guarda.tira(CHAVE); return pedirLink('Essa chave não abre o painel. Cole o link do painel mais recente.'); }
+    // plano B: o painel no endereço do Google (jeito antigo)
+    window.TG_MODO = 'google';
+    location.replace(P.APP + '?p=painel&k=' + encodeURIComponent(k));
+  });
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
+
+  function tela(html) {
+    sai();
+    var d = document.createElement('div');
+    d.className = 'tgs-tela';
+    d.innerHTML = html;
+    document.body.appendChild(d);
+    return d;
+  }
+  function pedirLink(txt) {
+    var d = tela(MARCA + '<h1>Seu painel</h1><p>' + txt + '</p>' +
+      '<form class="tgs-caixa" id="tgs-f"><input id="tgs-lk" inputmode="url" autocomplete="off" placeholder="Cole aqui o link do painel" aria-label="Link do painel">' +
+      '<button class="tgs-btn" type="submit">Entrar</button><div class="tgs-erro" id="tgs-er" role="alert"></div></form>');
+    d.querySelector('#tgs-f').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var c = doLink(d.querySelector('#tgs-lk').value);
+      if (!c) { d.querySelector('#tgs-er').textContent = 'Esse não parece ser o link do painel.'; return; }
+      guarda.por(CHAVE, c);
+      location.replace(location.pathname);
+    });
+  }
+  function semInternet() {
+    var d = tela(MARCA + '<h1>Sem internet</h1><p>O painel precisa de internet pra abrir. Assim que o sinal voltar, ele abre sozinho.</p>' +
+      '<button class="tgs-btn gh" type="button" id="tgs-de">Tentar de novo</button>');
+    d.querySelector('#tgs-de').addEventListener('click', function () { location.reload(); });
+    window.addEventListener('online', function () { location.reload(); });
+  }
+})();
+</script>
+</body>
+</html>

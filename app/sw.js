@@ -1,12 +1,12 @@
-// Guarda só a casca (página, ícones e manifesto) pra o app abrir rápido e mostrar a tela "Sem internet" sem sinal.
-// O app em si (no Google) nunca é guardado aqui: sempre vem fresco.
-var VERSAO = 'tg-casca-1';
-var ARQUIVOS = ['./', 'index.html', 'manifest.webmanifest', 'icones/icone-192.png', 'icones/icone-512.png', 'icones/apple-180.png', 'icones/favicon-32.png'];
+// Guarda só a página (página, ponte, ícones e manifesto) pra o app abrir rápido e mostrar a tela "Sem internet" sem sinal.
+// O código das telas e os dados vêm do Google pela porta de dados (a página guarda a última cópia das telas no celular).
+var VERSAO = 'tg-casca-2';
+var ARQUIVOS = ['./', 'index.html', '../ponte.js', 'manifest.webmanifest', 'icones/icone-192.png', 'icones/icone-512.png', 'icones/apple-180.png', 'icones/favicon-32.png'];
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(VERSAO).then(function (c) { return c.addAll(ARQUIVOS); }).then(function () { return self.skipWaiting(); }));
 });
 self.addEventListener('activate', function (e) {
-  e.waitUntil(caches.keys().then(function (ks) { return Promise.all(ks.filter(function (k) { return k !== VERSAO; }).map(function (k) { return caches.delete(k); })); }).then(function () { return self.clients.claim(); }));
+  e.waitUntil(caches.keys().then(function (ks) { return Promise.all(ks.filter(function (k) { return k.indexOf('tg-casca-') === 0 && k !== VERSAO; }).map(function (k) { return caches.delete(k); })); }).then(function () { return self.clients.claim(); }));
 });
 self.addEventListener('fetch', function (e) {
   var u = new URL(e.request.url);
