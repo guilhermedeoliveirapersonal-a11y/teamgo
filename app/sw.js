@@ -1,6 +1,6 @@
 // Guarda só a página (página, ponte, ícones e manifesto) pra o app abrir rápido e mostrar a tela "Sem internet" sem sinal.
 // O código das telas e os dados vêm do Google pela porta de dados (a página guarda a última cópia das telas no celular).
-var VERSAO = 'tg-casca-3';
+var VERSAO = 'tg-casca-5';
 var ARQUIVOS = ['./', 'index.html', '../ponte.js', 'manifest.webmanifest', 'icones/icone-192.png', 'icones/icone-512.png', 'icones/apple-180.png', 'icones/favicon-32.png'];
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(VERSAO).then(function (c) { return c.addAll(ARQUIVOS); }).then(function () { return self.skipWaiting(); }));

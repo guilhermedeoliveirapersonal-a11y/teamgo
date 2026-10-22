@@ -13,7 +13,7 @@
   function porta(f, a) {
     return fetch(APP, {
       method: 'POST',
-      body: JSON.stringify({ f: f, a: a || [] }),
+      body: JSON.stringify(window.TG_OLHAR ? { f: f, a: a || [], o: 1 } : { f: f, a: a || [] }), // o: "Ver app" do painel (não conta acesso)
       headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // texto simples: sem pergunta prévia do navegador
       credentials: 'omit', redirect: 'follow', cache: 'no-store'
     }).then(function (r) { return r.text(); }, function () { throw new SemPorta('rede'); })

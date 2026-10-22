@@ -6,7 +6,7 @@
   <rect width="512" height="512" fill="url(#fundo)"/>
   <g transform="translate(256 256) scale(1) translate(-256 -256)">
     <text x="256" y="168" text-anchor="middle" font-family="Big Shoulders Display,Arial Black,sans-serif" font-weight="800" font-size="92" letter-spacing="10" fill="#F7F3EF">TEAM</text>
-    <text x="262" y="430" text-anchor="middle" font-family="BSD" font-weight="900" font-size="300" fill="#1a0a0c" stroke="#1a0a0c" stroke-width="22" stroke-linejoin="round">GO!</text>
-    <text x="256" y="424" text-anchor="middle" font-family="BSD" font-weight="900" font-size="300" fill="url(#go)" stroke="#1a0a0c" stroke-width="6" stroke-linejoin="round" paint-order="stroke">GO!</text>
+    <text x="262" y="430" text-anchor="middle" font-family="Big Shoulders Display,Arial Black,sans-serif" font-weight="900" font-size="300" fill="#1a0a0c" stroke="#1a0a0c" stroke-width="22" stroke-linejoin="round">GO!</text>
+    <text x="256" y="424" text-anchor="middle" font-family="Big Shoulders Display,Arial Black,sans-serif" font-weight="900" font-size="300" fill="url(#go)" stroke="#1a0a0c" stroke-width="6" stroke-linejoin="round" paint-order="stroke">GO!</text>
   </g>
 </svg>
