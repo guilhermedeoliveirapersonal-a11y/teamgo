@@ -1,0 +1,6 @@
+# Só vale quando o site estiver no domínio próprio (raiz do endereço)
+User-agent: *
+Allow: /
+Disallow: /app/
+Disallow: /painel/
+Sitemap: https://guilhermedeoliveirapersonal-a11y.github.io/teamgo/sitemap.xml
