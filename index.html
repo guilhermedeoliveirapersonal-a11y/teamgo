@@ -28,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ProfessionalService", "name": "TEAM GO!", "description": "Eu sou o Guilherme, personal trainer em Cuiabá (MT). Te acompanho no presencial ou na consultoria online, de qualquer lugar do mundo. TEAM GO!", "url": "https://guilhermedeoliveirapersonal-a11y.github.io/teamgo/", "image": "https://guilhermedeoliveirapersonal-a11y.github.io/teamgo/site/img/compartilhar.jpg", "telephone": "+55 65 99349-7692", "areaServed": ["Cuiabá", "Brasil"], "address": {"@type": "PostalAddress", "addressLocality": "Cuiabá", "addressRegion": "MT", "addressCountry": "BR"}, "founder": {"@type": "Person", "name": "Guilherme de Oliveira", "jobTitle": "Personal trainer"}, "sameAs": ["https://instagram.com/treinadorguilhermedeoliveira"]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ProfessionalService", "name": "TEAM GO!", "description": "Eu sou o Guilherme, personal trainer em Cuiabá (MT). Te acompanho no presencial ou na consultoria online, de qualquer lugar do mundo. TEAM GO!", "url": "https://guilhermedeoliveirapersonal-a11y.github.io/teamgo/", "image": "https://guilhermedeoliveirapersonal-a11y.github.io/teamgo/site/img/compartilhar.jpg", "telephone": "+55 65 99349-7692", "areaServed": ["Cuiabá", "Brasil"], "address": {"@type": "PostalAddress", "addressLocality": "Cuiabá", "addressRegion": "MT", "addressCountry": "BR"}, "founder": {"@type": "Person", "name": "Guilherme Oliveira", "alternateName": "Guilherme de Oliveira", "jobTitle": "Personal trainer"}, "sameAs": ["https://instagram.com/treinadorguilhermedeoliveira", "https://maps.google.com/?cid=17595151246597377777"], "hasMap": "https://maps.google.com/?cid=17595151246597377777"}</script>
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <style>
   /* ============ TOKENS ============ */
@@ -582,6 +582,21 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
 .brand-logo,body .brand-logo{height:30px;width:auto}
 .hero-logo{width:clamp(150px,16vw,210px);height:auto;filter:none;margin:0 0 18px}
 .hero::before{opacity:.55}
+/* placar do time (v24): números do mês, liga dos times e pódio, vindos do app; some se não carregar */
+.placar{margin:0 0 40px;padding:28px;border-radius:18px;border:1px solid rgba(247,243,239,.08);background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01))}
+.placar[hidden]{display:none}.placar-top h3{font-family:"Big Shoulders Display",sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(1.6rem,3vw,2.2rem);margin:6px 0 18px}
+.placar-nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:22px}
+.pl-n{padding:14px 12px;border-radius:12px;background:rgba(244,0,26,.07);border:1px solid rgba(244,0,26,.25);min-width:0}
+.pl-n b{display:block;font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1;color:var(--text)}.pl-n span{display:block;margin-top:6px;font-size:.82rem;color:var(--text-muted)}
+.placar-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.placar-box{padding:16px;border-radius:14px;background:rgba(0,0,0,.18);border:1px solid rgba(247,243,239,.06);min-width:0}.placar-box h4{margin:0 0 12px;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-2-label)}
+.pl-t{margin:0 0 12px}.pl-tn{display:flex;align-items:center;gap:8px;font-weight:700}.pl-tn i,.podio i{display:inline-block;width:10px;height:10px;border-radius:3px;flex:none}.pl-tn b{margin-left:auto;font-family:"Space Mono",monospace;font-size:.85rem;color:var(--text-muted);font-weight:400}
+.pl-tb{height:8px;margin-top:6px;border-radius:6px;background:rgba(255,255,255,.07);overflow:hidden}.pl-tb span{display:block;height:100%;border-radius:6px}
+.podio{list-style:none;margin:0;padding:0;display:grid;gap:10px}.podio li{display:flex;align-items:center;gap:12px}.podio b{display:block}.podio small{display:flex;align-items:center;gap:6px;color:var(--text-muted);font-size:.85rem}
+.pl-pos{display:grid;place-items:center;width:38px;height:38px;flex:none;border-radius:50%;font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-size:1.1rem;background:rgba(255,197,49,.12);color:#FFC531;border:1px solid rgba(255,197,49,.35)}
+.podio li:nth-child(2) .pl-pos{background:rgba(200,205,210,.1);color:#d5dade;border-color:rgba(200,205,210,.3)}.podio li:nth-child(3) .pl-pos{background:rgba(205,127,50,.12);color:#e09a5b;border-color:rgba(205,127,50,.35)}
+.pl-vazio{color:var(--text-muted);font-size:.9rem}.placar-nota{margin:12px 0 0;font-size:.8rem;color:var(--text-muted)}
+@media (max-width:820px){.placar{padding:20px}.placar-nums{grid-template-columns:repeat(2,minmax(0,1fr))}.placar-cols{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -704,7 +719,7 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
           <li>Você quer resultado sem ficar refém de fórmula de internet</li>
         </ul>
         <a class="btn btn-primary btn-sm" style="align-self:flex-start;margin-top:10px" href="https://wa.me/5565993497692?text=Oi%21%20Vim%20pelo%20site%20e%20quero%20fechar%20minha%20consultoria%20TEAM%20GO%21" target="_blank" rel="noopener">Quero fechar minha consultoria</a>
-        <p style="color:var(--text-muted);font-size:0.9rem;margin:6px 0 0">Já fechou comigo? O próximo passo é a <a href="https://docs.google.com/forms/d/e/1FAIpQLSfsIFmGuDxOhOQFya14tWeIM1A4IVM4-gLNfcJwqlRrr-hO6A/viewform" target="_blank" rel="noopener" style="color:var(--accent-text);font-weight:600">anamnese de treino</a>: um questionário sobre sua rotina, seu histórico e seus objetivos. É com ele que eu monto o seu plano.</p>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin:6px 0 0">Já fechou comigo? Eu te mando no WhatsApp o link pessoal da sua <a href="avaliacao/?f=anamnese" style="color:var(--accent-text);font-weight:600">anamnese de treino</a>: um questionário sobre sua rotina, seu histórico e seus objetivos. É com ele que eu monto o seu plano.</p>
       </div>
     </div>
     <div class="plan-head"><span class="plan-name">Consultoria <span style="color:var(--accent)">GO!</span></span><span class="plan-sub">Treino, check-in toda semana com resposta minha e relatório a cada 4 semanas.</span></div>
@@ -787,7 +802,7 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
       <div class="card">
         <span class="when mono" style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent-text)">Veio por indicação?</span>
         <h3>Quem indica, ganha. Quem chega, também.</h3>
-        <p style="color:var(--text-muted);margin:0">Se um aluno meu te mandou pra cá, me conta quem foi: <b style="color:var(--text)">vocês dois ganham R$50 de desconto</b> na próxima mensalidade. E quem indica muito ganha mais: com 5 amigos indicados, uma camiseta TEAM GO!; com 10, um treino grátis comigo (presencial em Cuiabá ou por vídeo).</p>
+        <p style="color:var(--text-muted);margin:0">Se um aluno meu te mandou pra cá, me conta quem foi: <b style="color:var(--text)">vocês dois ganham R$50 de desconto</b> na próxima mensalidade. E quem indica muito ganha mais: com 15 amigos indicados, um treino grátis comigo (presencial em Cuiabá ou por vídeo); com 20, a camiseta do time.</p>
         <a class="btn btn-ghost btn-sm" style="align-self:flex-start;margin-top:auto" href="https://wa.me/5565993497692?text=Oi%21%20Vim%20por%20indica%C3%A7%C3%A3o%20e%20quero%20come%C3%A7ar%20minha%20consultoria%20TEAM%20GO%21%20Quem%20me%20indicou%20foi%3A%20" target="_blank" rel="noopener">Vim por indicação</a>
       </div>
     </div>
@@ -915,7 +930,15 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
       <span class="sec-num mono depth">04</span>
       <div>
         <h2>O que os alunos dizem</h2>
-        <p class="lede">Tô juntando os depoimentos dos meus alunos pra colocar aqui. Em breve!</p>
+        <p class="lede">Tô juntando os depoimentos dos meus alunos pra colocar aqui. Já treina comigo? <a href="https://g.page/r/CfFOte7ViC70EBM/review" target="_blank" rel="noopener" style="color:var(--accent-text,var(--accent));font-weight:600">Deixe sua avaliação no Google</a>: leva 1 minuto e ajuda quem procura personal em Cuiabá.</p>
+      </div>
+    </div>
+    <div class="placar" id="placar" hidden>
+      <div class="placar-top"><p class="eyebrow">Ao vivo do app · <span id="pl-mes"></span></p><h3>O time em números</h3></div>
+      <div class="placar-nums" id="pl-nums"></div>
+      <div class="placar-cols">
+        <div class="placar-box"><h4>Liga dos times</h4><div id="pl-times"></div><p class="placar-nota">Pontos do time = média por aluno. O time campeão do mês ganha moedas no app.</p></div>
+        <div class="placar-box"><h4>Pódio do mês</h4><ol class="podio" id="pl-podio"></ol><p class="placar-nota">Só aparece o nome de quem autorizou no app.</p></div>
       </div>
     </div>
     <div class="soon-grid">
@@ -941,8 +964,8 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
       <div class="card aluno-card">
         <span class="when">Antes de começar</span>
         <h3>Anamnese de treino</h3>
-        <p>Um questionário sobre sua rotina, seu histórico e seus objetivos. É a base de todo o seu plano.</p>
-        <a class="btn btn-ghost btn-sm" href="https://docs.google.com/forms/d/e/1FAIpQLSfsIFmGuDxOhOQFya14tWeIM1A4IVM4-gLNfcJwqlRrr-hO6A/viewform" target="_blank" rel="noopener">Preencher anamnese</a>
+        <p>Um questionário sobre sua rotina, seu histórico e seus objetivos. É a base de todo o seu plano. O link chega no seu WhatsApp quando a gente fecha.</p>
+        <a class="btn btn-ghost btn-sm" href="avaliacao/?f=anamnese">Preencher anamnese</a>
       </div>
       <div class="card aluno-card">
         <span class="when">Todo domingo</span>
@@ -968,7 +991,7 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
       <h3 style="font-family:'Big Shoulders Display',sans-serif;text-transform:uppercase;font-size:1.8rem;font-weight:800">Seu app <span style="color:var(--accent)">TEAM GO!</span></h3>
       <p style="color:var(--text-muted);margin:0">Todo aluno recebe um app só seu, com a sua foto, a sua sequência de check-ins, as medalhas que você já conquistou e a sua evolução semana a semana. E tem os níveis: todo mundo começa Franguito e, treinando com constância, vira Monstrão. Cada missão cumprida (treinar, beber água, dormir bem, fazer o check-in) rende GO Coins, que você troca na loja do app por acessórios pro seu mascote, desconto na mensalidade, treino comigo e até a camiseta TEAM GO!. Todo mês tem a liga do time, e quem soma mais pontos ganha moedas extras. Quem fizer check-in 1 ano sem falhar ganha uma camiseta TEAM GO!. No primeiro mês, o Mestre Galo (ou a Mestra Franga) te mostra o caminho dentro do app e responde dúvidas de treino, sono, alimentação e dor. Eu te mando o link no WhatsApp assim que você começa.</p>
         <p>Você aí que é mais da “velha guarda” também tem a opção de receber uma planilha personalizada, com o link dos vídeos de execução de cada movimento e as explicações.</p>
-      <div class="app-acoes"><a class="btn btn-primary btn-sm" href="app/">Abrir meu app</a><span>Primeira vez neste celular? Abra pelo link que eu te mandei no WhatsApp.</span></div>
+      <div class="app-acoes"><a class="btn btn-primary btn-sm" href="app/">Abrir meu app</a><span>Primeira vez neste celular? Abra pelo link que eu te mandei no WhatsApp. Perdeu o link? Toque em "Abrir meu app" e depois em "Perdi meu link": ele chega no seu e-mail.</span></div>
     </div>
 
     <div id="compromissos" style="scroll-margin-top:88px">
@@ -1033,7 +1056,7 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
       </div>
       <div class="faq-item">
         <h3>Tem desconto pra quem treina junto ou vem por indicação?</h3>
-        <p>Tem! Fechando em dupla, cada um ganha 10% de desconto. E se você veio por indicação de um aluno meu, vocês dois ganham R$50 de desconto na próxima mensalidade. Quem indica 5 amigos ganha uma camiseta TEAM GO!, e quem indica 10 ganha um treino grátis comigo.</p>
+        <p>Tem! Fechando em dupla, cada um ganha 10% de desconto. E se você veio por indicação de um aluno meu, vocês dois ganham R$50 de desconto na próxima mensalidade. Quem indica 15 amigos ganha um treino grátis comigo, e quem indica 20 ganha a camiseta do time.</p>
       </div>
       <div class="faq-item">
         <h3>Como funciona o pagamento?</h3>
@@ -1086,6 +1109,7 @@ try{if(/^[A-Za-z0-9_-]{4,60}$/.test(localStorage.getItem('tg_codigo')||''))docum
 // indicação: o link que o aluno manda pelo app traz ?ind=Nome; as mensagens de WhatsApp já vão com quem indicou
 (function(){try{
   var n=new URLSearchParams(location.search).get('ind')||'';
+  if(n)[].forEach.call(document.querySelectorAll('a[href^="avaliacao/?f=anamnese"]'),function(x){x.href='avaliacao/?f=anamnese&ind='+encodeURIComponent(n);}); // v25: a anamnese já abre com quem indicou
   n=n.replace(/[^A-Za-zÀ-ÿ' -]/g,'').trim().slice(0,30);
   if(!n)return;
   var ind=null;
@@ -1101,6 +1125,26 @@ try{if(/^[A-Za-z0-9_-]{4,60}$/.test(localStorage.getItem('tg_codigo')||''))docum
   document.getElementById('ind-btn').target='_blank';document.getElementById('ind-btn').rel='noopener';
   document.getElementById('ind-faixa').hidden=false;
 }catch(e){}})();
+</script>
+<script>
+// v24: placar do time vindo do app (números do mês, liga dos times e pódio). Carrega quando a seção chega perto;
+// guarda 6 h no celular; se não vier, a seção continua escondida.
+(function(){var APP='https://script.google.com/macros/s/AKfycbx0Nq7NgEz5-_1kDIpmm-yf4k_HPLKCGJ4eCAELk3SKQgDJ-_yGpruULFlOK1RsEPi9/exec',el=document.getElementById('placar');if(!el||!window.fetch)return;
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
+var cor=function(c){return /^#[0-9a-fA-F]{6}$/.test(c)?c:'#888888';},num=function(x){return Number(x||0).toLocaleString('pt-BR');};
+function mostrar(p){if(!p||!p.times||(Number(p.treinos)<5&&!p.times.some(function(t){return t.pts>0;})))return;
+  document.getElementById('pl-mes').textContent=p.mes||'';
+  document.getElementById('pl-nums').innerHTML=[[p.treinos,'treinos confirmados'],[p.checkins,'check-ins no mês'],[p.perfeitas,'semanas perfeitas'],[p.recordes,'recordes batidos']].map(function(x){return '<div class="pl-n"><b>'+num(x[0])+'</b><span>'+x[1]+'</span></div>';}).join('');
+  var mx=Math.max.apply(null,p.times.map(function(t){return t.pts||0;}).concat([1]));
+  document.getElementById('pl-times').innerHTML=p.times.slice().sort(function(a,b){return b.pts-a.pts;}).map(function(t){return '<div class="pl-t"><div class="pl-tn"><i style="background:'+cor(t.cor)+'"></i>'+esc(t.nome)+'<b>'+num(t.pts)+' pts</b></div><div class="pl-tb"><span style="width:'+Math.max(3,Math.round(100*(t.pts||0)/mx))+'%;background:'+cor(t.cor)+'"></span></div></div>';}).join('');
+  document.getElementById('pl-podio').innerHTML=(p.podio||[]).map(function(x){return '<li><span class="pl-pos">'+Number(x.pos)+'º</span><div><b>'+esc(x.nome)+'</b><small>'+esc(x.nivel)+(x.time?' · <i style="background:'+cor(x.cor)+'"></i>'+esc(x.time):'')+'</small></div></li>';}).join('')||'<li class="pl-vazio">O pódio começa com os primeiros treinos do mês.</li>';
+  el.hidden=false;}
+var c=null;try{c=JSON.parse(localStorage.getItem('tg_placar')||'null');}catch(e){}
+if(c&&Date.now()-c.t<6*3600e3){mostrar(c.r);return;}
+var foi=false,busca=function(){if(foi)return;foi=true;fetch(APP,{method:'POST',body:JSON.stringify({f:'placar',a:[]}),credentials:'omit'}).then(function(r){return r.json();}).then(function(j){if(j&&j.ok){mostrar(j.r);try{localStorage.setItem('tg_placar',JSON.stringify({t:Date.now(),r:j.r}));}catch(e){}}}).catch(function(){});};
+var alvo=document.getElementById('depoimentos');
+if('IntersectionObserver' in window&&alvo){var io=new IntersectionObserver(function(es){if(es.some(function(x){return x.isIntersecting;})){io.disconnect();busca();}},{rootMargin:'700px'});io.observe(alvo);}else setTimeout(busca,3000);
+})();
 </script>
 </body>
 </html>

@@ -1,0 +1,1032 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Atualização do físico · TEAM GO!</title>
+<meta name="theme-color" content="#F7F3EF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F0F10" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../app/icones/icone-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Libre+Franklin:wght@400;500;600;700&display=swap">
+<style>
+/* Área de avaliação do TEAM GO! — estilo "laudo" (v25, 22/10).
+   Referências: ficha de avaliação física de papel (linhas, protocolo numerado, tabela de perimetria), folha de
+   bioimpedância (faixa de referência), fita métrica (régua com tracinhos) e a própria marca (letra alta da logo,
+   papel e vermelho do site). Sem cartões com sombra: linhas finas, régua e números grandes. */
+:root{--bg:#F7F3EF;--sf:#FDFBF9;--sf2:#EFE9E4;--ink:#111111;--ink2:#4E4A47;--ink3:#8C8481;--line:#E2DAD4;--line2:#CFC5BE;
+  --red:#C8102E;--red2:#A50D26;--redt:rgba(200,16,46,.07);--ok:#1E7F4A;--okt:#E5F1E8;--warn:#875700;--warnt:#FBEFD6;--err:#B4232C;--errt:#FBE8E8;
+  --veu:rgba(200,16,46,.075);--disp:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0F0F10;--sf:#17171A;--sf2:#211F1F;--ink:#F3F0EC;--ink2:#B6AEA9;--ink3:#7F7874;--line:#2A2827;--line2:#3A3634;
+  --red:#E3243F;--red2:#C81B33;--redt:rgba(227,36,63,.12);--ok:#4CC27F;--okt:rgba(76,194,127,.12);--warn:#F0B54A;--warnt:rgba(240,181,74,.12);--err:#FF6B6B;--errt:rgba(255,107,107,.12);
+  --veu:rgba(227,36,63,.13);color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button,input,textarea{font:inherit;color:inherit}i,em{font-style:normal}button{cursor:pointer}
+.mut{color:var(--ink2)}.small{font-size:13.5px}
+.marca{font-family:var(--disp);font-weight:800;font-size:15px;letter-spacing:.03em;white-space:nowrap}.marca b{color:var(--red);font-weight:800}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:2.5px solid var(--red);outline-offset:3px}
+input:focus-visible,textarea:focus-visible{outline:0}
+
+/* estrutura: topo com a fita, miolo que rola, ação fixa embaixo */
+#fxsh{position:fixed;inset:0;display:flex;flex-direction:column;background:linear-gradient(180deg,var(--veu) 0,rgba(0,0,0,0) 380px),var(--bg)}
+.fx2-in{max-width:600px;margin:0 auto}
+.fx2-top{flex:none;padding:calc(6px + env(safe-area-inset-top)) 6px 0;background:color-mix(in srgb,var(--bg) 66%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line2)}
+.fx2-bar{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:2px}
+.fx2-ic{width:44px;height:44px;border:0;border-radius:6px;background:transparent;display:grid;place-items:center;color:var(--ink)}.fx2-ic[hidden]{display:grid;visibility:hidden}
+.fx2-tt{line-height:1.15;min-width:0}.fx2-tt>b{display:block;font-size:15px;font-weight:600}.fx2-tt .marca{font-size:13px}
+.fx2-sair{height:44px;padding:0 12px;border:0;background:none;font-size:14.5px;font-weight:600;color:var(--ink2);text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:4px}
+/* a fita métrica: tracinhos a cada 2%, tracinho maior em cada etapa, parte vermelha até onde o aluno está */
+.fita{position:relative;margin:4px 14px 0;padding-top:12px;--p:0%;--n:5}
+.fita-reg{display:block;height:15px;border-bottom:1.5px solid var(--ink2);
+  background:repeating-linear-gradient(90deg,var(--ink) 0 1.5px,transparent 1.5px calc(100% / var(--n))) left bottom/100% 13px no-repeat,
+    repeating-linear-gradient(90deg,var(--ink3) 0 1px,transparent 1px 4%) left bottom/100% 8px no-repeat,
+    repeating-linear-gradient(90deg,var(--line2) 0 1px,transparent 1px 2%) left bottom/100% 5px no-repeat}
+.fita-cheia{position:absolute;left:0;top:25.5px;height:3.5px;width:var(--p);background:var(--red);transition:width .4s cubic-bezier(.2,.8,.3,1)}
+.fita-mk{position:absolute;top:0;left:var(--p);width:2px;height:28px;margin-left:-1px;background:var(--red);transition:left .4s cubic-bezier(.2,.8,.3,1)}
+.fita-mk::before{content:"";position:absolute;top:-1px;left:-5px;border:6px solid transparent;border-top:7px solid var(--red);border-bottom:0}
+.fita-et{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.fita-et span{padding:6px 0 9px 4px;font-size:11.5px;line-height:1.2;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fita-et .ok{color:var(--ink2)}.fita-et .cur{color:var(--ink);font-weight:700}
+.fx2-body{flex:1;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.fx-pg{max-width:600px;margin:0 auto;padding:26px 20px 40px}
+.fx2-foot{flex:none;padding:12px 20px calc(14px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--bg) 92%,transparent);border-top:1px solid var(--line2)}
+.fx2-foot .fx2-in{max-width:560px}
+.fx2-hint{margin:0 0 10px;font-size:13.5px;line-height:1.35;color:var(--ink2);text-align:center}.fx2-hint:empty{display:none}
+.bt{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;padding:14px 18px;border:0;border-radius:8px;background:linear-gradient(180deg,#DD1F3C 0%,#B70C27 100%);color:#fff;font-size:16.5px;font-weight:600;letter-spacing:.005em;text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 18px -10px rgba(200,16,46,.7)}
+.bt[disabled]{background:var(--sf2);color:var(--ink3);box-shadow:none;cursor:default}
+.bt.sec{background:transparent;color:var(--ink);border:1.5px solid var(--ink);box-shadow:none}
+.fx-pg.an{animation:fxIn .3s cubic-bezier(.2,.8,.3,1) both}.fx-pg.an.vt{animation-name:fxVt}
+@keyframes fxIn{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:none}}
+@keyframes fxVt{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:none}}
+
+/* texto: título na letra da marca, com o número do item do protocolo em vermelho */
+h1{font-family:var(--disp);font-weight:700;font-size:42px;line-height:.98;letter-spacing:.005em;margin:0 0 12px}
+h1 .fx-n{display:inline-block;margin-right:10px;color:var(--red);font-weight:600}
+.fx-lead{margin:0;font-size:16px;line-height:1.55;color:var(--ink2);max-width:44ch}
+.fx-q{font-weight:600;font-size:17px;line-height:1.4;margin:26px 0 10px}
+.fx-q+.small{margin:-6px 0 10px}
+.fx-sub{margin:-4px 0 0}
+.fx-l{display:block;margin-top:20px;font-size:14px;font-weight:600}
+.fx-in{display:block;width:100%;margin-top:8px;padding:12px 14px;border-radius:4px;border:1.5px solid var(--line2);background:var(--sf);font-size:16px;line-height:1.45;resize:vertical}.fx-in:focus{border-color:var(--ink)}
+.fx-lista{margin:8px 0 0;padding-left:18px;color:var(--ink2);font-size:14.5px;line-height:1.6}
+.fx-dica{margin:16px 0 0}
+.fx-box{margin:22px 0 0;padding:2px 0 2px 16px;border-left:3px solid var(--red);font-size:14.5px;line-height:1.6;color:var(--ink2)}.fx-box b{color:var(--ink)}
+
+/* início: cabeçalho de ficha (tempo, fotos, perguntas) e protocolo */
+.fx-dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:24px 0 0;border-top:1.5px solid var(--ink);border-bottom:1px solid var(--line2)}
+.fx-dl div{padding:10px 12px 12px;border-left:1px solid var(--line2)}.fx-dl div:first-child{border-left:0;padding-left:0}
+.fx-dl dt{font-size:12.5px;color:var(--ink2)}.fx-dl dd{margin:2px 0 0;font-family:var(--disp);font-weight:700;font-size:30px;line-height:1}
+.fx-prot{margin:26px 0 0}.fx-prot>b{display:block;font-size:15px;padding-bottom:6px;border-bottom:1.5px solid var(--ink)}.fx-prot>small{display:block;margin-top:10px;font-size:13.5px;line-height:1.5;color:var(--ink2)}
+.fx-pi{display:flex;align-items:center;gap:14px;padding:11px 0;line-height:1.4;border-bottom:1px solid var(--line)}.fx-pi svg{flex:none;color:var(--ink2)}
+
+/* respostas: linhas de ficha com quadradinho de marcar (e medidor quando a resposta é uma escala) */
+.fx-ops{margin-top:4px;border-top:1.5px solid var(--ink)}
+.fx-op{display:flex;align-items:center;gap:14px;width:100%;min-height:64px;padding:12px 6px 12px 2px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line2);border-radius:0;color:var(--ink);transition:background-color .15s}
+.fx-op.on{background:linear-gradient(90deg,var(--redt),rgba(0,0,0,0) 85%)}
+.fx-opr{flex:none;position:relative;width:22px;height:22px;border:1.5px solid var(--ink2);border-radius:3px;background:var(--sf)}
+.fx-op.on .fx-opr,.fx-sn .on .fx-opr{background:var(--red);border-color:var(--red)}
+.fx-op.on .fx-opr::after,.fx-sn .on .fx-opr::after{content:"";position:absolute;left:6.5px;top:2.5px;width:5px;height:10px;border:solid #fff;border-width:0 2.2px 2.2px 0;transform:rotate(45deg)}
+.fx-opt{flex:1;min-width:0}.fx-opt b{display:block;font-size:16px;font-weight:600;line-height:1.3}.fx-opt small{display:block;margin-top:2px;font-size:13.5px;line-height:1.4;color:var(--ink2)}
+.fx-mt{flex:none;display:flex;align-items:flex-end;gap:3px;height:18px;color:var(--ink3)}
+.fx-mt i{display:block;width:5px;border-radius:1px;background:var(--line2)}.fx-mt i.on{background:var(--ink2)}.fx-op.on .fx-mt i.on{background:var(--red)}
+.fx-mt svg{width:22px;height:22px;color:var(--ink2)}.fx-op.on .fx-mt svg{color:var(--red)}
+.fx-add{display:inline-block;margin:14px 0 0;padding:8px 0;background:none;border:0;color:var(--ink);font-weight:600;font-size:15px;text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:4px}
+.fx-qb+.fx-qb{margin-top:30px}
+.fx-sn{display:grid;grid-template-columns:1fr 1fr;border-top:1.5px solid var(--ink);border-bottom:1px solid var(--line2)}
+.fx-sn button{display:flex;align-items:center;gap:12px;min-height:58px;padding:12px 14px 12px 2px;border:0;background:none;font-weight:600;font-size:16px;text-align:left}
+.fx-sn button+button{border-left:1px solid var(--line2);padding-left:14px}.fx-sn button.on{background:var(--redt)}
+
+/* fotos: 3 quadros com cantos de visor de câmera */
+.fx-fg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px}.fx-fg.um{grid-template-columns:minmax(0,132px);margin-top:12px}
+.fx-fi{min-width:0}
+.fx-fc{position:relative;display:block;width:100%;aspect-ratio:3/4;padding:0;border:0;border-radius:2px;background:var(--sf);overflow:hidden;color:var(--ink3)}
+.fx-fc::after{content:"";position:absolute;inset:6px;pointer-events:none;--k:var(--ink2);
+  background:linear-gradient(var(--k),var(--k)) left top/14px 1.5px no-repeat,linear-gradient(var(--k),var(--k)) left top/1.5px 14px no-repeat,
+    linear-gradient(var(--k),var(--k)) right top/14px 1.5px no-repeat,linear-gradient(var(--k),var(--k)) right top/1.5px 14px no-repeat,
+    linear-gradient(var(--k),var(--k)) left bottom/14px 1.5px no-repeat,linear-gradient(var(--k),var(--k)) left bottom/1.5px 14px no-repeat,
+    linear-gradient(var(--k),var(--k)) right bottom/14px 1.5px no-repeat,linear-gradient(var(--k),var(--k)) right bottom/1.5px 14px no-repeat}
+.fx-fc.tem::after{--k:#fff}.fx-fc.fx-ok::after{--k:#fff}.fx-fc.fx-erro{box-shadow:inset 0 0 0 2px var(--err)}
+.fx-fv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}.fx-fv>img{width:100%;height:100%;object-fit:cover}.fx-fv>svg{position:relative;height:80%;width:auto}
+.fx-fv .fx-gh0{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.14;filter:grayscale(1)}
+.fx-ftap{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);width:34px;height:34px;border-radius:6px;background:var(--red);color:#fff;display:grid;place-items:center}
+.fx-fmais{font-family:var(--disp);font-size:44px;font-weight:600;line-height:1;color:var(--ink3)}
+.fx-fb{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:12.5px;line-height:1;color:#fff;z-index:1}
+.fx-fb.fx-ok{background:var(--ok)}.fx-fb.fx-aviso{background:#D9A12B;color:#2A1B00}.fx-fb.fx-erro{background:var(--err)}.fx-fb.env{background:rgba(0,0,0,.55)}
+.fx-fl{display:flex;flex-direction:column;align-items:flex-start;margin-top:8px;padding-top:6px;border-top:1.5px solid var(--ink);line-height:1.3}.fx-fl b{font-size:15px;font-weight:600}.fx-fl small{font-size:12.5px;color:var(--ink2)}.fx-fl small.ok{color:var(--ok)}.fx-fl small.er{color:var(--err)}
+.fx-gal{margin:2px 0 0 -2px;padding:6px 2px;background:none;border:0;color:var(--ink);font-size:13px;font-weight:600;text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px}.fx-gal[disabled]{opacity:.4}
+.fx-qual{margin:22px 0 0;padding:4px 0 4px 16px;border-left:3px solid #D9A12B}.fx-qual p{display:flex;gap:10px;align-items:flex-start;margin:0 0 6px;font-size:14px;line-height:1.45}.fx-qual p svg{flex:none;margin-top:2px;color:var(--warn)}.fx-qual small{display:block;font-size:13px;color:var(--ink2)}
+.fx-qual.ok{border-left-color:var(--ok)}.fx-qual.ok p{margin:0}.fx-qual.ok svg{color:var(--ok)}
+.fx-como{margin:24px 0 0;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);padding:12px 0}.fx-como summary{cursor:pointer;font-weight:600;font-size:15px}.fx-como[open] summary{margin-bottom:8px}
+.fx-mapa{display:block;width:100%;max-width:260px;height:auto;margin:6px auto 4px;color:var(--ink3)}
+.fx-spin{width:40px;height:40px;margin:0 auto 16px;border-radius:50%;border:3px solid var(--line2);border-top-color:var(--red);animation:fxg .9s linear infinite}@keyframes fxg{to{transform:rotate(360deg)}}
+.fx-spin.sm{display:inline-block;width:14px;height:14px;margin:0;border-width:2px;border-color:rgba(255,255,255,.35);border-top-color:#fff}
+
+/* peso: visor de balança e faixa de referência (último envio × hoje) */
+.fx-kgw{display:flex;align-items:baseline;justify-content:center;gap:6px;margin:26px 0 0;padding:12px 16px 8px;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);cursor:text}
+.fx-kgw:focus-within{background:var(--sf)}
+.fx-kg{width:4.1ch;max-width:70%;padding:0;background:none;border:0;outline:0;font-family:var(--disp);font-weight:700;font-size:104px;line-height:1;letter-spacing:.005em;text-align:right;font-variant-numeric:tabular-nums}.fx-kg::placeholder{color:var(--line2)}
+.fx-kgw span{font-family:var(--disp);font-size:34px;font-weight:600;color:var(--ink2)}
+.fx-pd{margin:14px 0 0;min-height:24px}.fx-pd>span{display:block;text-align:center;font-size:14px;color:var(--ink2)}.fx-pd b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.fx-rg{position:relative;margin:4px 0 14px;padding:24px 0 0}
+.fx-rgr{position:relative;height:12px;border-bottom:1.5px solid var(--ink2);background:repeating-linear-gradient(90deg,var(--ink3) 0 1px,transparent 1px 10%) left bottom/100% 8px no-repeat,repeating-linear-gradient(90deg,var(--line2) 0 1px,transparent 1px 5%) left bottom/100% 5px no-repeat}
+.fx-rgm{position:absolute;bottom:-1.5px;width:2px;margin-left:-1px;height:30px;background:var(--ink3)}.fx-rgm b{position:absolute;bottom:31px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11.5px;font-weight:600;color:var(--ink2)}
+.fx-rgm.hj{background:var(--red);height:34px}.fx-rgm.hj b{color:var(--red);bottom:35px}
+.fx-rgl{display:flex;justify-content:space-between;margin-top:4px;font-size:11.5px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.fx-warn{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;padding:4px 0 4px 14px;border-left:3px solid #D9A12B;font-size:14px;line-height:1.45}.fx-warn[hidden]{display:none}.fx-warn svg{flex:none;margin-top:2px;color:var(--warn)}
+.fx-prot2{list-style:none;display:grid;grid-template-columns:1fr 1fr;margin:22px 0 0;padding:0;border-top:1px solid var(--line2)}.fx-prot2 li{display:flex;align-items:center;gap:10px;padding:12px 4px 12px 0;border-bottom:1px solid var(--line2);font-size:14px;line-height:1.3;color:var(--ink2)}.fx-prot2 li:nth-child(even){padding-left:12px;border-left:1px solid var(--line2)}.fx-prot2 svg{flex:none;color:var(--ink2)}
+
+/* medidas: tabela de perimetria (1ª, 2ª, média) */
+.fx-tb{margin-top:22px;border-top:1.5px solid var(--ink)}
+.fx-th,.fx-tr{display:grid;grid-template-columns:minmax(0,1fr) 62px 62px 62px;gap:8px;align-items:end}
+.fx-th{padding:8px 0 6px;border-bottom:1px solid var(--line2)}.fx-th small{font-size:12px;color:var(--ink2);text-align:center}
+.fx-tr{padding:14px 0 12px;align-items:center}
+.fx-tw{border-bottom:1px solid var(--line2)}
+.fx-tn b{display:block;font-size:16px;font-weight:600}.fx-tn small{display:block;margin-top:2px;font-size:12.5px;line-height:1.35;color:var(--ink2)}.fx-tn .fx-ult{color:var(--ink3)}
+.fx-tr input{width:100%;min-width:0;padding:6px 0 4px;border:0;border-bottom:1.5px solid var(--ink3);border-radius:0;background:transparent;font-family:var(--disp);font-size:26px;font-weight:600;line-height:1.1;text-align:center;font-variant-numeric:tabular-nums}
+.fx-tr input:focus{border-bottom-color:var(--red);background:var(--sf)}
+.fx-mv{display:block;text-align:center;font-family:var(--disp);font-size:30px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}.fx-mv.fa{color:var(--warn)}.fx-mv.fe{color:var(--err)}
+.fx-mw{margin:-4px 0 12px;font-size:13px;color:var(--warn);line-height:1.4}.fx-mw:empty{display:none}.fx-mw.er{color:var(--err)}
+
+/* nota de 0 a 10: régua; a parte até a nota fica na cor da nota */
+.fx-nt{display:flex;align-items:baseline;gap:14px;margin:22px 0 10px;min-height:84px}.fx-ntv{font-family:var(--disp);font-size:96px;font-weight:700;line-height:.85;font-variant-numeric:tabular-nums}.fx-ntv.vz{color:var(--line2)}.fx-nt span{font-size:17px;font-weight:600;color:var(--ink2)}
+.fx-eq{position:relative;display:grid;grid-template-columns:repeat(11,minmax(0,1fr));border-bottom:1.5px solid var(--ink2)}
+.fx-eq::after{content:"";position:absolute;left:0;bottom:-1.5px;height:4px;width:var(--w,0);background:var(--cv,var(--red));transition:width .3s ease}
+.fx-eq button{position:relative;height:62px;padding:0 0 22px;border:0;background:none;font-family:var(--disp);font-size:22px;font-weight:600;color:var(--ink2);font-variant-numeric:tabular-nums}
+.fx-eq button::after{content:"";position:absolute;left:50%;bottom:0;width:1.5px;height:14px;margin-left:-.75px;background:var(--ink3)}
+.fx-eq button.ate{color:var(--ink)}.fx-eq button.on{color:var(--c);font-weight:800;font-size:26px}
+.fx-eq button.on::before{content:"";position:absolute;left:50%;top:0;margin-left:-6px;border:6px solid transparent;border-top:7px solid var(--c);border-bottom:0}
+.fx-eql{display:flex;justify-content:space-between;margin-top:8px;font-size:13px;color:var(--ink3)}
+
+/* extras */
+.fx-wa{display:flex;align-items:center;gap:14px;margin-top:24px;padding:14px 0;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);color:var(--ink);text-decoration:none}.fx-wa svg{flex:none;color:var(--ok)}.fx-wa b{display:block;font-size:15.5px;font-weight:600}.fx-wa small{display:block;font-size:13.5px;color:var(--ink2)}
+
+/* revisão: laudo com seções numeradas */
+.fx-rc{margin-top:22px}
+.fx-rch{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:4px;border-bottom:1.5px solid var(--ink)}.fx-rch b{font-family:var(--disp);font-size:24px;font-weight:700;line-height:1.1}.fx-rch b i{font-style:normal;color:var(--red);margin-right:8px;font-weight:600}
+.fx-ed{padding:8px 0 8px 16px;background:none;border:0;color:var(--ink);font-weight:600;font-size:14px;text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px}
+.fx-rth{display:flex;gap:8px;margin:12px 0 4px}.fx-rth img{width:56px;aspect-ratio:3/4;object-fit:cover;border-radius:2px;background:var(--sf2)}
+.fx-rev .row{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}.fx-rev .row b{text-align:right;font-weight:600}
+
+/* antes × agora */
+.fx-cmp{margin:22px 0 4px}.fx-cmpw{position:relative;aspect-ratio:3/4;max-height:380px;margin:0 auto;border-radius:2px;overflow:hidden;background:var(--sf2)}.fx-cmpw img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fx-cmpn{clip-path:inset(0 0 0 var(--x))}.fx-cmpb{position:absolute;top:0;bottom:0;left:var(--x);width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 8px rgba(0,0,0,.5)}
+.fx-cmpl,.fx-cmpr{position:absolute;bottom:10px;padding:4px 10px;border-radius:3px;background:rgba(0,0,0,.6);font-size:12px;font-weight:600;color:#fff}.fx-cmpl{left:10px}.fx-cmpr{right:10px}
+.fx-cmp input[type=range]{display:block;width:100%;margin:12px 0 0;accent-color:var(--red)}
+.fx-cmpt{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 0}.fx-cmpt div{display:grid;grid-template-columns:1fr 1fr;gap:4px}.fx-cmpt img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:2px;background:var(--sf2)}.fx-cmpt small{grid-column:1/-1;font-size:12px;color:var(--ink2)}
+
+/* envio e fim */
+.fx-env,.fx-fim{padding:48px 0}.fx-env{text-align:center}.fx-env b{display:block;font-size:17px;font-weight:600}.fx-env p{margin:6px 0 0}
+.fx-fim h1{margin:22px 0 10px;font-size:46px}.fx-fim p{margin:0 0 22px;max-width:38ch;color:var(--ink2)}
+.fx-okc{width:76px;height:76px;border-radius:50%;background:var(--okt);display:grid;place-items:center;color:var(--ok)}
+.fx-okc path{stroke-dasharray:30;stroke-dashoffset:30;animation:fxRisca .5s .15s ease-out forwards}@keyframes fxRisca{to{stroke-dashoffset:0}}
+.fx-recibo{display:grid;grid-template-columns:1fr 1fr;margin:0 0 26px;border-top:1.5px solid var(--ink);border-bottom:1px solid var(--line2)}
+.fx-recibo div{padding:10px 0 12px}.fx-recibo div+div{padding-left:12px;border-left:1px solid var(--line2)}.fx-recibo dt{font-size:12.5px;color:var(--ink2)}.fx-recibo dd{margin:2px 0 0;font-family:var(--disp);font-size:24px;font-weight:700;line-height:1.1}
+
+/* câmera guiada (escura, ocupa a tela toda) */
+#fxsh>.fx-cam{flex:1;overflow-y:auto;background:#000;color:#fff;padding:calc(12px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom))}
+.fx-cam{display:flex;flex-direction:column;gap:14px;align-items:stretch}.fx-cam>*{width:100%;max-width:520px;margin-left:auto;margin-right:auto}
+.fx-vw{position:relative;aspect-ratio:3/4;max-height:68vh;border-radius:6px;overflow:hidden;background:#111}.fx-vw video{width:100%;height:100%;object-fit:cover;display:block}.fx-vw video.esp{transform:scaleX(-1)}
+.fx-gh{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.3;pointer-events:none}.fx-gh[hidden]{display:none}
+.fx-sil{position:absolute;inset:7% 22%;pointer-events:none;display:flex;justify-content:center}
+.fx-vg{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.32),rgba(0,0,0,0) 24%,rgba(0,0,0,0) 76%,rgba(0,0,0,.32))}
+.fx-gl{position:absolute;left:6%;right:6%;height:0;border-top:2px dashed rgba(255,255,255,.85);filter:drop-shadow(0 0 1.5px rgba(0,0,0,.7));pointer-events:none}
+.fx-gl span{position:absolute;right:0;top:-24px;padding:2px 8px;border-radius:3px;background:rgba(0,0,0,.6);font-size:12px;font-weight:600;color:#fff;filter:none}.fx-gl.pe span{top:6px}.fx-sil svg{height:100%;width:auto}
+.fx-ctit{position:absolute;top:12px;left:12px;padding:5px 11px;border-radius:3px;background:rgba(0,0,0,.55);font-size:13px;font-weight:600}
+.fx-lvl{position:absolute;top:10px;right:12px;width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:rgba(0,0,0,.25)}.fx-lvl[hidden]{display:none}.fx-lvl i{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#FFC531;transition:transform .1s}.fx-lvl.ok{border-color:#5FD38D}.fx-lvl.ok i{background:#5FD38D}
+.fx-cd{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--disp);font-size:130px;font-weight:700;color:#fff;text-shadow:0 6px 30px rgba(0,0,0,.7);background:rgba(0,0,0,.15)}.fx-cd[hidden]{display:none}
+.fx-cbar{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.fx-cb{width:44px;height:44px;flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);display:grid;place-items:center;color:#fff}.fx-cb.on{background:rgba(255,197,49,.2);border-color:#FFC531}
+.fx-tm{display:flex;gap:2px;padding:3px;border-radius:999px;background:rgba(255,255,255,.1)}.fx-tm button{border:0;background:none;color:#cfd2d6;padding:8px 13px;border-radius:999px;font-weight:600;font-size:13.5px}.fx-tm button.on{background:#fff;color:#111}
+.fx-disp{align-self:center;width:76px!important;height:76px;border-radius:50%;border:4px solid #fff;background:transparent;padding:5px}.fx-disp i{display:block;width:100%;height:100%;border-radius:50%;background:var(--red);transition:transform .1s}.fx-disp:active i{transform:scale(.9)}
+.fx-ct{text-align:center;margin:0;line-height:1.45;color:#c9ccd1}
+
+/* aviso rápido e telas de carregamento/erro */
+#toast{position:fixed;left:50%;bottom:calc(112px + env(safe-area-inset-bottom));transform:translate(-50%,20px);max-width:min(92vw,420px);padding:12px 16px;border-radius:6px;background:var(--ink);color:var(--bg);font-size:14.5px;line-height:1.4;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50}
+#toast.on{opacity:1;transform:translate(-50%,0)}#toast.erro{background:var(--err);color:#fff}
+.fx-msg{max-width:440px;margin:0 auto;padding:72px 24px}.fx-msg h1{font-size:36px}.fx-msg p{color:var(--ink2);margin:0 0 24px}.fx-msg>.fx-spin+p{text-align:center}
+@media (hover:hover){.bt:not([disabled]):not(.sec):hover{background:linear-gradient(180deg,#C8102E 0%,#A00B23 100%)}.fx2-ic:hover{background:var(--sf2)}.fx-op:not(.on):hover{background:var(--sf)}.fx-eq button:not(.on):hover{color:var(--ink)}}
+@media (min-width:700px){.fx-pg{padding-top:44px}h1{font-size:50px}}
+@media (prefers-reduced-motion:reduce){.fx-pg.an,.fx-okc path{animation:none}.fx-okc path{stroke-dashoffset:0}.fita-cheia,.fita-mk,.fx-eq::after{transition:none}}
+
+/* ---- anamnese (v25): mesmas linhas de ficha, com respostas de tocar em grade, mapa do corpo e linha do tempo */
+.an-oi{margin:0 0 10px;font-size:15px;color:var(--ink2)}.an-oi b{color:var(--ink)}
+.an-pote{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.an-seg{display:grid;border-top:1.5px solid var(--ink);border-left:1px solid var(--line2)}
+.an-seg button{min-height:54px;padding:10px 8px;border:0;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2);background:none;font-size:14.5px;font-weight:600;line-height:1.25;color:var(--ink2);text-align:center}
+.an-seg button.on{color:var(--ink);background:var(--redt);box-shadow:inset 0 -3px 0 var(--red)}
+.an-num{display:grid;border-bottom:1.5px solid var(--ink2)}
+.an-num button{position:relative;height:56px;padding:0 0 16px;border:0;background:none;font-family:var(--disp);font-size:24px;font-weight:600;color:var(--ink2);font-variant-numeric:tabular-nums}
+.an-num button::after{content:"";position:absolute;left:50%;bottom:0;width:1.5px;height:12px;margin-left:-.75px;background:var(--ink3)}
+.an-num button.on{color:var(--red);font-weight:800;font-size:30px}.an-num button.on::after{height:18px;width:3px;margin-left:-1.5px;background:var(--red)}
+.an-step{display:flex;align-items:center;justify-content:space-between;max-width:280px;border-top:1.5px solid var(--ink);border-bottom:1px solid var(--line2)}
+.an-step button{width:56px;height:56px;border:0;background:none;font-size:28px;font-weight:400;color:var(--ink)}.an-step b{font-family:var(--disp);font-size:38px;font-weight:700;font-variant-numeric:tabular-nums}
+.an-data{display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:10px}.an-data .fx-in{text-align:center;font-size:18px}
+.an-vis2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.an-vis2 .fx-kgw{margin-top:20px;padding:10px 8px 6px}.an-vis2 .fx-kg{font-size:64px;width:3.3ch}.an-vis2 .fx-kgw span{font-size:24px}
+.an-dor{display:grid;grid-template-columns:120px minmax(0,1fr);gap:14px;align-items:start;margin-top:18px}
+.an-mapa{display:block;width:120px;height:auto;color:var(--ink3);position:sticky;top:8px}
+.an-pt{cursor:pointer}.an-pt circle+circle{fill:var(--sf);stroke:var(--ink2);stroke-width:1}.an-pt.on circle+circle{fill:var(--red);stroke:var(--red)}
+.an-dor .fx-op{min-height:48px;padding:8px 4px 8px 2px}.an-dor .fx-opt b{font-size:15px}
+.an-dupla{display:grid;grid-template-columns:1fr 1fr;column-gap:14px}.an-dupla .fx-op{min-height:54px}
+.an-musc{display:grid;grid-template-columns:1fr 1fr;border-top:1.5px solid var(--ink);border-left:1px solid var(--line2);margin-top:14px}
+.an-musc button{position:relative;min-height:56px;padding:10px 12px;border:0;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2);background:none;font-size:15.5px;font-weight:600;text-align:left;color:var(--ink)}
+.an-musc button.on{background:var(--redt)}.an-musc button i{display:inline-grid;place-items:center;width:22px;height:22px;margin-right:8px;border-radius:50%;background:var(--red);color:#fff;font-family:var(--disp);font-size:14px;font-weight:700;vertical-align:-1px}
+.an-musc .an-sem{grid-column:1/-1;color:var(--ink2)}.an-musc .an-sem.on{color:var(--ink)}
+.an-nada{border-bottom-color:var(--ink2)}
+.an-depois .fx-fi{opacity:.45}
+.an-regras{margin:18px 0 6px;padding:0;list-style:none;counter-reset:r;border-top:1.5px solid var(--ink)}
+.an-regras li{position:relative;padding:12px 0 12px 34px;border-bottom:1px solid var(--line2);font-size:14.5px;line-height:1.5;color:var(--ink2);counter-increment:r}.an-regras li b{color:var(--ink)}
+.an-regras li::before{content:counter(r);position:absolute;left:0;top:10px;font-family:var(--disp);font-size:24px;font-weight:700;color:var(--red)}
+.an-lin{margin:6px 0 26px;padding:0;list-style:none;border-left:2px solid var(--line2)}
+.an-lin li{position:relative;padding:0 0 18px 20px}.an-lin li::before{content:"";position:absolute;left:-7px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--red)}
+.an-lin b{display:block;font-family:var(--disp);font-size:22px;font-weight:700;line-height:1.1}.an-lin span{display:block;margin-top:2px;font-size:14.5px;color:var(--ink2)}
+.fx-fim a.bt{max-width:360px}
+/* v25: convite (sem link, perdeu o link, venceu, já enviada) */
+.fx-pg .bt+.bt{margin-top:10px}.fx-pg>h1+.fx-lead{margin-bottom:22px}.fx-pg>.fx-lead+.bt{margin-top:4px}
+.an-porta{margin-top:26px;padding-top:4px;border-top:1.5px solid var(--ink)}.an-porta .fx-q{margin-top:16px}.an-porta .fx-l{margin-top:12px}.an-porta .bt{margin-top:14px}
+.an-rmsg{margin:10px 0 0;color:var(--ink2);min-height:1em}.an-rmsg a{color:var(--red);font-weight:700}.an-rmsg .bt{margin-top:10px}
+/* varredura 22/10: celular estreito (320–359 px): nomes das etapas inteiros e coluna das medidas mais larga */
+@media (max-width:359px){.fita-et span{font-size:10.5px;padding-left:2px;letter-spacing:-.01em}
+  .fx-th,.fx-tr{grid-template-columns:minmax(0,1fr) 54px 54px 50px;gap:6px}}
+/* v25: fotos do seu jeito. Esconder o rosto (chave), conferência da faixa no rosto e "quem vê suas fotos" */
+.fx-sw{display:flex;align-items:center;gap:14px;width:100%;margin-top:22px;padding:14px 2px;text-align:left;background:none;border:0;border-top:1.5px solid var(--ink);border-bottom:1px solid var(--line2);color:var(--ink)}
+.fx-sw>span{flex:1;min-width:0}.fx-sw b{display:block;font-size:15.5px}.fx-sw small{display:block;margin-top:2px;font-size:13.5px;line-height:1.45;color:var(--ink2)}
+.fx-sw i{flex:none;position:relative;width:46px;height:28px;border-radius:14px;background:var(--line2);transition:background-color .15s}
+.fx-sw i::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .15s}
+.fx-sw.on i{background:var(--red)}.fx-sw.on i::after{transform:translateX(18px)}
+.fx-qv .fx-lista{margin-top:6px;padding-left:16px}.fx-qv .fx-add{margin-top:6px}
+.fx-rv{position:relative;border-radius:6px;overflow:hidden;background:#111;max-height:62vh;display:flex;justify-content:center}.fx-rv canvas{display:block;max-width:100%;max-height:62vh;width:auto;height:auto}
+.fx-rq{margin:0;text-align:center;line-height:1.45;color:#c9ccd1}.fx-rq b{color:#fff}
+.fx-ry{width:100%;accent-color:var(--red);height:32px}
+.fx-rb{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fx-rosto .bt.sec{color:#fff;border-color:#fff}
+.fx-mont{display:block;width:100%;max-width:420px;height:auto;margin:12px 0 4px;color:var(--ink2)}
+.fx-passos{margin:4px 0 0;padding-left:22px;color:var(--ink2);font-size:14.5px;line-height:1.55}.fx-passos li{margin:6px 0}.fx-passos b{color:var(--ink)}
+.fx-pg-t{margin:16px 0 0;font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+.fx-ok-ver{display:flex;gap:8px;align-items:flex-start;margin:14px 0 0;padding:10px 12px;background:var(--okt);border-radius:4px;font-size:14.5px;color:var(--ink)}.fx-ok-ver svg{flex:none;margin-top:2px;color:var(--ok)}
+/* 22/10 noite: preparo das fotos (as 3 posições com o fio de prumo e o checklist conferido antes da câmera) */
+.fx-poses{display:block;width:100%;max-width:420px;height:auto;margin:16px 0 2px;color:var(--ink2)}
+.fx-ck{margin:10px 0 0;border-top:1.5px solid var(--ink)}
+.fx-cki{display:flex;gap:12px;align-items:flex-start;width:100%;padding:13px 2px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line2);color:var(--ink2);font:inherit;font-size:15px;line-height:1.45;cursor:pointer}
+.fx-cki i{flex:none;position:relative;width:22px;height:22px;margin-top:1px;border:1.5px solid var(--ink2);border-radius:3px;transition:background-color .15s,border-color .15s}
+.fx-cki.on{color:var(--ink)}.fx-cki.on i{background:var(--red);border-color:var(--red)}
+.fx-cki.on i::after{content:"";position:absolute;left:6.5px;top:2.5px;width:6px;height:11px;border:solid #fff;border-width:0 2.4px 2.4px 0;transform:rotate(45deg)}
+/* página pública do protocolo (?f=protocolo) */
+.pr-op{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pr-op .fx-q{margin-top:18px}
+@media print{.fx2-top{position:static}.fx2-body{overflow:visible;height:auto}.fx-cki i{border-color:#000}}
+.pr-op+.fx-sub{margin-top:10px}.pr-pg a{color:var(--red)}
+</style>
+</head>
+<body>
+<div id="fxsh" role="main"><div class="fx-msg"><div class="fx-spin"></div><p>Abrindo sua ficha…</p></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="../ponte.js"></script>
+<script>
+// Área de avaliação do TEAM GO! (v25): página própria, fora do jogo. Aberta pelo app com ?a=<código do aluno>.
+// Conversa com o Google pela porta de dados (ponte.js imita o google.script.run). Rascunho fica neste celular.
+// Ao enviar, o servidor grava na planilha, monta o relatório, dá as moedas e fecha o ciclo; o jogo lê na próxima abertura.
+var D=null,APP_URL='../app/';
+TGPonte.instalarGoogle();
+function qs(k){try{return new URL(location.href).searchParams.get(k)||'';}catch(x){return '';}}
+function e(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+var ICOP={alerta:'<path d="M12 3.5 21.5 20h-19z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 10v4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1.1" fill="currentColor"/>',
+  ok:'<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 12.3l2.8 2.8L16.2 9.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'};
+function ico(k,s){s=s||18;return '<svg viewBox="0 0 24 24" width="'+s+'" height="'+s+'" aria-hidden="true" focusable="false">'+(ICOP[k]||ICOP.ok)+'</svg>';}
+var toastT=null;
+function toast(t,tipo){var el=document.getElementById('toast');if(!el)return;el.textContent=t;el.className='on'+(tipo=='erro'?' erro':'');clearTimeout(toastT);toastT=setTimeout(function(){el.className=tipo=='erro'?'erro':'';},3600);}
+// chamada ao servidor no jeito do app (o código do aluno vai na frente): resposta com "erro" vira aviso e cai no falhou
+function call(fn,args,ok,falhou){google.script.run.withSuccessHandler(function(r){if(r&&r.erro){toast(r.erro,'erro');if(falhou)falhou(r.erro);return;}if(ok)ok(r);})
+  .withFailureHandler(function(er){var m=String((er&&er.message)||'');toast(m&&!/rede|resposta/.test(m)?m:'Sem conexão. Tenta de novo?','erro');if(falhou)falhou(m);})[fn].apply(null,[D.codigo].concat(args||[]));}
+// sair volta pro app (o rascunho fica salvo); "j" abre o app direto na Jornada, onde aparece o que acabou de ser enviado
+function sair(j){if(typeof fxCamParar=='function')fxCamParar();if(typeof MODO!='undefined'&&MODO=='an'){location.href='../';return;}var c=(D&&D.codigo)||qs('a');try{if(j)sessionStorage.setItem('aba','jornada');}catch(x){}location.href=APP_URL+(c?'?a='+encodeURIComponent(c):'');}
+function fxHist(){try{history.pushState({fx:1},'',location.href);}catch(x){}}
+window.addEventListener('popstate',function(){if(typeof MODO!='undefined'&&MODO=='an'?anVoltar():(typeof fxVoltar=='function'&&fxVoltar()))return;sair();});
+function telaMsg(t,txt,tentar){var b=document.getElementById('fxsh');b.onclick=function(ev){var x=ev.target.closest('button');if(!x)return;if(x.dataset.tentar)iniciar();else if(x.dataset.app)sair();};
+  b.innerHTML='<div class="fx2-body"><div class="fx-msg"><h1>'+e(t)+'</h1><p>'+e(txt)+'</p>'+(tentar?'<button type="button" class="bt" data-tentar="1">Tentar de novo</button>':'')+'<button type="button" class="bt sec" style="margin-top:10px" data-app="1">Ir pro app TEAM GO!</button></div></div>';}
+function iniciar(){if(qs('f')=='protocolo')return iniciarProtocolo();if(qs('f')=='anamnese')return iniciarAnamnese();var c=qs('a');
+  if(!/^[A-Za-z0-9_-]{4,60}$/.test(c))return telaMsg('Abra pelo app','A atualização do físico abre pelo botão "Fazer minha atualização", no seu app TEAM GO!.');
+  document.getElementById('fxsh').innerHTML='<div class="fx-msg"><div class="fx-spin"></div><p class="mut">Abrindo sua ficha…</p></div>';
+  google.script.run.withSuccessHandler(function(r){
+    if(!r||r.erro)return telaMsg('Link não encontrado','Abra a atualização pelo botão "Fazer minha atualização", no seu app TEAM GO!.');
+    D={codigo:c,primeiro:r.primeiro||'',f:!!r.f,ciclo:{n:r.ciclo||''},evolucao:r.evolucao||[],links:{whats:r.whats||''},fotos:r.fotos||'',rosto:r.rosto!==false,roupa:r.roupa||''};iniciarFicha();
+  }).withFailureHandler(function(){telaMsg('Não consegui conectar','Confere a internet e tenta de novo. O que você já preencheu continua salvo neste celular.',true);}).alunoFichaInicio(c);}
+// FXUP: pra onde a foto sobe (a anamnese troca pela anamneseFoto)
+var FXUP={fn:'alunoFisicoFoto',args:function(p,b64){return [D.codigo,p,b64];}};
+var FX=null,FXC=null,FXA={},FXU=-1,FXDIR=0,FXNUM='',FXPCT=0,FXP=['intro','peso','medidas','roupa','adesao','fome','cardio','refeicoes','alimentacao','percepcao','recuperacao','treino','preparo','fotos','extra','revisar'];
+// passos em 5 etapas com nome; botão fixo embaixo; as 3 fotos numa tela; cartões de resposta com ícone; revisão com "Editar"
+// v25 (fim da tarde): fotos por último (o mais difícil no fim) e o jeito de acompanhar escolhido no começo:
+// sem fotos pula o passo das fotos e ganha a "roupa de prova"; as medidas viram obrigatórias.
+var FXE=[['Corpo',['intro','peso','medidas','roupa']],['Seu mês',['adesao','fome','cardio','refeicoes','alimentacao','percepcao']],['Treino',['recuperacao','treino']],['Fotos',['preparo','fotos']],['Enviar',['extra','revisar']]];
+function fxPula(p){return p=='roupa'?FX.modo!='sem':p=='fotos'||p=='preparo'?FX.modo=='sem':false;}
+function fxEtapas(){return FXE.map(function(x){return [x[0],x[1].filter(function(p){return !fxPula(p);})];}).filter(function(x){return x[1].length;});}
+var FXT={frente:'Foto de frente',costas:'Foto de costas',lado:'Foto do lado direito',livre:'Foto extra'};
+var FXN={frente:'Frente',costas:'Costas',lado:'Lado direito',livre:'Foto extra'};
+var FXD={frente:'Braços colados ao corpo, sem contrair. Tem que dar pra ver pés, joelhos, quadril e ombros.',costas:'Braços colados ao corpo, sem contrair. Tem que dar pra ver pés, joelhos, quadril e ombros.',lado:'Braços levantados à frente, formando um ângulo reto com o tronco.'};
+var FXM=[['cintura','Cintura',40,200],['quadril','Quadril',50,200],['braco','Braço',15,70],['coxa','Coxa',25,110]];
+var FXMK={cintura:'ci',quadril:'q',braco:'b',coxa:'x'};
+var FXMW={cintura:'Na altura do umbigo, sem encolher a barriga',quadril:'Na parte mais larga do glúteo',braco:'No meio, entre ombro e cotovelo',coxa:'No meio, entre virilha e joelho'};
+var FXQ={escura:'Ficou escura: acende a luz ou chega perto de uma janela.',clara:'Ficou clara demais: evite luz forte de frente pra câmera ou atrás de você.',tremida:'Parece tremida: apoie o celular em algum lugar e use o timer.',deitada:'Deixe o celular em pé (na vertical), como nas outras vezes.'};
+var FXNF=['Não deu pra seguir','Quase nada','Quase nada','Segui pouco','Segui pouco','Metade do caminho','Mais da metade','Segui boa parte','Segui quase tudo','Segui muito bem','Segui tudo'];
+var FXI={x:'<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>',
+  volta:'<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  gh:'<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 20V10a7 7 0 0 1 14 0v10l-2.4-1.8L14.3 20 12 18.2 9.7 20l-2.3-1.8z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><circle cx="9.5" cy="10.5" r="1.3" fill="#fff"/><circle cx="14.5" cy="10.5" r="1.3" fill="#fff"/></svg>',
+  vira:'<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4.5 9.5A8 8 0 0 1 18.8 7M19.5 14.5A8 8 0 0 1 5.2 17" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/><path d="M19.4 3.2v4.4H15M4.6 20.8v-4.4H9" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>'};
+// ícones de traço da ficha (32×32, cor do texto)
+function fxSvg(d,s){s=s||28;return '<svg viewBox="0 0 32 32" width="'+s+'" height="'+s+'" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>';}
+var FXCIRC='<circle cx="16" cy="16" r="11"/>',FXESC='<path d="M16 4l10 4v7c0 7-4.5 11-10 13C10.5 26 6 22 6 15V8z"/>';
+var FXO={
+  med:function(n){var a=[[8.6,17.8],[16,14],[23.4,17.8]][n];return fxSvg('<path d="M5 24a11 11 0 0 1 22 0"/><path d="M16 24L'+a[0]+' '+a[1]+'"/><circle cx="16" cy="24" r="1.8" fill="currentColor" stroke="none"/>');},
+  onda:function(){return fxSvg('<path d="M4 16c2-6 4-6 6 0s4 6 6 0 4-6 6 0 4 6 6 0"/>');},
+  ok:function(){return fxSvg(FXCIRC+'<path d="M11 16.5l3.5 3.5 6.5-7"/>');},
+  suor:function(){return fxSvg('<circle cx="15" cy="17" r="10"/><path d="M10.5 17.5l3 3 5.5-6"/><path d="M26.5 3.5c-1.8 2.6-2.7 4-2.7 5.3a2.7 2.7 0 0 0 5.4 0c0-1.3-.9-2.7-2.7-5.3z" fill="currentColor" stroke="none"/>');},
+  xis:function(){return fxSvg(FXCIRC+'<path d="M12 12l8 8M20 12l-8 8"/>');},
+  traco:function(){return fxSvg(FXCIRC+'<path d="M11 16h10"/>');},
+  prato:function(n){var p=[[],[[16,16]],[[13,16],[19,16]],[[12.6,17.6],[19.4,17.6],[16,12.6]]][n];return fxSvg('<circle cx="16" cy="16" r="12"/><circle cx="16" cy="16" r="7.5" stroke-width="1.5" opacity=".55"/>'+p.map(function(q){return '<circle cx="'+q[0]+'" cy="'+q[1]+'" r="2" fill="currentColor" stroke="none"/>';}).join(''));},
+  seta:function(t){return fxSvg({c2:'<path d="M9 15l7-7 7 7M9 23l7-7 7 7"/>',c:'<path d="M16 25V8M9 15l7-7 7 7"/>',l:'<path d="M6 16h19M18 9l7 7-7 7"/>',b:'<path d="M16 7v17M9 17l7 7 7-7"/>'}[t]);},
+  bat:function(n){var r='';for(var i=0;i<4;i++)if(i<n)r+='<rect x="'+(7.2+i*4.4)+'" y="13" width="3" height="6" rx=".6" fill="currentColor" stroke="none"/>';return fxSvg('<rect x="4" y="10" width="21" height="12" rx="3"/><path d="M28 14v4"/>'+r);},
+  escOk:function(){return fxSvg(FXESC+'<path d="M11.5 16l3 3 6-6.5"/>');},
+  escX:function(){return fxSvg(FXESC+'<path d="M12.5 12.5l7 7M19.5 12.5l-7 7"/>');},
+  sol:function(s){return fxSvg('<path d="M4 23h24M9 23a7 7 0 0 1 14 0M16 8v3M8.6 11.6l2 2M23.4 11.6l-2 2M4.5 18h2M25.5 18h2"/>',s);},
+  luz:function(s){return fxSvg('<path d="M12 21c-2.4-2-4-4.2-4-7.2a8 8 0 0 1 16 0c0 3-1.6 5.2-4 7.2zM12.5 25h7M14 28.5h4"/>',s);},
+  cel:function(s){return fxSvg('<rect x="9.5" y="3.5" width="13" height="25" rx="2.5"/><path d="M14.5 24.5h3"/>',s);},
+  relogio:function(s){return fxSvg(FXCIRC+'<path d="M16 10v6l4 3"/>',s);},
+  camera:function(s){return fxSvg('<path d="M4.5 11h5l2-3.5h9l2 3.5h5v14h-23z"/><circle cx="16" cy="18" r="4.5"/>',s);},
+  lista:function(s){return fxSvg('<path d="M12 9h14M12 16h14M12 23h9"/><circle cx="6.5" cy="9" r="1.4" fill="currentColor" stroke="none"/><circle cx="6.5" cy="16" r="1.4" fill="currentColor" stroke="none"/><circle cx="6.5" cy="23" r="1.4" fill="currentColor" stroke="none"/>',s);},
+  gota:function(s){return fxSvg('<path d="M16 4.5c-4.2 6-7 9.4-7 13a7 7 0 0 0 14 0c0-3.6-2.8-7-7-13z"/>',s);},
+  balanca:function(s){return fxSvg('<rect x="5" y="6" width="22" height="20" rx="4"/><path d="M11 12.5h10M16 12.5l2.5-2.5"/>',s);},
+  video:function(s){return fxSvg('<rect x="3.5" y="8" width="17" height="16" rx="3"/><path d="M20.5 14l8-4.5v13l-8-4.5"/>',s);}
+};
+function fxKey(){return 'tg_ficha_'+D.codigo;}
+function fxSalvar(){if(typeof MODO!='undefined'&&MODO=='an')return anSalvar();try{localStorage.setItem(fxKey(),fxRascunho(FX,['antPed','th','ant','antD']));}catch(x){}}
+function fxNovo(){return {v:3,t:Date.now(),p:0,ref:Date.now().toString(36)+Math.random().toString(36).slice(2,8),modo:D.fotos||'',rosto:D.rosto!==false,roupa:'',roupaQual:D.roupa||'',aut:null,fotos:{},th:{},st:{},q:{},peso:'',med:{},med2:{},adesao:null,just:'',fome:'',fomeTxt:'',cardio:'',cardioTxt:'',refl:'',reflTxt:'',perc:'',percTxt:'',recup:'',recupTxt:'',vol:'',volTxt:'',tempo:'',carga:'',cargaTxt:'',obs:'',frutas:'',ultra:'',agua:'',nutri:''};}
+function fxVibra(ms){try{if(navigator.vibrate)navigator.vibrate(ms||8);}catch(x){}}
+function iniciarFicha(){
+  try{FX=JSON.parse(localStorage.getItem(fxKey())||'null');}catch(x){}
+  // rascunho velho não serve: os passos mudaram de lugar (v3: fotos por último e o jeito de acompanhar)
+  if(!FX||FX.v!==3||!FX.ref||FX.fim||Date.now()-(FX.t||0)>12*864e5)FX=fxNovo();
+  if(!(FX.p>=0&&FX.p<FXP.length))FX.p=0;
+  FX.env=false;FX.rv=0;FX.st=FX.st||{};FX.q=FX.q||{};FX.med2=FX.med2||{};FX.th={};FX.ant=null;FXR=null;Object.keys(FX.st).forEach(function(k){if(FX.st[k]=='env')FX.st[k]=FX.fotos[k]?'ok':'';});
+  while(FX.p>0&&fxPula(FXP[FX.p]))FX.p--;fxSalvar();
+  FXU=-1;FXA={};var sh=document.getElementById('fxsh');sh.onclick=fxClique;sh.oninput=fxDigitou;fxTela();fxAnteriores();fxHist();
+}
+// fotos do último envio (miniaturas do Drive), pra guiar o enquadramento e comparar antes × agora
+function fxAnteriores(){if(!FX||FX.ant||FX.antPed||FX.modo=='sem')return;FX.antPed=1;
+  google.script.run.withSuccessHandler(function(r){if(!FX)return;FX.antPed=0;FX.ant=(r&&r.fotos)||{};FX.antD=(r&&r.d)||'';fxSalvar();if(!FXC)fxTela();}).withFailureHandler(function(){if(FX)FX.antPed=0;}).alunoFisicoAnteriores(D.codigo);}
+function fxNumero(x){var t=String(x==null?'':x).trim().replace(',','.');if(!t)return NaN;var n=Number(t);return isFinite(n)?n:NaN;}
+// média das 2 medidas de cada ponto (protocolo: mede 2 vezes; se a diferença passar de 1 cm, mede a 3ª e corrige)
+function fxMedia(k){var a=fxNumero(FX.med[k]),b=fxNumero(FX.med2[k]);if(isNaN(a))return NaN;return isNaN(b)?a:Math.round((a+b)*5)/10;}
+function fxMed4(){return FXM.every(function(m){var v=fxMedia(m[0]);return v>=m[2]&&v<=m[3];});}
+function fxMedOk(){return FXM.every(function(m){var v=fxMedia(m[0]),a=FX.med[m[0]];return (a===undefined||a==='')||(v>=m[2]&&v<=m[3]);});}
+function fxTemMed(){return FXM.some(function(m){return String(FX.med[m[0]]||'').trim()||String(FX.med2[m[0]]||'').trim();});}
+function fxPode(p){if(p=='intro')return FXMODOS.indexOf(FX.modo)>=0;
+  if(p=='preparo')return fxCheckOk(FX,FX.modo,D.f)&&FX.aut=='sim';
+  if(p=='fotos')return FX.aut=='sim'&&['frente','costas','lado'].every(function(k){return FX.st[k]=='ok'&&!!FX.fotos[k];});
+  if(p=='roupa')return !!FX.roupa;
+  if(p=='peso'){var n=fxNumero(FX.peso);return n>=30&&n<=300;}
+  if(p=='medidas')return fxMedOk()&&(FX.modo!='sem'||fxMed4());
+  if(p=='adesao')return FX.adesao!=null;if(p=='fome')return !!FX.fome;if(p=='cardio')return !!FX.cardio;if(p=='refeicoes')return !!FX.refl;if(p=='alimentacao')return !!FX.frutas&&!!FX.ultra&&!!FX.agua;if(p=='percepcao')return !!FX.perc;if(p=='recuperacao')return !!FX.recup;
+  if(p=='treino')return !!FX.vol&&!!FX.carga&&(FX.vol!='Sim'||!!FX.tempo);if(p=='extra')return FX.st.livre!='env';return true;}
+// o que falta pra continuar (aparece em cima do botão, sem culpar)
+function fxFalta(p){if(p=='intro')return 'Escolha como prefere ser acompanhad'+(D.f?'a':'o')+'.';
+  if(p=='preparo')return !fxCheckOk(FX,FX.modo,D.f)?'Confira e marque os 5 itens do preparo.':'Responda a autorização de uso das fotos.';
+  if(p=='fotos'||p=='extra'){var ps=p=='extra'?['livre']:['frente','costas','lado'];if(ps.some(function(k){return FX.st[k]=='env';}))return 'Esperando a foto subir…';var n=ps.filter(function(k){return !(FX.st[k]=='ok'&&FX.fotos[k]);}).length;if(!n&&p=='fotos')return 'Responda a autorização das fotos.';return n==1?'Falta 1 foto.':'Faltam '+n+' fotos.';}
+  if(p=='medidas'&&FX.modo=='sem'&&fxMedOk())return 'Sem fotos, as 4 medidas são o seu acompanhamento: preencha as 4.';
+  if(p=='roupa')return 'Diga como a roupa ficou.';
+  if(p=='peso')return String(FX.peso||'').trim()?'O peso precisa ficar entre 30 e 300 kg.':'Digite o seu peso pra continuar.';
+  if(p=='medidas')return 'Tem medida fora do comum: confere o número.';
+  if(p=='adesao')return 'Toque numa nota de 0 a 10.';
+  if(p=='alimentacao')return 'Responda as 3 perguntas pra continuar.';
+  if(p=='treino')return FX.vol=='Sim'&&!FX.tempo&&FX.carga?'Falta dizer se tem tempo pras séries a mais.':'Responda as perguntas pra continuar.';
+  return 'Escolha uma opção pra continuar.';}
+function fxRotulo(p){return FX.rv?'Salvar e revisar':p=='intro'?'Começar':p=='medidas'&&!fxTemMed()&&FX.modo!='sem'?'Pular':'Continuar';}
+function fxEtapa(p){var E=fxEtapas();for(var i=0;i<E.length;i++){var j=E[i][1].indexOf(p);if(j>=0)return {i:i,j:j,n:E[i][1].length};}return {i:0,j:0,n:1};}
+function fxOpc(k,v,t,s,m){var on=FX[k]===v;return '<button type="button" class="fx-op'+(on?' on':'')+'" data-fxk="'+k+'" data-fxc="'+e(v)+'" aria-pressed="'+on+'"><span class="fx-opr" aria-hidden="true"></span><span class="fx-opt"><b>'+e(t)+'</b>'+(s?'<small>'+e(s)+'</small>':'')+'</span>'+(m||'')+'</button>';}
+function fxSeg(k,ops){return '<div class="an-seg" role="group" style="grid-template-columns:repeat('+ops.length+',minmax(0,1fr))">'+ops.map(function(v){var on=FX[k]===v;return '<button type="button" class="'+(on?'on':'')+'" data-fxk="'+k+'" data-fxc="'+e(v)+'" aria-pressed="'+on+'">'+e(v)+'</button>';}).join('')+'</div>';}
+function fxOps(a){return '<div class="fx-ops" role="group">'+a.join('')+'</div>';}
+function fxSN(k,a,b){return '<div class="fx-sn" role="group">'+[a||'Sim',b||'Não'].map(function(v){var on=FX[k]===v;return '<button type="button" class="'+(on?'on':'')+'" data-fxk="'+k+'" data-fxc="'+e(v)+'" aria-pressed="'+on+'"><span class="fx-opr" aria-hidden="true"></span>'+e(v)+'</button>';}).join('')+'</div>';}
+// medidor à direita da resposta quando ela é uma escala (pouca → muita, cansado → recuperado)
+function fxMed(n,max){var r='<span class="fx-mt" aria-hidden="true">';for(var i=1;i<=max;i++)r+='<i class="'+(i<=n?'on':'')+'" style="height:'+Math.round(5+i*13/max)+'px"></i>';return r+'</span>';}
+function fxGlifo(d){return '<span class="fx-mt" aria-hidden="true">'+fxSvg(d,22)+'</span>';}
+function fxH(t){return '<h1>'+(FXNUM?'<span class="fx-n">'+FXNUM+'</span>':'')+t+'</h1>';}
+function fxTxt(k,rot){return '<label class="fx-l">'+rot+'<textarea class="fx-in" data-fxi="'+k+'" rows="3" maxlength="600">'+e(FX[k])+'</textarea></label>';}
+// comentário opcional fica atrás de um toque (tela mais limpa); se já tem texto, aparece aberto
+function fxCom(k,rot){return FX[k]||FXA[k]?fxTxt(k,'Seu comentário <span class="mut">(opcional)</span>'):'<button type="button" class="fx-add" data-fxcom="'+k+'">+ '+rot+'</button>';}
+function fxNum(x){return String(x).replace('.',',');}
+function fxTemCam(){return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);}
+function fxCorNota(i){return 'hsl('+Math.round(i*12)+','+(i>3&&i<8?62:56)+'%,'+(i>3&&i<8?40:44)+'%)';}
+function fxAvs(p){var q=FX.q[p];return q&&FX.st[p]=='ok'?['escura','clara','tremida','deitada'].filter(function(k){return q[k];}):[];}
+// cartão de foto (3:4): contorno-guia com a foto do ciclo passado clarinha atrás, ou a miniatura; selo de status no canto
+function fxFotoCard(p){var st=FX.st[p]||'',avs=fxAvs(p),ant=FX.ant&&FX.ant[p],lv=p=='livre',th=FX.th[p],nm=FXN[p],env=st=='env';
+  var at=lv?'data-fxgal="livre"':fxTemCam()?'data-fxguia="'+p+'"':'data-fxcam="'+p+'"';
+  var cl=(th?' tem':'')+(st=='ok'?(avs.length?' av':' ok'):st=='erro'?' er':'');
+  var vis=th?'<img src="'+th+'" alt="">':lv?'<span class="fx-fmais">+</span>':(ant&&st!='ok'?'<img class="fx-gh0" src="'+ant+'" alt="">':'')+poseSvg(p)+(st=='ok'?'':'<span class="fx-ftap">'+FXO.camera(18)+'</span>');
+  var bd=env?'<span class="fx-fb env"><span class="fx-spin sm"></span></span>':st=='ok'?(avs.length?'<span class="fx-fb av">!</span>':'<span class="fx-fb ok">✓</span>'):st=='erro'?'<span class="fx-fb er">!</span>':'';
+  var stx=env?'Enviando…':st=='ok'?(avs.length?'Enviada, veja o aviso':'Enviada'):st=='erro'?'Não foi. Toque de novo':lv?'Toque pra escolher':'Toque pra tirar';
+  return '<div class="fx-fi"><button type="button" class="fx-fc'+cl+'" '+at+(env?' disabled':'')+' aria-label="'+(th?'Trocar a ':'Tirar a ')+(lv?'foto extra':'foto de '+nm.toLowerCase())+'"><span class="fx-fv">'+vis+'</span>'+bd+'</button>'+
+    '<div class="fx-fl"><b>'+nm+'</b><small class="'+(st=='ok'&&!avs.length?'ok':st=='erro'?'er':'')+'">'+stx+'</small>'+(lv?'':'<button type="button" class="fx-gal" data-fxgal="'+p+'"'+(env?' disabled':'')+'>Galeria</button>')+'</div></div>';}
+// conferência das 3 fotos num bloco só, embaixo dos cartões
+function fxQualResumo(){var ps=['frente','costas','lado'],tem=[];ps.forEach(function(k){fxAvs(k).forEach(function(a){tem.push('<p>'+ico('alerta',16)+'<span><b>'+FXN[k]+':</b> '+FXQ[a]+'</span></p>');});});
+  if(tem.length)return '<div class="fx-qual">'+tem.join('')+'<small class="mut">Pra avaliação ficar confiável, tire de novo a foto com aviso. Fica valendo a última.</small></div>';
+  if(ps.every(function(k){return FX.st[k]=='ok'&&FX.q[k];}))return '<div class="fx-qual ok"><p>'+ico('ok',16)+' Luz, nitidez e posição boas nas 3 fotos.</p></div>';return '';}
+var FXPF='M45 30.5C45 35 41 37 35 39C29 41 26 45 25.5 52C25 62 24 72 23.5 80C23 88 22 96 22.5 103C22.7 108 24 111 25.6 110C27 109 27.4 106 27.6 103C28 96 29.2 88 29.8 80C30.3 72 31 63 32.5 56C33.5 64 33.5 72 34.3 80C35 86 34 93 32.5 100C31.5 108 32 118 33.5 130C34.5 138 35.5 144 35.5 150C35 158 34 166 35.5 178C36 182 36 186 35 189C33 191 33.5 193 36 193L42.5 193C43.5 192 43.5 189 43 186C43 176 44 164 44.2 152C44.5 142 46 128 47.5 116C48.2 112 49 110.5 50 110C51 110.5 51.8 112 52.5 116C54 128 55.5 142 55.8 152C56 164 57 176 57 186C56.5 189 56.5 192 57.5 193L64 193C66.5 193 67 191 65 189C64 186 64 182 64.5 178C66 166 65 158 64.5 150C64.5 144 65.5 138 66.5 130C68 118 68.5 108 67.5 100C66 93 65 86 65.7 80C66.5 72 66.5 64 67.5 56C69 63 69.7 72 70.2 80C70.8 88 72 96 72.4 103C72.6 106 73 109 74.4 110C76 111 77.3 108 77.5 103C78 96 77 88 76.5 80C76 72 75 62 74.5 52C74 45 71 41 65 39C59 37 55 35 55 30.5Z',FXPL='M44.4 30C41.6 36 38.8 44 38.8 54C38.8 66 41.6 76 40.9 86C40.2 92 36 98 35.3 106C34.6 114 37.4 120 39.5 126C41.6 136 42.3 146 41.6 154C40.2 160 38.1 166 38.8 174C39.5 180 41.6 184 41.6 188C41.6 191 43 193 47.2 193L66.4 193C67.4 191 65.9 189 61.2 188C57 187 55.6 186 54.9 182C54.2 174 55.6 164 56.3 156C57 152 58.4 148 57.7 144C58.4 136 61.2 126 60.5 116C59.8 108 61.2 100 62.6 94C64 86 63.3 80 61.9 74C62.6 70 64 66 64 62L64 57L96.4 57C99.4 57 100.4 55.5 100.4 53C100.4 50.5 99.4 49 96.4 49L61.2 49C59.1 42 57 36 55.6 31Z';
+// contorno-guia. Na câmera: tracejado branco com uma borda escura por baixo, pra aparecer em parede clara e escura
+function poseSvg(p,cam){var vb=p=='lado'?'0 0 104 200':'0 0 100 200',fs=p=='lado'?[['ellipse','cx="52" cy="19" rx="10.5" ry="12"'],['path','d="'+FXPL+'"']]:[['ellipse','cx="50" cy="19" rx="10" ry="12"'],['path','d="'+FXPF+'"']];
+  var des=function(at){return fs.map(function(f){return '<'+f[0]+' '+f[1]+' '+at+'/>';}).join('');};
+  if(cam)return '<svg viewBox="'+vb+'" aria-hidden="true">'+des('fill="none" stroke="rgba(0,0,0,.45)" stroke-width="5" stroke-linejoin="round" vector-effect="non-scaling-stroke"')+des('fill="rgba(255,255,255,.06)" stroke="#fff" stroke-width="2.5" stroke-dasharray="9 6" stroke-linejoin="round" vector-effect="non-scaling-stroke"')+'</svg>';
+  return '<svg viewBox="'+vb+'" aria-hidden="true">'+des('style="fill:var(--sf2);stroke:currentColor" stroke-width="1.5" stroke-linejoin="round"')+(p=='costas'?'<path d="M50 36V98" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2.5 3" opacity=".7"/>':'')+'</svg>';}
+// onde passar a fita (protocolo da OMS e da ISAK adaptado pra medir em casa)
+function fxMapaMedidas(){var L=function(y,x1,x2,t,c,ly){return '<path d="M'+x1+' '+y+'H'+x2+'" stroke="'+c+'" stroke-width="2.6" stroke-linecap="round"/><path d="M'+(x2+3)+' '+y+'L92 '+(ly-4)+'H98" stroke="'+c+'" stroke-width="1" fill="none" opacity=".6"/><text x="101" y="'+ly+'" fill="'+c+'" font-size="10.5" font-weight="600">'+t+'</text>';};
+  return '<svg class="fx-mapa" viewBox="0 0 200 200" aria-hidden="true">'+poseSvg('frente').replace(/^<svg[^>]*>|<\/svg>$/g,'')+L(66,22,33,'Braço (meio)','#3B82F6',56)+L(84,32,68,'Cintura (umbigo)','#E11D48',84)+L(104,30,70,'Quadril (mais largo)','#16A34A',108)+L(132,31,49,'Coxa (meio)','#D97706',138)+'</svg>';}
+function fxAvisoPeso(){var ev=D.evolucao||[],u=ev[ev.length-1],pn=fxNumero(FX.peso);return u&&pn>=30&&pn<=300&&Math.abs(pn-u.p)>3?ico('alerta',16)+' Mudou '+fxNum(Math.round(Math.abs(pn-u.p)*10)/10)+' kg desde '+e(u.d)+'. Confere o número? Se estiver certo, pode seguir.':'';}
+// diferença pro último envio, embaixo do número grande (só a seta: subir ou descer não é bom nem ruim por si só)
+function fxDifPeso(){var ev=D.evolucao||[],u=ev[ev.length-1],pn=fxNumero(FX.peso),ok=pn>=30&&pn<=300;if(!u)return '';
+  var d=ok?Math.round((pn-u.p)*10)/10:0,t=!ok?'Da última vez: <b>'+fxNum(u.p)+' kg</b> em '+e(u.d):d===0?'Igual ao último envio ('+e(u.d)+')':'<b>'+(d<0?'↓ ':'↑ ')+fxNum(Math.abs(d))+' kg</b> desde '+e(u.d);
+  var c=Math.round(u.p),lo=c-5,hi=c+5,pos=function(x){return Math.max(0,Math.min(100,(x-lo)*10));},pu=pos(u.p),ph=ok?pos(pn):-99,perto=Math.abs(pu-ph)<16;
+  return '<div class="fx-rg" aria-hidden="true"><div class="fx-rgr"><i class="fx-rgm" style="left:'+pu.toFixed(1)+'%">'+(perto?'':'<b>'+e(String(u.d).slice(0,5))+'</b>')+'</i>'+(ok?'<i class="fx-rgm hj" style="left:'+ph.toFixed(1)+'%"><b>hoje</b></i>':'')+'</div><div class="fx-rgl"><span>'+lo+'</span><span>'+c+' kg</span><span>'+hi+'</span></div></div><span>'+t+'</span>';}
+function fxLinhaMed(m){var ev=D.evolucao||[],u=ev[ev.length-1],a=FX.med[m[0]],v=fxMedia(m[0]),dif=Math.abs(fxNumero(a)-fxNumero(FX.med2[m[0]])),ruim=!isNaN(v)&&(v<m[2]||v>m[3]),ul=u&&u[FXMK[m[0]]];
+  return {v:isNaN(v)?'—':fxNum(v),c:ruim?' fe':dif>1?' fa':'',w:ruim?m[1]+' fora do comum ('+m[2]+' a '+m[3]+' cm). Confere?':dif>1?'Diferença de '+fxNum(Math.round(dif*10)/10)+' cm: meça a 3ª vez e corrija a que destoou.':ul&&!isNaN(v)&&Math.abs(v-ul)>4?'Mudou '+fxNum(Math.round(Math.abs(v-ul)*10)/10)+' cm desde o último envio. Confere a fita?':''};}
+function fxRevCard(t,n,ir,linhas,extra){return '<div class="fx-rc"><div class="fx-rch"><b><i>'+n+'</i>'+t+'</b><button type="button" class="fx-ed" data-fxir="'+FXP.indexOf(ir)+'">Editar</button></div>'+(extra||'')+linhas.map(function(r){return '<div class="row"><span class="mut">'+r[0]+'</span><b>'+e(r[1])+'</b></div>';}).join('')+'</div>';}
+function fxCorpo(p){var ev=D.evolucao||[],u=ev[ev.length-1],h='',o=D.f?'a':'o';
+  if(FX.fim){var z=function(x){return ('0'+x).slice(-2);},t=new Date();
+    return '<div class="fx-fim"><div class="fx-okc">'+fxSvg('<path d="M8.5 16.5l5 5 10-11" stroke-width="2.6"/>',44)+'</div><h1>Recebi tudo'+(D.primeiro?', '+e(D.primeiro):'')+'!</h1><p>Seu relatório de evolução e o treino novo chegam em até 72 horas úteis. As moedas do ciclo já entraram no seu TEAM GO!.</p>'+
+      '<dl class="fx-recibo"><div><dt>Ciclo</dt><dd>'+e(D.ciclo&&D.ciclo.n||'')+'</dd></div><div><dt>Enviado</dt><dd>'+z(t.getDate())+'/'+z(t.getMonth()+1)+' às '+t.getHours()+'h'+z(t.getMinutes())+'</dd></div></dl><button type="button" class="bt" data-x="j">Ver no TEAM GO!</button></div>';}
+  if(FX.env)return '<div class="fx-env"><div class="fx-spin"></div><b>Enviando e montando seu relatório…</b><p class="small mut">Leva uns 20 segundos. Não feche esta página.</p></div>';
+  if(p=='intro'){var sem=FX.modo=='sem';return '<h1>Fim do ciclo'+(D.ciclo&&D.ciclo.n?' '+D.ciclo.n:'')+'</h1><p class="fx-lead">'+(D.primeiro?e(D.primeiro)+', com':'Com')+' isso eu ajusto seu protocolo e monto seu relatório de evolução, em até 72 horas úteis. Quanto mais detalhe, melhor.</p>'+
+    '<dl class="fx-dl"><div><dt>Tempo</dt><dd>5 min</dd></div><div><dt>Fotos</dt><dd>'+(sem?'Nenhuma':'3')+'</dd></div><div><dt>Perguntas</dt><dd>'+(sem?'12':'11')+'</dd></div></dl>'+
+    fxPostura(0)+'<p class="fx-q">Como você prefere ser acompanhad'+o+'?</p><p class="small mut fx-sub">A roupa é escolha sua; o protocolo das fotos é um só. Todas as opções valem as mesmas moedas, e dá pra trocar no próximo ciclo.</p>'+fxModoOps(D.f)+(sem?fxSemNota(0):'')+
+    '<p class="small mut fx-dica">Pode sair e voltar depois: o que você preencher fica salvo neste celular.</p>'+
+    '<div class="fx-prot"><b>Protocolo: todo ciclo igual, pra comparar de verdade</b>'+[[FXO.sol(22),'De manhã, em jejum, depois de ir ao banheiro'],[FXO.luz(22),sem?'Mesma fita, mesma balança, mesma roupa de prova':'Mesmo lugar, mesma luz, mesma roupa'],[FXO.cel(22),sem?'Fita justa, sem apertar, reta e paralela ao chão':'Celular em pé e parado, na altura da cintura, uns 3 metros de você']].map(function(x){return '<div class="fx-pi">'+x[0]+'<span>'+x[1]+'</span></div>';}).join('')+(sem?'':'<small>A câmera guiada ajuda: mostra a silhueta, a sua foto do ciclo passado por cima e se o celular está reto.</small>')+'</div>'+
+    '<details class="fx-como"><summary>Quem vê suas fotos</summary>'+fxQuemVe(true)+'</details>';}
+  // 22/10 noite (Gui): preparo conferido item por item e autorização ANTES da câmera
+  if(p=='preparo')return fxH('Preparo das fotos')+fxPorque()+fxProtocolo(FX.modo,D.f)+
+    '<p class="fx-q">Antes de abrir a câmera, confira</p><p class="small mut fx-sub">Toque em cada item quando estiver pronto.</p>'+fxChecklist(FX,FX.modo,D.f)+fxQuemVe(true)+
+    '<p class="fx-q">Autorização de uso das fotos e vídeos</p>'+fxOps([fxOpc('aut','sim','Autorizo, nas condições acima','Uso só pra sua avaliação e o seu acompanhamento'),fxOpc('aut','nao','Não autorizo','Sigo sem fotos, pelas medidas')]);
+  if(p=='fotos'){var cam=fxTemCam();
+    return fxH('Suas 3 fotos')+'<p class="fx-lead">'+(FX.modo?e(fxModoNome(FX.modo))+'. ':'')+'Siga a ordem: frente, costas e lado direito, sem mexer o celular entre uma foto e outra. '+(cam?'Toque em cada quadro pra abrir a câmera guiada.':'Toque em cada quadro pra tirar a foto.')+'</p><div class="fx-fg">'+['frente','costas','lado'].map(fxFotoCard).join('')+'</div>'+fxQualResumo()+
+      fxRostoLinha()+fxComoTirar(FX.modo,D.f,false)+
+      '<button type="button" class="fx-add" data-fxsemfoto="1">Prefiro seguir sem fotos</button>';}
+  if(p=='peso')return fxH('Seu peso')+'<p class="fx-lead">Em jejum, de manhã, depois de ir ao banheiro.</p><label class="fx-kgw"><input class="fx-kg" data-fxi="peso" inputmode="decimal" autocomplete="off" placeholder="0,0" aria-label="Peso em jejum, em quilos" value="'+e(FX.peso)+'"><span>kg</span></label>'+
+    '<div class="fx-pd" id="fxpd">'+fxDifPeso()+'</div><p class="fx-warn" id="fxpw"'+(fxAvisoPeso()?'':' hidden')+'>'+fxAvisoPeso()+'</p>'+
+    '<ul class="fx-prot2">'+[[FXO.sol(18),'De manhã'],[FXO.relogio(18),'Em jejum'],[FXO.gota(18),'Depois do banheiro'],[FXO.balanca(18),'Sempre a mesma balança']].map(function(x){return '<li>'+x[0]+'<span>'+x[1]+'</span></li>';}).join('')+'</ul>';
+  if(p=='medidas'){h=fxH('Medidas com fita')+'<p class="fx-lead">'+(FX.modo=='sem'?'Sem fotos, as 4 medidas são o seu acompanhamento. Em centímetros':'Opcional, em centímetros')+'. Meça 2 vezes cada ponto e o app faz a média. Se der mais de 1 cm de diferença, meça a 3ª vez.</p>'+
+    '<details class="fx-como"><summary>Onde passar a fita</summary>'+fxMapaMedidas()+'<ul class="fx-lista"><li><b>Cintura:</b> na altura do umbigo, no fim de uma expiração normal, sem encolher a barriga</li><li><b>Quadril:</b> na parte mais larga do glúteo, pés juntos</li><li><b>Braço:</b> no meio, entre o ombro e o cotovelo, relaxado</li><li><b>Coxa:</b> no meio, entre a virilha e o joelho, em pé</li><li>Fita justa, sem apertar a pele, reta (paralela ao chão)</li></ul></details>';
+    return h+'<div class="fx-tb"><div class="fx-th"><span></span><small>1ª</small><small>2ª</small><small>Média</small></div>'+FXM.map(function(m){var x=fxLinhaMed(m),ul=u&&u[FXMK[m[0]]];
+      return '<div class="fx-tw"><div class="fx-tr"><div class="fx-tn"><b>'+m[1]+'</b><small>'+FXMW[m[0]]+'</small>'+(ul?'<small class="fx-ult">Última: '+fxNum(ul)+' cm</small>':'')+'</div>'+
+        '<input data-fxm="'+m[0]+'" inputmode="decimal" autocomplete="off" aria-label="'+m[1]+', 1ª medida em cm" value="'+e(FX.med[m[0]]||'')+'"><input data-fxm2="'+m[0]+'" inputmode="decimal" autocomplete="off" aria-label="'+m[1]+', 2ª medida em cm" value="'+e(FX.med2[m[0]]||'')+'">'+
+        '<span class="fx-mv'+x.c+'" id="fxmv_'+m[0]+'">'+x.v+'</span></div><p class="fx-mw'+(x.c==' fe'?' er':'')+'" id="fxmw_'+m[0]+'">'+x.w+'</p></div>';}).join('')+'</div>';}
+  if(p=='roupa')return fxH('Sua roupa de prova')+'<p class="fx-lead">Uma roupa justa que você usa sempre, tipo uma calça jeans. Todo ciclo você veste a mesma e me conta como ficou: mostra a mudança que a balança não mostra.</p>'+
+    '<label class="fx-l">Qual roupa? <span class="mut">(opcional)</span><input class="fx-in" data-fxi="roupaQual" maxlength="80" autocomplete="off" placeholder="Ex.: calça jeans azul" value="'+e(FX.roupaQual)+'"></label>'+
+    '<p class="fx-q">Como ela ficou agora?</p>'+fxOps([fxOpc('roupa','Mais folgada','Mais folgada','',fxGlifo('<path d="M16 7v17M9 17l7 7 7-7"/>')),fxOpc('roupa','Igual','Igual','',fxGlifo('<path d="M6 16h19M18 9l7 7-7 7"/>')),fxOpc('roupa','Mais apertada','Mais apertada','',fxGlifo('<path d="M16 25V8M9 15l7-7 7 7"/>')),fxOpc('roupa','Primeira vez','É a primeira vez','A partir de agora, essa é a sua roupa de prova')]);
+  if(p=='adesao'){var a=FX.adesao;h=fxH('Como foi o ciclo?')+'<p class="fx-q">De 0 a 10, quanto você conseguiu seguir o plano?</p><p class="small mut">Seja sincer'+o+': não é prova, é pra eu ajustar.</p>'+
+    '<div class="fx-nt">'+(a==null?'<b class="fx-ntv vz">?</b><span>Toque numa nota</span>':'<b class="fx-ntv" style="color:'+fxCorNota(a)+'">'+a+'</b><span>'+FXNF[a]+'</span>')+'</div>'+
+    '<div class="fx-eq" role="group" aria-label="Nota de 0 a 10" style="--w:'+(a==null?'0%':((a+.5)*100/11).toFixed(2)+'%')+';--cv:'+(a==null?'var(--red)':fxCorNota(a))+'">';
+    for(var i=0;i<=10;i++)h+='<button type="button" class="'+(a===i?'on':a!=null&&i<a?'ate':'')+'" data-fxa="'+i+'" aria-pressed="'+(a===i)+'" aria-label="Nota '+i+'" style="--c:'+fxCorNota(i)+'">'+i+'</button>';
+    return h+'</div><div class="fx-eql"><span>Não segui</span><span>Segui tudo</span></div>'+(a!=null&&a<=7?fxTxt('just','Quer contar o que pegou? <span class="mut">(opcional)</span>'):'');}
+  if(p=='fome')return fxH('E a fome?')+'<p class="fx-q">Como está a sua fome no dia a dia?</p>'+fxOps([fxOpc('fome','Pouca','Pouca','Quase não sinto fome',fxMed(1,3)),fxOpc('fome','Normal','Normal','Sinto nas horas das refeições',fxMed(2,3)),fxOpc('fome','Muita','Muita','Fico com fome boa parte do dia',fxMed(3,3)),fxOpc('fome','Varia muito','Varia muito','Tem dia de um jeito, dia de outro',fxGlifo('<path d="M4 16c2-6 4-6 6 0s4 6 6 0 4-6 6 0 4 6 6 0"/>'))])+fxCom('fomeTxt','Adicionar um comentário');
+  if(p=='cardio')return fxH('E o cardio?')+'<p class="fx-q">Está conseguindo fazer o cardio combinado?</p>'+fxOps([fxOpc('cardio','Fazendo tranquilo','Fazendo tranquilo','Cabe bem na rotina'),fxOpc('cardio','Fazendo, mas está puxado','Fazendo, mas está puxado','Faço, mas está pesando'),fxOpc('cardio','Não estou conseguindo','Não estou conseguindo','Ficou fora da rotina'),fxOpc('cardio','Não tenho cardio no plano','Não tenho cardio no plano','')])+fxCom('cardioTxt','Adicionar um comentário');
+  if(p=='refeicoes')return fxH('Refeições livres')+'<p class="fx-q">Quantas refeições livres você fez no mês?</p><p class="small mut fx-sub">Refeição fora do seu normal: festa, rodízio, pizza, lanche. Não é proibida, só me ajuda a entender o resultado.</p>'+fxOps([fxOpc('refl','Nenhuma','Nenhuma','',fxMed(0,3)),fxOpc('refl','Poucas (1 ou 2)','Poucas (1 ou 2)','No mês todo',fxMed(1,3)),fxOpc('refl','Uma por semana','Uma por semana','',fxMed(2,3)),fxOpc('refl','Mais de uma por semana','Mais de uma por semana','',fxMed(3,3))])+fxCom('reflTxt','Contar como foram as escolhas');
+  // v25: retrato da alimentação do mês (as mesmas perguntas da anamnese, pra comparar). Não é dieta: quem monta dieta é nutricionista.
+  if(p=='alimentacao')return fxH('Sua alimentação')+'<div class="fx-box"><b>Não é dieta.</b> É só um retrato do mês, com as mesmas perguntas da anamnese, pra eu acompanhar junto com o treino.</div>'+
+    '<p class="fx-q">Frutas, verduras e legumes</p>'+fxSeg('frutas',['Quase todo dia','Algumas vezes na semana','Quase nunca'])+
+    '<p class="fx-q">Fast food, doce ou refrigerante</p>'+fxSeg('ultra',['Quase nunca','1 a 2 vezes na semana','Quase todo dia'])+
+    '<p class="fx-q">Água por dia</p>'+fxSeg('agua',['Menos de 1 litro','1 a 2 litros','Mais de 2 litros'])+
+    '<p class="fx-q">Nutricionista <span class="mut">(opcional)</span></p>'+fxSeg('nutri',['Já tenho','Quero uma indicação','Agora não'])+(FX.nutri=='Quero uma indicação'?'<p class="small mut fx-sub">Combinado: te passo um contato de confiança pelo app.</p>':'');
+  if(p=='percepcao')return fxH('Seu físico')+'<p class="fx-q">Como você percebeu as mudanças no seu físico este mês?</p>'+fxOps([fxOpc('perc','Mudou bastante','Mudou bastante','Dá pra ver no espelho e na roupa',fxGlifo('<path d="M9 15l7-7 7 7M9 23l7-7 7 7"/>')),fxOpc('perc','Mudou um pouco','Mudou um pouco','Começando a aparecer',fxGlifo('<path d="M16 25V8M9 15l7-7 7 7"/>')),fxOpc('perc','Ficou igual','Ficou igual','Não notei diferença',fxGlifo('<path d="M6 16h19M18 9l7 7-7 7"/>')),fxOpc('perc','Piorou','Piorou','Senti que andei pra trás',fxGlifo('<path d="M16 7v17M9 17l7 7 7-7"/>'))])+fxCom('percTxt','Contar o que você notou');
+  if(p=='recuperacao')return fxH('Recuperação')+'<p class="fx-q">Como está sua recuperação entre um treino e outro?</p>'+fxOps([fxOpc('recup','100% recuperad'+o,'100% recuperad'+o,'Chego inteir'+o+' no próximo treino',fxMed(4,4)),fxOpc('recup','Quase sempre recuperad'+o,'Quase sempre recuperad'+o,'',fxMed(3,4)),fxOpc('recup','Às vezes cansad'+o,'Às vezes cansad'+o,'',fxMed(2,4)),fxOpc('recup','Quase sempre cansad'+o,'Quase sempre cansad'+o,'O cansaço passa de um treino pro outro',fxMed(1,4))])+fxCom('recupTxt','Contar mais');
+  if(p=='treino')return fxH('Seu treino')+'<div class="fx-qb"><p class="fx-q">Sente que dá pra fazer mais séries em algum músculo?</p>'+fxSN('vol')+
+    (FX.vol=='Sim'?fxTxt('volTxt','Qual(is) músculo(s)?')+'<p class="fx-q">Tem tempo pra essas séries a mais?</p>'+fxSN('tempo','Tenho tempo','Não tenho tempo'):'')+'</div>'+
+    '<div class="fx-qb"><p class="fx-q">Está com dificuldade de aumentar a carga em algum exercício?</p>'+fxSN('carga')+(FX.carga=='Sim'?fxTxt('cargaTxt','Em qual exercício?'):'')+'</div>';
+  if(p=='extra')return fxH('Mais alguma coisa?')+'<p class="fx-lead">Tudo aqui é opcional.</p>'+fxTxt('obs','Gostaria de acrescentar algo?')+
+    (FX.modo=='sem'?'':'<p class="fx-q">Foto extra <span class="mut">(opcional)</span></p><p class="small mut fx-sub">Quer que eu veja algum ponto de perto? Uma assimetria, um incômodo, um detalhe da postura. Mesmo lugar e mesma luz das outras fotos.</p><div class="fx-fg um">'+fxFotoCard('livre')+'</div>')+
+    '<a class="fx-wa" href="'+e((D.links||{}).whats||'#')+'" target="_blank" rel="noopener">'+FXO.video(26)+'<span><b>Mandar vídeo de exercício</b><small>Pelo WhatsApp, pra eu corrigir a execução</small></span></a>';
+  var fo=['frente','costas','lado'].filter(function(k){return FX.fotos[k];}).length,md=FXM.filter(function(m){return !isNaN(fxMedia(m[0]));}).map(function(m){return m[1]+' '+fxNum(fxMedia(m[0]));}).join(' · ');
+  var mi='<div class="fx-rth">'+['frente','costas','lado','livre'].filter(function(k){return FX.th[k];}).map(function(k){return '<img src="'+FX.th[k]+'" alt="'+FXN[k]+'">';}).join('')+'</div>';
+  return fxH('Tudo certo?')+'<p class="fx-lead">Confere antes de enviar. Dá pra mudar qualquer parte.</p>'+fxComparar()+'<div class="fx-rev">'+
+    fxRevCard('Corpo',1,'peso',[['Peso em jejum',fxNum(FX.peso)+' kg'],['Medidas',md||'Não mediu']].concat(FX.modo=='sem'?[['Roupa de prova',(FX.roupaQual?FX.roupaQual+': ':'')+FX.roupa]]:[]))+
+    fxRevCard('Seu mês',2,'adesao',[['Nota do ciclo',FX.adesao+' de 10'],['Fome',FX.fome],['Cardio',FX.cardio],['Refeições livres',FX.refl],['Frutas e verduras',FX.frutas],['Fast food e doce',FX.ultra],['Água por dia',FX.agua]].concat(FX.nutri?[['Nutricionista',FX.nutri]]:[]).concat([['Físico',FX.perc]]))+
+    fxRevCard('Treino',3,'recuperacao',[['Recuperação',FX.recup],['Mais séries',FX.vol+(FX.vol=='Sim'&&FX.tempo?' · '+FX.tempo:'')],['Travou na carga',FX.carga]])+
+    (FX.modo=='sem'?fxRevCard('Acompanhamento',4,'intro',[['Jeito','Sem fotos: medidas, peso e roupa de prova']]):
+      fxRevCard('Fotos',4,'fotos',[['Jeito',fxModoNome(FX.modo)+(FX.rosto!==false?', rosto coberto':'')],['Fotos',fo+' de 3'+(FX.fotos.livre?' + 1 livre':'')],['Autorização',FX.aut=='sim'?'Autorizado':'Não autorizado']],mi))+'</div><p class="small mut fx-dica">Ao enviar, seu ciclo fecha e as moedas do ciclo entram na hora.</p>';}
+// antes × agora: arrasta a barra pra ver a diferença (fotos pequenas, só no seu celular)
+function fxComparar(){var a=FX.ant||{},ps=['frente','costas','lado'].filter(function(k){return a[k]&&FX.th[k];});if(!ps.length)return '';var p=ps[0];
+  return '<div class="fx-cmp"><div class="fx-cmpw" style="--x:50%"><img src="'+a[p]+'" alt="Ciclo passado"><img class="fx-cmpn" src="'+FX.th[p]+'" alt="Agora"><span class="fx-cmpl">Antes'+(FX.antD?' · '+e(FX.antD):'')+'</span><span class="fx-cmpr">Agora</span><i class="fx-cmpb"></i></div><input type="range" min="0" max="100" value="50" data-fxcmp="1" aria-label="Comparar antes e agora"></div>'+
+    (ps.length>1?'<div class="fx-cmpt">'+ps.slice(1).map(function(k){return '<div><img src="'+a[k]+'" alt=""><img src="'+FX.th[k]+'" alt=""><small>'+FXN[k]+': antes e agora</small></div>';}).join('')+'</div>':'');}
+// topo (voltar, marca, sair) + fita métrica das 5 etapas, miolo que rola e botão fixo embaixo
+function fxTela(){var b=document.getElementById('fxsh');if(!b||!FX)return;if(FXC)return fxCamTela();if(FXR)return fxRostoTela();if(typeof MODO!='undefined'&&MODO=='an')return anTela();
+  var p=FXP[FX.p],E=fxEtapas(),fim=FX.fim||FX.env,et=fim?{i:E.length,j:0,n:1}:fxEtapa(p),corpo=b.querySelector('.fx2-body'),mesmo=FXU===FX.p&&!fim,sc=mesmo&&corpo?corpo.scrollTop:0;
+  FXNUM=fim||p=='intro'?'':(et.i+1)+'.'+(et.j+(et.i===0?0:1));
+  var pct=fim?100:Math.round((et.i+(et.j+1)/et.n)/E.length*1000)/10,p0=FXPCT;FXPCT=pct;
+  var h='<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><button type="button" class="fx2-ic" data-fxv="1" aria-label="Voltar"'+(FX.p&&!fim?'':' hidden')+'>'+FXI.volta+'</button><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>Atualização do físico</b></div><button type="button" class="fx2-sair" data-x="1" aria-label="Sair e voltar pro app">Sair</button></div>';
+  h+='<div class="fita" style="--p:'+p0+'%" aria-hidden="true"><i class="fita-reg"></i><i class="fita-cheia"></i><i class="fita-mk"></i><div class="fita-et">'+E.map(function(x,i){return '<span class="'+(i<et.i?'ok':i==et.i?'cur':'')+'">'+x[0]+'</span>';}).join('')+'</div></div></div></div>';
+  h+='<div class="fx2-body"><div class="fx-pg'+(mesmo?'':' an'+(FXDIR<0?' vt':''))+'" data-pg="'+p+'">'+fxCorpo(p)+'</div></div>';
+  if(!fim){var r=p=='revisar',pd=fxPode(p);h+='<div class="fx2-foot"><div class="fx2-in"><p class="fx2-hint" id="fxhint" aria-live="polite">'+(r||pd?'':fxFalta(p))+'</p>'+(r?'<button type="button" class="bt" data-fxe="1">Enviar</button>':'<button type="button" class="bt" data-fxn="1"'+(pd?'':' disabled')+'>'+fxRotulo(p)+'</button>')+'</div></div>';}
+  b.innerHTML=h;FXU=FX.p;FXDIR=0;var fi=b.querySelector('.fita');if(fi){if(p0===pct)fi.style.setProperty('--p',pct+'%');else requestAnimationFrame(function(){requestAnimationFrame(function(){fi.style.setProperty('--p',pct+'%');});});}var nb=b.querySelector('.fx2-body');if(nb&&sc)nb.scrollTop=sc;}
+function fxProx(){if(!FX)return;var p=FXP[FX.p],b=document.querySelector('#fxsh [data-fxn]'),hi=document.getElementById('fxhint'),ok=fxPode(p);if(b){b.disabled=!ok;b.textContent=fxRotulo(p);}if(hi)hi.textContent=ok?'':fxFalta(p);}
+// medidas e peso: atualiza só a média e os avisos enquanto digita (os campos ficam, o teclado não fecha)
+function fxRedesenhaPeso(t){var pw=document.getElementById('fxpw');if(pw){var a=fxAvisoPeso();pw.innerHTML=a;pw.hidden=!a;}var pd=document.getElementById('fxpd');if(pd)pd.innerHTML=fxDifPeso();
+  FXM.forEach(function(m){var x=fxLinhaMed(m),v=document.getElementById('fxmv_'+m[0]),w=document.getElementById('fxmw_'+m[0]);if(v){v.textContent=x.v;v.className='fx-mv'+x.c;}if(w){w.textContent=x.w;w.className='fx-mw'+(x.c==' fe'?' er':'');}});}
+function fxDigitou(ev){var t=ev.target;if(!FX||!document.getElementById('fxsh')||!t.dataset)return;var d=t.dataset;
+  if(d.fxcmp){var w=t.parentNode.querySelector('.fx-cmpw');if(w)w.style.setProperty('--x',t.value+'%');return;}
+  if(d.fxi)FX[d.fxi]=t.value;else if(d.fxm)FX.med[d.fxm]=t.value;else if(d.fxm2)FX.med2[d.fxm2]=t.value;else return;fxSalvar();
+  var p=FXP[FX.p];if(p=='peso'||p=='medidas')fxRedesenhaPeso(t);fxProx();}
+function fxIr(i,dir){while(i>0&&i<FXP.length-1&&fxPula(FXP[i]))i+=dir<0?-1:1;FXDIR=dir;FX.p=Math.max(0,Math.min(FXP.length-1,i));fxSalvar();fxTela();}
+// botão voltar do celular dentro da ficha: fecha a câmera ou volta um passo (a ficha só fecha no passo 1)
+function fxVoltar(){if(!FX||!document.getElementById('fxsh'))return false;
+  if(FXC){fxCamFechar();fxHist();return true;}
+  if(FXR){FXR=null;fxTela();fxHist();return true;}
+  if(!FX.fim&&!FX.env&&FX.p>0){FX.rv=0;fxIr(FX.p-1,-1);fxHist();return true;}return false;}
+function fxClique(ev){var t=ev.target,sx=t.closest&&t.closest('[data-x]');if(sx){sair(sx.dataset.x=='j');return;}
+  var b=t.closest&&t.closest('button');if(!b||b.disabled)return;var d=b.dataset;
+  if(d.fxcx){fxCamFechar();return;}if(d.fxtira){fxCamTirar();return;}if(d.fxvira){FXC.fac=FXC.fac=='user'?'environment':'user';fxCamTela();fxCamLigar();return;}
+  if(d.fxgh){FXC.ghost=!FXC.ghost;var gi=document.querySelector('#fxsh .fx-gh');if(gi)gi.hidden=!FXC.ghost;b.classList.toggle('on',FXC.ghost);return;}
+  if(d.fxtm!=null){FXC.tim=Number(d.fxtm);try{localStorage.setItem('tg_fxtim',d.fxtm);}catch(x){}[].forEach.call(document.querySelectorAll('#fxsh [data-fxtm]'),function(x){x.classList.toggle('on',x===b);});var ct=document.querySelector('#fxsh .fx-ct');if(ct)ct.textContent=fxCamTexto();return;}
+  if(d.fxn){fxVibra();if(FX.rv){FX.rv=0;fxIr(FXP.indexOf('revisar'),1);}else fxIr(FX.p+1,1);return;}
+  if(d.fxv){FX.rv=0;fxIr(FX.p-1,-1);return;}
+  if(d.fxir!=null){FX.rv=1;fxIr(Number(d.fxir),-1);return;}
+  if(d.fxcom){FXA[d.fxcom]=1;fxTela();var ta=document.querySelector('#fxsh [data-fxi="'+d.fxcom+'"]');if(ta)ta.focus();return;}
+  if(d.fxrok){fxRostoOk();return;}if(d.fxrnao){fxRostoNao();return;}
+  if(d.fxrosto){FX.rosto=FX.rosto===false;fxVibra(6);fxSalvar();fxTela();return;}
+  if(d.fxapaga){fxPedirApagar(b);return;}
+  if(d.fxchk){FX.chk=FX.chk||{};FX.chk[d.fxchk]=!FX.chk[d.fxchk];fxVibra(6);fxSalvar();fxTela();return;}
+  if(d.fxsemfoto||(d.fxk=='aut'&&d.fxc=='nao')){if(!confirm(FXSEMQ))return;fxVibra(6);fxSemFotos();toast('Combinado: sem fotos. As medidas viram o seu acompanhamento.');fxIr(!fxMed4()?FXP.indexOf('medidas'):!FX.roupa?FXP.indexOf('roupa'):FXP.indexOf('extra'),fxMed4()&&FX.roupa?1:-1);return;}
+  if(d.fxk=='modo'&&d.fxc!='sem'&&FX.aut=='nao')FX.aut=null;
+  if(d.fxk){fxVibra(6);FX[d.fxk]=d.fxc;fxSalvar();fxTela();if(d.fxk=='modo')fxAnteriores();return;}
+  if(d.fxa!=null){fxVibra(6);FX.adesao=Number(d.fxa);fxSalvar();fxTela();return;}
+  if(d.fxguia){fxCamAbrir(d.fxguia);return;}
+  if(d.fxcam||d.fxgal){fxPegar(d.fxcam||d.fxgal,!!d.fxcam);return;}
+  if(d.fxe)fxEnviar();}
+// v25: pedido pra apagar todas as fotos guardadas. Vai pro painel do Gui, que confirma com 1 toque (lixeira do Drive).
+function fxPedirApagar(b){if(!D||!D.codigo){toast('Peça no WhatsApp do Gui.');return;}
+  if(!confirm('Pedir pra apagar todas as suas fotos guardadas? O Guilherme confirma e te avisa no app.'))return;
+  b.disabled=true;b.textContent='Enviando…';call('alunoFotosApagar',[],function(){b.textContent='Pedido enviado';toast('Pedido enviado. Te aviso no app quando estiver feito.');},function(){b.disabled=false;b.textContent='Apagar minhas fotos';});}
+// ---- câmera guiada
+function fxCamAbrir(p){var tim=0;try{tim=Number(localStorage.getItem('tg_fxtim')||0)||0;}catch(x){}FXC={p:p,fac:'environment',tim:tim,ghost:true};fxCamTela();fxCamLigar();fxNivelLigar();}
+function fxCamLigar(){var c=FXC;if(!c)return;if(c.st){c.st.getTracks().forEach(function(t){t.stop();});c.st=null;}
+  navigator.mediaDevices.getUserMedia({video:{facingMode:c.fac,width:{ideal:1920},height:{ideal:1440}},audio:false}).then(function(st){
+    if(FXC!==c){st.getTracks().forEach(function(t){t.stop();});return;}c.st=st;var v=document.getElementById('fxv');if(v){v.srcObject=st;v.play().catch(function(){});}
+  }).catch(function(){if(FXC!==c)return;var p=c.p;fxCamFechar();toast('A câmera não abriu aqui. Vou usar a câmera do celular.','erro');fxPegar(p,true);});}
+function fxCamParar(){if(FXC&&FXC.st)FXC.st.getTracks().forEach(function(t){t.stop();});if(FXC)FXC.st=null;window.removeEventListener('deviceorientation',fxNivel);}
+function fxCamFechar(){fxCamParar();FXC=null;fxTela();}
+function fxCamTela(){var b=document.getElementById('fxsh');if(!b||!FXC)return;var c=FXC,ant=FX.ant&&FX.ant[c.p];
+  b.innerHTML='<div class="fx-cam"><div class="fx-vw"><video id="fxv" playsinline muted autoplay'+(c.fac=='user'?' class="esp"':'')+'></video>'+(ant?'<img class="fx-gh" src="'+ant+'" alt=""'+(c.ghost?'':' hidden')+'>':'')+'<i class="fx-vg"></i><div class="fx-sil">'+poseSvg(c.p,1)+'</div><div class="fx-gl" style="top:10%"><span>Topo da cabeça</span></div><div class="fx-gl pe" style="top:90%"><span>Pés</span></div><div class="fx-lvl" id="fxlvl" hidden><i></i></div><div class="fx-cd" id="fxcd" hidden></div><span class="fx-ctit">'+FXT[c.p]+'</span></div>'+
+    '<div class="fx-cbar"><button class="fx-cb" data-fxcx="1" aria-label="Fechar a câmera">'+FXI.x+'</button><div class="fx-tm" role="group" aria-label="Timer">'+[0,5,10].map(function(t){return '<button class="'+(c.tim==t?'on':'')+'" data-fxtm="'+t+'">'+(t?t+' s':'Já')+'</button>';}).join('')+'</div>'+
+    (ant?'<button class="fx-cb'+(c.ghost?' on':'')+'" data-fxgh="1" aria-label="Mostrar a foto do ciclo passado">'+FXI.gh+'</button>':'')+'<button class="fx-cb" data-fxvira="1" aria-label="Trocar de câmera">'+FXI.vira+'</button></div>'+
+    '<button class="fx-disp" data-fxtira="1" aria-label="Tirar a foto"><i></i></button><p class="small mut fx-ct">'+fxCamTexto()+'</p></div>';
+  var v=document.getElementById('fxv');if(v&&c.st){v.srcObject=c.st;v.play().catch(function(){});}}
+function fxCamTexto(){var c=FXC||{},ant=FX&&FX.ant&&FX.ant[c.p];return (FXCP[c.p]?FXCP[c.p]+' Relaxe, sem contrair. ':'')+'Cabeça e pés entre as duas linhas, corpo dentro do contorno. '+(c.tim?'Depois de tocar, você tem '+c.tim+' segundos pra se posicionar.':'Use o timer se for tirar sozinho(a).')+(ant?' A foto clarinha por cima é a do ciclo passado: tente se encaixar nela.':'');}
+function fxNivelLigar(){var on=function(){window.addEventListener('deviceorientation',fxNivel);};
+  try{if(window.DeviceOrientationEvent&&typeof DeviceOrientationEvent.requestPermission=='function')DeviceOrientationEvent.requestPermission().then(function(s){if(s=='granted')on();}).catch(function(){});else if(window.DeviceOrientationEvent)on();}catch(x){}}
+function fxNivel(ev){if(ev.beta==null||!FXC)return;var el=document.getElementById('fxlvl');if(!el)return;el.hidden=false;
+  var db=Math.max(-20,Math.min(20,ev.beta-90)),dg=Math.max(-20,Math.min(20,ev.gamma||0)),ok=Math.abs(db)<5&&Math.abs(dg)<4;
+  el.className='fx-lvl'+(ok?' ok':'');el.firstChild.style.transform='translate('+(dg*1.4)+'px,'+(db*1.4)+'px)';}
+function fxCamTirar(){var c=FXC;if(!c||c.cd)return;
+  var go=function(t0){var v=document.getElementById('fxv');if(FXC!==c)return;t0=t0||Date.now();if(!v||!v.videoWidth){if(Date.now()-t0<2500)return setTimeout(function(){go(t0);},120);toast('A câmera ainda está abrindo. Tenta de novo.','erro');return;}
+    var w=v.videoWidth,h=v.videoHeight,k=Math.min(1,1280/Math.max(w,h)),cv=document.createElement('canvas');cv.width=Math.round(w*k);cv.height=Math.round(h*k);cv.getContext('2d').drawImage(v,0,0,cv.width,cv.height);
+    fxVibra(30);var p=c.p;fxCamParar();FXC=null;fxProcessar(p,cv,true);};
+  if(!c.tim)return go();var n=c.tim,el=document.getElementById('fxcd');c.cd=1;
+  var tick=function(){if(FXC!==c)return;if(n<=0){c.cd=0;if(el)el.hidden=true;go();return;}if(el){el.hidden=false;el.textContent=n;}fxVibra(n<=3?30:8);n--;setTimeout(tick,1000);};tick();}
+// ---- conferência da foto: luz (brilho médio), nitidez (variação do contorno) e celular em pé
+function fxQualidade(c){try{var w=160,h=Math.max(1,Math.round(c.height*160/c.width)),t=document.createElement('canvas');t.width=w;t.height=h;var x=t.getContext('2d');x.drawImage(c,0,0,w,h);
+  var d=x.getImageData(0,0,w,h).data,g=new Float32Array(w*h),s=0,i;for(i=0;i<w*h;i++){g[i]=.299*d[i*4]+.587*d[i*4+1]+.114*d[i*4+2];s+=g[i];}
+  var m=s/(w*h),lap=0,sl=0,n=0;for(var yy=1;yy<h-1;yy++)for(var xx=1;xx<w-1;xx++){var k=yy*w+xx,L=4*g[k]-g[k-1]-g[k+1]-g[k-w]-g[k+w];sl+=L;lap+=L*L;n++;}
+  var vr=n?lap/n-(sl/n)*(sl/n):0;return {escura:m<55,clara:m>215,tremida:vr<30,deitada:c.width>c.height*1.05,m:Math.round(m),v:Math.round(vr)};}catch(e){return null;}}
+function fxPegar(p,cam){var i=document.createElement('input');i.type='file';i.accept='image/*';if(cam)i.setAttribute('capture','environment');i.onchange=function(){if(i.files&&i.files[0])fxFoto(p,i.files[0]);};i.click();}
+function fxFoto(p,f){FX.st[p]='env';fxTela();var url=URL.createObjectURL(f),img=new Image();
+  img.onerror=function(){FX.st[p]='erro';fxTela();toast('Não consegui abrir essa foto. Tenta outra.','erro');};
+  img.onload=function(){var w=img.naturalWidth,h=img.naturalHeight,k=Math.min(1,1280/Math.max(w,h)),c=document.createElement('canvas');c.width=Math.round(w*k);c.height=Math.round(h*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);fxProcessar(p,c);};
+  img.src=url;}
+// v25: com "Esconder meu rosto" ligado, a foto passa pela conferência da faixa antes de subir (a qualidade é medida antes da faixa)
+function fxProcessar(p,c,cam){var q=fxQualidade(c);if(FX.rosto!==false){fxRostoAbrir(p,c,cam,q);return;}fxSobe(p,c,q);}
+function fxSobe(p,c,q){FX.st[p]='env';FX.q[p]=q;
+  var b64=c.toDataURL('image/jpeg',.82).split(',')[1],t=document.createElement('canvas'),tk=Math.min(1,360/Math.max(c.width,c.height));t.width=Math.round(c.width*tk);t.height=Math.round(c.height*tk);t.getContext('2d').drawImage(c,0,0,t.width,t.height);FX.th[p]=t.toDataURL('image/jpeg',.72);fxTela();
+  var vez=0,manda=function(){google.script.run.withSuccessHandler(function(r){if(r&&r.ok){FX.fotos[p]=r.id;FX.st[p]='ok';fxVibra(12);}else{FX.st[p]='erro';delete FX.fotos[p];if(r&&r.erro)toast(r.erro,'erro');}fxSalvar();fxTela();})
+    .withFailureHandler(function(){if(++vez<2)return setTimeout(manda,1500);FX.st[p]='erro';fxSalvar();fxTela();toast('Sem conexão. Tenta de novo?','erro');})[FXUP.fn].apply(null,FXUP.args(p,b64));};manda();}
+function fxEnviar(){FX.env=true;fxTela();var med={};FXM.forEach(function(m){var v=fxMedia(m[0]);if(!isNaN(v))med[m[0]]=v;});
+  call('alunoFisicoEnviar',[{ref:FX.ref,modo:FX.modo,rosto:FX.rosto!==false,roupa:FX.roupa,roupaQual:FX.roupaQual,aut:FX.aut=='sim'&&FX.modo!='sem',fotos:FX.modo=='sem'?{}:FX.fotos,peso:FX.peso,med:med,adesao:FX.adesao,just:FX.just,fome:FX.fome,fomeTxt:FX.fomeTxt,cardio:FX.cardio,cardioTxt:FX.cardioTxt,refl:FX.refl,reflTxt:FX.reflTxt,frutas:FX.frutas,ultra:FX.ultra,agua:FX.agua,nutri:FX.nutri,perc:FX.perc,percTxt:FX.percTxt,recup:FX.recup,recupTxt:FX.recupTxt,vol:FX.vol,volTxt:FX.volTxt,tempo:FX.tempo,carga:FX.carga,cargaTxt:FX.cargaTxt,obs:FX.obs}],
+    function(){FX.env=false;FX.fim=true;fxVibra([20,40,20]);try{localStorage.removeItem(fxKey());}catch(x){}fxTela();},
+    function(er){if(!FX)return;FX.env=false;if(/fotos/.test(er||'')&&FX.modo!='sem'){['frente','costas','lado'].forEach(function(k){FX.st[k]='';delete FX.fotos[k];delete FX.th[k];});FX.p=FXP.indexOf('fotos');}else if(/medidas/.test(er||''))FX.p=FXP.indexOf('medidas');fxSalvar();fxTela();});}
+// varredura 22/10: saiu do app com a câmera aberta (foi no WhatsApp, bloqueou a tela) → fecha a câmera.
+// Assim ela não fica ligada gastando bateria e, na volta, a pessoa não vê a imagem congelada: é só tocar no quadro de novo.
+document.addEventListener('visibilitychange',function(){if(document.hidden&&typeof FXC!='undefined'&&FXC)fxCamFechar();});
+// v25 (22/10 fim da tarde): avaliação postural por fotos, pra ficha do físico e pra anamnese.
+// 22/10 noite (Gui): "avaliação deve ser feita de forma correta e séria, pois isso afeta como vou prescrever".
+// A roupa é escolha da pessoa; o protocolo das fotos é um só, com preparo conferido item por item antes da câmera.
+// Pedido do Gui: tem aluna que não quer (ou não pode) mandar foto de biquíni. Cada pessoa escolhe:
+// roupa de banho, roupa de treino ou sem fotos (medidas, peso e roupa de prova; na anamnese, postura ao vivo na chamada).
+// O Gui só precisa ver pés, joelhos, quadril e ombros: o rosto pode ser coberto no próprio celular antes de subir
+// (a faixa é pintada na foto aqui; o rosto nunca sai do celular). Nenhum texto fala de marido ou ciúme.
+var FXMODOS=['banho','treino','sem'];
+var FXMG={banho:'<path d="M5 12c2.2-3 4.4-3 6.6 0s4.4 3 6.6 0 4.4-3 6.6 0"/><path d="M5 20c2.2-3 4.4-3 6.6 0s4.4 3 6.6 0 4.4-3 6.6 0"/>',
+  treino:'<path d="M11.5 5.5 6 8.5l2.4 5 2.6-1.4V26h10V12.1l2.6 1.4 2.4-5-5.5-3c-.8 2-2.4 3.2-4.5 3.2s-3.7-1.2-4.5-3.2z"/>',
+  sem:'<circle cx="13" cy="15" r="8.5"/><circle cx="13" cy="15" r="2.6"/><path d="M13 23.5h15v-4h-4M18 23.5v-2M23 23.5v-2"/>'};
+function fxModoTxt(m,f,an){return {banho:['Fotos com roupa de banho',f?'Biquíni, ou short e top. Mostra com mais precisão o alinhamento do corpo.':'Sunga ou short, sem camiseta. Mostra com mais precisão o alinhamento do corpo.'],
+  treino:['Fotos com roupa de treino',f?'Bermuda justa acima do joelho (ou legging) e top. O contorno do corpo precisa aparecer.':'Bermuda acima do joelho e regata justa. O contorno do corpo precisa aparecer.'],
+  sem:['Sem fotos',an?'Avalio sua postura ao vivo, na chamada de início, por vídeo. Nada é gravado.':'Acompanho pelas medidas com fita, pelo peso e por uma roupa de prova.']}[m];}
+function fxModoOps(f,an){return '<div class="fx-ops" role="group">'+FXMODOS.map(function(m){var t=fxModoTxt(m,f,an);return fxOpc('modo',m,t[0],t[1],fxGlifo(FXMG[m]));}).join('')+'</div>';}
+// v25 (22/10 noite, pedido do Gui): deixar bem claro que a avaliação da postura é muito importante e muda o ajuste do treino;
+// se mesmo assim a pessoa não quiser foto, tudo bem (sem culpa, sem insistir de novo)
+function fxPostura(an){return '<div class="fx-box fx-post"><b>A avaliação postural orienta a prescrição do seu treino.</b> Pelas fotos eu analiso o alinhamento dos seus pés, joelhos, quadril e ombros'+(an?'':' e comparo com o ciclo anterior')+'. É isso que define quais exercícios entram, como você vai executar cada um e o que precisa ser corrigido. Por isso as fotos seguem um protocolo, sempre igual: só assim elas podem ser comparadas com precisão.<br>Se mesmo assim você preferir não tirar, tudo bem: '+(an?'eu avalio sua postura ao vivo na chamada de início.':'é só escolher "Sem fotos".')+'</div>';}
+function fxSemNota(an){return an?'<div class="fx-box"><b>Combinado.</b> Na chamada de início, por vídeo, eu olho sua postura ao vivo: em pé, de frente, de costas e de lado. Nada é gravado. Se mudar de ideia, as fotos podem vir depois.</div>'
+  :'<div class="fx-box"><b>Combinado.</b> Só lembrando: sem as fotos eu não consigo acompanhar sua postura, e o ajuste do treino fica com menos informação. Se mudar de ideia, é só trocar na próxima atualização.</div>';}
+var FXSEMQ='A avaliação postural orienta a prescrição do seu treino. Quer mesmo seguir sem fotos?';
+function fxModoNome(m){return {banho:'Fotos com roupa de banho',treino:'Fotos com roupa de treino',sem:'Sem fotos'}[m]||'';}
+// roupa e o que precisa aparecer (o Gui olha pés, joelhos, quadril e ombros)
+function fxRoupa(m,f){return m=='treino'?(f?'bermuda justa acima do joelho (ou legging) e top. Sempre a mesma roupa, descalça.':'bermuda acima do joelho e regata justa. Sempre a mesma roupa, descalço.')
+  :(f?'biquíni, ou short e top justos. Descalça.':'sunga ou short de academia, sem camiseta. Descalço.');}
+// v25 (22/10 noite, pedido do Gui): instruções claras, no protocolo de avaliação postural por foto (fotogrametria, linha do SAPO):
+// fundo liso, câmera parada na altura da cintura a uns 3 m, sem zoom, de frente, de costas e de lado direito, postura do dia a dia.
+// O lado com os braços à frente em ângulo reto é o jeito da ficha do Gui (o braço não esconde o quadril). Marca no chão = todo ciclo igual.
+function fxMontagem(){var R='var(--red)';return '<svg class="fx-mont" viewBox="0 0 320 132" role="img" aria-label="Celular parado na altura da cintura, a uns 3 metros, com a pessoa em pé na frente de uma parede lisa">'+
+  '<g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+
+  '<path d="M6 104H314"/><path d="M14 8V104"/><path d="M14 18l-6 6M14 34l-6 6M14 50l-6 6M14 66l-6 6M14 82l-6 6M14 98l-6 6" stroke-width="1" opacity=".55"/>'+
+  '<circle cx="50" cy="24" r="7"/><path d="M50 31V68M50 68l-6 36M50 68l6 36M50 38l-7 26M50 38l7 26"/>'+
+  '<rect x="263" y="52" width="13" height="22" rx="2"/><path d="M269.5 74V84M269.5 84l-11 20M269.5 84l11 20M269.5 84v20"/>'+
+  '<path d="M64 63H258" stroke-dasharray="4 4" opacity=".7"/><path d="M58 118H262M58 114v8M262 114v8"/></g>'+
+  '<path d="M38 104h24M258 104h24" stroke="'+R+'" stroke-width="4"/>'+
+  '<g fill="currentColor" font-size="10.5" font-family="inherit"><text x="160" y="58" text-anchor="middle">altura da cintura</text><text x="160" y="131" text-anchor="middle">uns 3 metros</text>'+
+  '<text x="20" y="12">parede lisa e clara</text></g><text x="50" y="99" text-anchor="middle" font-size="9" fill="'+R+'" dy="16">fita no chão</text></svg>';}
+// as 3 posições, com a linha de referência (fio de prumo) em vermelho
+function fxPoses(){var R='var(--red)',fig=function(x,lado,costas){var g=lado?
+      '<circle cx="'+x+'" cy="22" r="8"/><path d="M'+(x+8)+' 21l3 2-3 1"/><path d="M'+x+' 30V80M'+x+' 39H'+(x+27)+'M'+x+' 80V130M'+(x-3)+' 130H'+(x+12)+'"/>'
+      :'<circle cx="'+x+'" cy="22" r="8"/><path d="M'+x+' 30V78M'+(x-14)+' 38H'+(x+14)+'M'+(x-14)+' 38L'+(x-16)+' 78M'+(x+14)+' 38L'+(x+16)+' 78M'+(x-8)+' 78H'+(x+8)+'M'+(x-7)+' 78L'+(x-7)+' 130M'+(x+7)+' 78L'+(x+7)+' 130M'+(x-11)+' 130H'+(x-4)+'M'+(x+4)+' 130H'+(x+11)+'"/>'+(costas?'<path d="M'+(x-10)+' 44q4 6 1 13M'+(x+10)+' 44q-4 6-1 13" opacity=".7"/>':'');
+    return '<g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+g+'</g><path d="M'+(lado?x+2:x)+' 6V138" stroke="'+R+'" stroke-width="1.2" stroke-dasharray="3 3"/><path d="M'+(x-22)+' 132H'+(x+22)+'" stroke="currentColor" stroke-width="1" opacity=".5"/><path d="M'+(x-13)+' 134H'+(x+13)+'" stroke="'+R+'" stroke-width="3"/>';};
+  return '<svg class="fx-poses" viewBox="0 0 300 158" role="img" aria-label="As 3 fotos: de frente, de costas e com o lado direito virado pra câmera, braços à frente">'+fig(50)+fig(150,0,1)+fig(244,1)+
+    '<g fill="currentColor" font-size="11" font-family="inherit" text-anchor="middle"><text x="50" y="154">1 · Frente</text><text x="150" y="154">2 · Costas</text><text x="250" y="154">3 · Lado direito</text></g></svg>';}
+// o preparo, item por item (a pessoa marca cada um antes de abrir a câmera)
+function fxCheckItens(m,f){var a=f?'a':'o';return [['lugar','Parede lisa e clara atrás de mim, sem objetos, com luz de frente'],['cel','Celular em pé e parado na altura da cintura, a uns 3 metros, sem zoom'],
+  ['chao','Marquei no chão onde ficam os meus pés e o celular'],['roupa','Roupa combinada ('+(m=='treino'?(f?'bermuda justa e top':'bermuda e regata justa'):(f?'roupa de banho':'sunga ou short'))+'), descalç'+a+', cabelo preso e sem acessórios'],
+  ['postura','Vou ficar na postura do meu dia a dia, sem contrair nem “arrumar” o corpo']];}
+function fxCheckOk(o,m,f){var c=(o&&o.chk)||{};return fxCheckItens(m,f).every(function(x){return !!c[x[0]];});}
+function fxChecklist(o,m,f){var c=(o&&o.chk)||{};return '<div class="fx-ck" role="group" aria-label="Preparo das fotos">'+fxCheckItens(m,f).map(function(x){var on=!!c[x[0]];
+  return '<button type="button" class="fx-cki'+(on?' on':'')+'" data-fxchk="'+x[0]+'" role="checkbox" aria-checked="'+on+'"><i aria-hidden="true"></i><span>'+x[1]+'</span></button>';}).join('')+'</div>';}
+function fxProtocolo(m,f){var a=f?'a':'o',n=1;
+  var G=[['Prepare o lugar',['Parede <b>lisa e de cor clara</b> atrás de você, sem móveis nem objetos. Fique uns 30 cm à frente dela.',
+      '<b>Luz de frente ou do lado.</b> Nada de janela ou luz forte atrás de você.',
+      '<b>Marque o chão com uma fita:</b> onde ficam seus pés e onde fica o celular. Assim todo ciclo sai igual e dá pra comparar.']],
+    ['Posicione o celular',['Celular <b>em pé</b> (na vertical), parado num apoio firme ou num tripé, <b>na altura da sua cintura</b>.',
+      'A <b>uns 3 metros</b> de você. Se não couber, o mais longe que der, pegando do topo da cabeça até os pés.',
+      'Câmera de trás, <b>sem zoom, sem filtro e sem espelho</b>. Use o timer ou peça pra alguém tirar.']],
+    ['Seu corpo',['<b>Roupa:</b> '+fxRoupa(m,f)+' Cabelo preso, sem relógio, boné ou meia.',
+      'Em pé e relaxad'+a+': <b>não contraia, não encolha a barriga e não "arrume" a postura.</b> Fique do jeito que você fica no dia a dia.',
+      '<b>Pés paralelos</b>, afastados na largura do quadril, com o <b>peso igual nas duas pernas</b>. Joelhos esticados sem travar. Olhar pra frente, na linha do horizonte.']],
+    ['As 3 fotos',['<b>Frente:</b> de frente pra câmera, braços colados ao corpo.',
+      '<b>Costas:</b> gire no mesmo lugar, sem tirar os pés da marca. Braços colados ao corpo.',
+      '<b>Lado:</b> o <b>lado direito</b> virado pra câmera, braços levantados à frente formando um ângulo reto com o tronco (assim o braço não esconde o quadril).']]];
+  return fxMontagem()+G.map(function(x,i){var h=(i==3?fxPoses():'')+'<p class="fx-pg-t">'+x[0]+'</p><ol class="fx-passos" start="'+n+'">'+x[1].map(function(t){return '<li>'+t+'</li>';}).join('')+'</ol>';n+=x[1].length;return h;}).join('')+
+    '<p class="fx-ok-ver">'+ico('ok',16)+'<span>Em cada foto precisam aparecer, sem nada na frente: <b>pés, joelhos, quadril e ombros.</b></span></p>';}
+// por que o padrão importa (abre o passo do preparo)
+function fxPorque(){return '<p class="fx-lead">Estas fotos são a sua avaliação postural. Feitas sempre do mesmo jeito, elas mostram com precisão o alinhamento do seu corpo e permitem comparar um ciclo com o outro. Foto fora do padrão (de cima, de perto, com zoom ou com o corpo “arrumado”) pode esconder um desvio ou mostrar um que não existe.</p>';}
+// na tela das fotos: o mesmo protocolo, recolhido, pra rever
+function fxComoTirar(m,f,aberto){return '<details class="fx-como fx-prot-foto"'+(aberto?' open':'')+'><summary>Rever o protocolo das fotos</summary>'+fxProtocolo(m,f)+'</details>';}
+// na câmera: o lembrete da pose, curto
+var FXCP={frente:'De frente, braços colados ao corpo.',costas:'De costas: gire no mesmo lugar, pés na marca.',lado:'Lado direito virado pra câmera, braços retos à frente.',livre:''};
+// quem vê as fotos: curto e claro, do tipo que dá pra mostrar pra quem quiser
+function fxQuemVe(apagar){return '<div class="fx-box fx-qv"><b>Quem vê suas fotos</b><ul class="fx-lista">'+
+  '<li>Só eu, Guilherme. Elas vão direto pra uma pasta privada minha.</li>'+
+  '<li>Nunca aparecem no time, no app, em e-mail ou em rede social. Divulgação, só com uma autorização sua pedida à parte.</li>'+
+  '<li>A câmera guiada daqui não salva nada na galeria do seu celular.</li>'+
+  '<li>Uso só pra ver sua postura e sua evolução: pés, joelhos, quadril e ombros.</li>'+
+  '<li>Quer apagar? '+(apagar?'Toque aqui embaixo e eu apago todas.':'É só me pedir no WhatsApp.')+'</li></ul>'+
+  (apagar?'<button type="button" class="fx-add" data-fxapaga="1">Apagar minhas fotos</button>':'')+'</div>';}
+function fxRostoLinha(){var on=FX.rosto!==false;return '<button type="button" class="fx-sw'+(on?' on':'')+'" data-fxrosto="1" role="switch" aria-checked="'+on+'"><span><b>Esconder meu rosto</b><small>O celular cobre o rosto antes de mandar.</small></span><i aria-hidden="true"></i></button>';}
+// ---- faixa no rosto: depois de tirar, a pessoa confere (e ajusta) a faixa; só então a foto sobe
+var FXR=null;
+// câmera guiada: topo da cabeça em 10% e pés em 90% do visor (3:4, cortado pelo "cover"); o queixo fica perto de 20%, os ombros perto de 24%
+function fxRostoPadrao(c,cam){if(!cam)return .18;var A=3/4,F=c.width/c.height,v=.205;return F<A?(1-F/A)/2+v*F/A:v;}
+function fxRostoAbrir(p,c,cam,q){FXR={p:p,c:c,cam:!!cam,q:q,y:fxRostoPadrao(c,cam)};fxRostoTela();}
+function fxFaixa(x,w,h,y){var hy=Math.round(h*y);x.fillStyle='#1d1b19';x.fillRect(0,0,w,hy);
+  var fs=Math.round(Math.max(11,w*.034));if(hy>fs*3){x.fillStyle='rgba(255,255,255,.6)';x.font='600 '+fs+'px system-ui,sans-serif';x.textAlign='center';x.textBaseline='alphabetic';x.fillText('rosto coberto no celular',w/2,hy-fs*.8);}}
+function fxRostoDesenha(){var cv=document.getElementById('fxrc');if(!cv||!FXR)return;var c=FXR.c,k=Math.min(1,900/c.height);cv.width=Math.round(c.width*k);cv.height=Math.round(c.height*k);
+  var x=cv.getContext('2d');x.drawImage(c,0,0,cv.width,cv.height);fxFaixa(x,cv.width,cv.height,FXR.y);}
+function fxRostoTela(){var b=document.getElementById('fxsh');if(!b||!FXR)return;
+  b.innerHTML='<div class="fx-cam fx-rosto"><div class="fx-rv"><canvas id="fxrc"></canvas><span class="fx-ctit">'+FXT[FXR.p]+'</span></div>'+
+    '<p class="fx-rq"><b>O rosto ficou coberto?</b> Arraste até a faixa cobrir o rosto e parar logo acima dos ombros.</p>'+
+    '<input type="range" id="fxry" class="fx-ry" min="4" max="45" step=".5" value="'+(FXR.y*100).toFixed(1)+'" aria-label="Altura da faixa do rosto">'+
+    '<div class="fx-rb"><button type="button" class="bt sec" data-fxrnao="1">Tirar de novo</button><button type="button" class="bt" data-fxrok="1">Mandar esta</button></div></div>';
+  var r=document.getElementById('fxry');if(r)r.oninput=function(){FXR.y=Number(r.value)/100;fxRostoDesenha();};fxRostoDesenha();}
+function fxRostoOk(){var r=FXR;if(!r)return;FXR=null;fxFaixa(r.c.getContext('2d'),r.c.width,r.c.height,r.y);fxSobe(r.p,r.c,r.q);}
+function fxRostoNao(){var r=FXR;FXR=null;if(!r)return;if(r.cam&&fxTemCam())fxCamAbrir(r.p);else fxTela();}
+// sem fotos: "Não autorizo" ou "Prefiro seguir sem fotos" (as fotos que já subiram vão pra lixeira quando a ficha for enviada)
+function fxSemFotos(){FX.modo='sem';FX.aut='nao';['frente','costas','lado','livre'].forEach(function(k){delete FX.fotos[k];delete FX.th[k];FX.st[k]='';});}
+// o rascunho no celular guarda só "foto enviada", nunca a imagem (quem abrir a página no celular não vê foto nenhuma)
+function fxRascunho(o,fora){var c={};for(var k in o)if(fora.indexOf(k)<0)c[k]=o[k];return JSON.stringify(c);}
+// ---- ANAMNESE DE TREINO (v25): pra quem ainda não é aluno. Abre com ?f=anamnese (aceita ?ind=Nome e ?plano=go|premium|presencial|planilha).
+// Amigável de propósito: quase tudo por toque, perguntas que só aparecem quando fazem sentido, rascunho no celular,
+// mapa do corpo pras dores, triagem de saúde com "Nenhum destes" num toque e fotos que podem ficar pra depois.
+// Alimentação: só retrato de hábitos, não é dieta (prescrever dieta é só pra nutricionista).
+var AN=null,MODO='',ANU=-1,ANDIR=0,ANPCT=0,ANA={},ANNUM='';
+var ANE=[['Você',['boas','nome','contato','plano']],['Treino',['pratica','onde','treinoatual','nivel','aparelhos']],['Saúde',['corpo','parq','dores','horm','habitos']],
+  ['Rotina',['sono','estresse','agenda','alim1','alim2']],['Objetivo',['objetivo','prioridade','preferencias']],['Enviar',['postura','protocolo','fotos','regras','revisar']]];
+var ANP=[].concat.apply([],ANE.map(function(x){return x[1];}));
+var ANKEY='tg_anamnese',ANWA='5565993497692',ANCK='tg_anconv',ANPL={go:'Consultoria GO!',premium:'GO! Premium',presencial:'Presencial',planilha:'Planilha com vídeos'};
+var ANPLANOS=[['Consultoria GO!','Online, treino no app e acompanhamento'],['GO! Premium','Online, com acompanhamento mais de perto'],['Presencial','Personal presencial em Cuiabá'],['Planilha com vídeos','Treino em planilha, com vídeos dos exercícios'],['Ainda não fechei','Tudo bem: a gente conversa depois']];
+var ANATIV=['Musculação','Corrida ou caminhada','Funcional ou CrossFit','Lutas','Esporte coletivo','Pilates ou yoga','Bike','Natação'];
+var ANAP=[['Costas',['Pullover Machine','T-Bar Row','Remada Pronada e/ou neutra','Remada alta','Remada baixa']],['Peito',['Supino reto máquina','Supino declinado máquina','Supino reto deitado máquina','Supino inclinado máquina','Chest Dips']],
+  ['Ombros',['Desenvolvimento máquina (bateria de pesos)','Desenvolvimento máquina (plate loaded)','Elevação lateral máquina']],['Pernas',['Pendulum Squat','Hack Squat','Leg Press Horizontal','Elevação Pélvica','Hip Press','Belt Squat']]];
+var ANPARQ=['Um médico já disse que você tem problema no coração ou pressão alta','Sente dor no peito em repouso, no dia a dia ou quando faz exercício','Perdeu o equilíbrio por tontura ou desmaiou nos últimos 12 meses',
+  'Tem outra doença crônica (ex.: diabetes, asma, tireoide)','Toma remédio de uso contínuo por alguma doença crônica','Tem (ou teve nos últimos 12 meses) problema em osso, articulação ou músculo que pode piorar com exercício',
+  'Um médico já disse que você só deve fazer exercício com supervisão médica'];
+// mapa do corpo: [nome, pontos (x,y) no desenho de frente]
+var ANDOR=[['Pescoço',[[50,33]]],['Ombros',[[35,41],[65,41]]],['Cotovelos',[[26.5,80],[73.5,80]]],['Punhos e mãos',[[25,104],[75,104]]],['Coluna ou lombar',[[50,76]]],['Quadril',[[37,102],[63,102]]],['Joelhos',[[40,150],[60,150]]],['Tornozelos e pés',[[39.5,186],[60.5,186]]]];
+var ANMUSC=['Costas','Peito','Ombros','Bíceps','Tríceps','Pernas (quádriceps)','Posterior de coxa','Glúteos','Panturrilha','Abdômen'];
+var ANFRASE=['Péssimo','Muito ruim','Ruim','Ruim','Mais ou menos','Mais ou menos','Razoável','Bom','Bom','Muito bom','Excelente'];
+var ANSTR=['Zero','Bem baixo','Baixo','Baixo','Moderado','Moderado','Alto','Alto','Muito alto','Muito alto','No limite'];
+
+function anNovo(){return {v:1,t:Date.now(),t0:Date.now(),p:0,ref:'an'+Date.now().toString(36)+Math.random().toString(36).slice(2,10),site:'',nome:'',versao:'',whats:'',email:'',nascD:'',nascM:'',nascA:'',plano:'',dur:'',ind:'',
+  sit:'',ativ:[],ativOutro:'',esporteTxt:'',onde:'',freq:null,divisao:'',treinoTxt:'',nivel:'',tecnica:'',aparelhos:[],naoSeiAp:false,faltaMaq:'',
+  altura:'',peso:'',parq:[],parqNada:false,parqTxt:'',dores:[],doresNada:false,doresTxt:'',horm:'',hormTxt:'',fuma:'',alcool:'',
+  sono:null,horas:7,estresse:null,energia:'',dias:null,tempo:'',nutri:'',refeicoes:'',frutas:'',proteina:'',ultra:'',agua:'',supl:[],
+  objetivo:'',prio:[],naoGosta:'',modo:'',rosto:true,fotos:{},th:{},st:{},q:{},ant:{},fotosDepois:false,aut:null,chk:{},regras:''};}
+function anSalvar(){try{localStorage.setItem(ANKEY,fxRascunho(AN,['th','ant']));}catch(x){}} // v25: a imagem das fotos nunca fica no celular
+function anA(){return AN.versao=='f'?'a':AN.versao=='m'?'o':'o(a)';}
+function anPrimeiro(){var n=String(AN.nome||'').trim().split(/\s+/)[0]||'';return n?n.charAt(0).toUpperCase()+n.slice(1).toLowerCase():'';}
+function anMusc(){return AN.ativ.indexOf('Musculação')>=0;}
+// passos que só aparecem quando fazem sentido
+function anPula(p){if(p=='protocolo'||p=='fotos')return !(AN.modo=='banho'||AN.modo=='treino')||!!AN.fotosDepois;
+  if(p=='treinoatual')return !(anMusc()&&(AN.sit=='Treino regularmente'||AN.sit=='Treino às vezes'));
+  if(p=='aparelhos')return !(AN.onde=='Academia de bairro'||AN.onde=='Em casa'||AN.onde=='Academia de condomínio');return false;}
+function anVisiveis(){return ANP.filter(function(p){return !anPula(p);});}
+function anEtapa(p){for(var i=0;i<ANE.length;i++){var vs=ANE[i][1].filter(function(x){return !anPula(x);}),j=vs.indexOf(p);if(j>=0)return {i:i,j:j,n:vs.length};}return {i:0,j:0,n:1};}
+function anNumOk(x,a,b){var n=Number(String(x==null?'':x).replace(',','.'));return String(x==null?'':x).trim()!==''&&n>=a&&n<=b;}
+function anAltura(){var n=Number(String(AN.altura||'').replace(',','.'));if(n>=100&&n<=230)n=n/100;return n;}
+function anNascOk(){var d=Number(AN.nascD),m=Number(AN.nascM),a=Number(AN.nascA),dt=new Date(a,m-1,d);return a>=1920&&dt<=new Date()&&dt.getDate()===d&&dt.getMonth()===m-1;}
+function anIdade(){var d=Number(AN.nascD),m=Number(AN.nascM),a=Number(AN.nascA),h=new Date();return h.getFullYear()-a-((h.getMonth()<m-1||(h.getMonth()===m-1&&h.getDate()<d))?1:0);}
+function anZap(){return String(AN.whats||'').replace(/\D/g,'');}
+function anPode(p){var A=AN;
+  if(p=='boas')return true;
+  if(p=='nome')return String(A.nome).trim().split(/\s+/).length>=2&&!!A.versao;
+  if(p=='contato')return anZap().length>=10&&anZap().length<=13&&/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(A.email).trim())&&anNascOk();
+  if(p=='plano')return !!A.plano&&(A.plano=='Ainda não fechei'||A.plano=='Planilha com vídeos'||!!A.dur);
+  if(p=='pratica')return !!A.sit&&(A.sit=='Nunca treinei'||A.ativ.length>0);
+  if(p=='onde')return !!A.onde&&A.freq!=null;
+  if(p=='treinoatual')return !!A.divisao;
+  if(p=='nivel')return !!A.nivel&&!!A.tecnica;
+  if(p=='corpo'){var h=anAltura();return h>=1&&h<=2.3&&anNumOk(A.peso,30,300);}
+  if(p=='parq')return A.parqNada||(A.parq.length>0&&String(A.parqTxt).trim().length>=3);
+  if(p=='dores')return A.doresNada||A.dores.length>0;
+  if(p=='horm')return !!A.horm;
+  if(p=='habitos')return !!A.fuma&&!!A.alcool;
+  if(p=='sono')return A.sono!=null&&A.horas>=2;
+  if(p=='estresse')return A.estresse!=null&&!!A.energia;
+  if(p=='agenda')return A.dias!=null&&!!A.tempo;
+  if(p=='alim1')return !!A.nutri&&!!A.refeicoes&&!!A.frutas;
+  if(p=='alim2')return !!A.proteina&&!!A.ultra&&!!A.agua;
+  if(p=='objetivo')return !!A.objetivo;
+  if(p=='prioridade')return A.prio.length>0;
+  if(p=='postura')return FXMODOS.indexOf(A.modo)>=0&&(A.modo=='sem'||A.aut=='sim');
+  if(p=='protocolo')return fxCheckOk(A,A.modo,A.versao=='f');
+  if(p=='fotos')return A.aut=='sim'&&['frente','costas','lado'].every(function(k){return A.st[k]=='ok'&&!!A.fotos[k];});
+  if(p=='regras')return !!A.regras;
+  return true;}
+function anFalta(p){var A=AN;
+  if(p=='nome')return String(A.nome).trim().split(/\s+/).length<2?'Escreva seu nome completo (nome e sobrenome).':'Toque em aluna ou aluno.';
+  if(p=='contato'){if(anZap().length<10||anZap().length>13)return 'Confere o WhatsApp com DDD (ex.: 65 99999 9999).';if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(A.email).trim()))return 'Confere o e-mail.';return 'Confere a data de nascimento (dia, mês e ano).';}
+  if(p=='plano')return A.plano?'Escolha por quanto tempo.':'Escolha uma opção.';
+  if(p=='pratica')return A.sit?'Marque o que você pratica.':'Toque na opção que mais combina com você.';
+  if(p=='onde')return A.onde?'Toque em quantas vezes por semana.':'Escolha onde você treina.';
+  if(p=='nivel')return 'Responda as 2 perguntas.';
+  if(p=='corpo')return 'Altura em metros (ex.: 1,72) e peso em quilos (ex.: 72,5).';
+  if(p=='parq')return A.parq.length?'Conta um pouco no campo de baixo (o que é e se tem liberação médica).':'Marque o que vale pra você, ou "Nenhum destes".';
+  if(p=='dores')return 'Toque onde dói, ou em "Não sinto dor".';
+  if(p=='habitos'||p=='nivel'||p=='estresse'||p=='agenda'||p=='alim1'||p=='alim2')return 'Responda as perguntas da tela.';
+  if(p=='sono')return 'Toque numa nota de 0 a 10.';
+  if(p=='prioridade')return 'Escolha até 2 músculos, ou "Sem prioridade".';
+  if(p=='postura')return FXMODOS.indexOf(A.modo)<0?'Escolha como prefere ser avaliad'+(A.versao=='f'?'a':'o')+'.':'Responda a autorização de uso das fotos.';
+  if(p=='protocolo')return 'Confira e marque os 5 itens do preparo.';
+  if(p=='fotos'){if(['frente','costas','lado'].some(function(k){return A.st[k]=='env';}))return 'Esperando a foto subir…';var n=['frente','costas','lado'].filter(function(k){return !(A.st[k]=='ok'&&A.fotos[k]);}).length;return n==1?'Falta 1 foto.':'Faltam '+n+' fotos.';}
+  return 'Escolha uma opção pra continuar.';}
+function anRotulo(p){return AN.rv?'Salvar e revisar':p=='boas'?'Começar':'Continuar';}
+
+// ---- pedacinhos de tela (mesmo visual da ficha do físico)
+function anH(t){return '<h1>'+(ANNUM?'<span class="fx-n">'+ANNUM+'</span>':'')+t+'</h1>';}
+function anOpc(k,v,t,s,m){var on=AN[k]===v;return '<button type="button" class="fx-op'+(on?' on':'')+'" data-ank="'+k+'" data-anc="'+e(v)+'" aria-pressed="'+on+'"><span class="fx-opr" aria-hidden="true"></span><span class="fx-opt"><b>'+e(t||v)+'</b>'+(s?'<small>'+e(s)+'</small>':'')+'</span>'+(m||'')+'</button>';}
+function anMul(k,v,t,s,ex){var on=AN[k].indexOf(v)>=0;return '<button type="button" class="fx-op'+(on?' on':'')+'" data-anm="'+k+'" data-anc="'+e(v)+'"'+(ex?' data-anx="'+ex+'"':'')+' aria-pressed="'+on+'"><span class="fx-opr" aria-hidden="true"></span><span class="fx-opt"><b>'+e(t||v)+'</b>'+(s?'<small>'+e(s)+'</small>':'')+'</span></button>';}
+function anNada(k,t){var on=!!AN[k];return '<button type="button" class="fx-op an-nada'+(on?' on':'')+'" data-annada="'+k+'" aria-pressed="'+on+'"><span class="fx-opr" aria-hidden="true"></span><span class="fx-opt"><b>'+e(t)+'</b></span></button>';}
+function anSeg(k,ops,cols){return '<div class="an-seg" role="group" style="grid-template-columns:repeat('+(cols||ops.length)+',minmax(0,1fr))">'+ops.map(function(v){var on=AN[k]===v;return '<button type="button" class="'+(on?'on':'')+'" data-ank="'+k+'" data-anc="'+e(v)+'" aria-pressed="'+on+'">'+e(v)+'</button>';}).join('')+'</div>';}
+function anNum(k,de,ate,suf){var r='<div class="an-num" role="group" style="grid-template-columns:repeat('+(ate-de+1)+',minmax(0,1fr))">';for(var i=de;i<=ate;i++){var on=AN[k]===i;r+='<button type="button" class="'+(on?'on':'')+'" data-ann="'+k+'" data-v="'+i+'" aria-pressed="'+on+'" aria-label="'+i+(suf||'')+'">'+i+'</button>';}return r+'</div>';}
+function anTxt(k,rot,ph,uma){return '<label class="fx-l">'+rot+(uma?'<input class="fx-in" data-ani="'+k+'" value="'+e(AN[k])+'"'+(ph?' placeholder="'+e(ph)+'"':'')+' autocomplete="off">':'<textarea class="fx-in" data-ani="'+k+'" rows="3" maxlength="1500"'+(ph?' placeholder="'+e(ph)+'"':'')+'>'+e(AN[k])+'</textarea>')+'</label>';}
+function anRegua(k,frases,esq,dir){var a=AN[k],h='<div class="fx-nt">'+(a==null?'<b class="fx-ntv vz">?</b><span>Toque numa nota</span>':'<b class="fx-ntv">'+a+'</b><span>'+frases[a]+'</span>')+'</div><div class="fx-eq" role="group" aria-label="Nota de 0 a 10" style="--w:'+(a==null?'0%':((a+.5)*100/11).toFixed(2)+'%')+';--cv:var(--red)">';
+  for(var i=0;i<=10;i++)h+='<button type="button" class="'+(a===i?'on':a!=null&&i<a?'ate':'')+'" data-ann="'+k+'" data-v="'+i+'" aria-pressed="'+(a===i)+'" aria-label="Nota '+i+'" style="--c:var(--red)">'+i+'</button>';
+  return h+'</div><div class="fx-eql"><span>'+esq+'</span><span>'+dir+'</span></div>';}
+function anGrupoQ(t,sub){return '<p class="fx-q">'+t+'</p>'+(sub?'<p class="small mut fx-sub">'+sub+'</p>':'');}
+// mapa do corpo pras dores: toque nas bolinhas (ou na lista ao lado)
+function anMapa(){var s='<svg class="an-mapa" viewBox="0 0 100 200" aria-hidden="true"><ellipse cx="50" cy="19" rx="10" ry="12" style="fill:var(--sf2);stroke:var(--ink3)" stroke-width="1"/><path d="'+FXPF+'" style="fill:var(--sf2);stroke:var(--ink3)" stroke-width="1" stroke-linejoin="round"/>';
+  ANDOR.forEach(function(r,i){var on=AN.dores.indexOf(r[0])>=0;r[1].forEach(function(q){s+='<g class="an-pt'+(on?' on':'')+'" data-andor="'+i+'"><circle cx="'+q[0]+'" cy="'+q[1]+'" r="7" fill="transparent"/><circle cx="'+q[0]+'" cy="'+q[1]+'" r="'+(on?3.6:3)+'"/></g>';});});
+  return s+'</svg>';}
+
+function anCorpo(p){var A=AN,a=anA(),pn=anPrimeiro();
+  if(A.fim)return '<div class="fx-fim"><div class="fx-okc">'+fxSvg('<path d="M8.5 16.5l5 5 10-11" stroke-width="2.6"/>',44)+'</div><h1>Recebi'+(A.fimNome?', '+e(A.fimNome):'')+'!</h1><p>Sua anamnese chegou certinha. Daqui pra frente é comigo:</p>'+
+    '<ol class="an-lin"><li><b>Até amanhã</b><span>Te chamo no WhatsApp pra marcar a chamada de início (20 a 30 minutos).</span></li><li><b>Até o 3º dia</b><span>Seu treino fica pronto no app TEAM GO!. O link chega no seu e-mail.</span></li><li><b>Segunda-feira seguinte</b><span>Começo oficial. Bora!</span></li></ol>'+
+    '<a class="bt" href="https://wa.me/'+ANWA+'?text='+encodeURIComponent('Oi Gui! Acabei de mandar minha anamnese. Aqui é '+(A.fimNome||'')+'.')+'" target="_blank" rel="noopener">Falar com o Gui no WhatsApp</a></div>';
+  if(A.env)return '<div class="fx-env"><div class="fx-spin"></div><b>Enviando sua anamnese…</b><p class="small mut">Leva uns segundos. Não feche esta página.</p></div>';
+  if(p=='boas')return '<p class="an-oi">Oi! Eu sou o <b>Guilherme</b>, personal trainer, especialista em Fisiologia do Exercício.</p><h1>Vamos montar o seu treino</h1><p class="fx-lead">São perguntas rápidas, quase todas de tocar. Quanto mais sincero(a), mais o treino encaixa na sua vida.</p>'+
+    '<dl class="fx-dl"><div><dt>Tempo</dt><dd>8 min</dd></div><div><dt>Etapas</dt><dd>6</dd></div><div><dt>Fotos</dt><dd>3</dd></div></dl><p class="small mut fx-dica">Pode parar e continuar depois: o que você preencher fica salvo neste celular. As fotos podem ficar pra depois.</p>'+
+    '<div class="fx-prot"><b>Depois que você enviar</b><div class="fx-pi">'+FXO.cel(22)+'<span>Te chamo no WhatsApp pra uma chamada de início</span></div><div class="fx-pi">'+FXO.lista(22)+'<span>Monto seu treino no app TEAM GO!</span></div><div class="fx-pi">'+FXO.relogio(22)+'<span>Na segunda seguinte você começa</span></div></div>'+
+    '<input class="an-pote" tabindex="-1" autocomplete="off" aria-hidden="true" data-ani="site" value="'+e(A.site)+'">';
+  if(p=='nome')return anH('Como você se chama?')+anTxt('nome','Nome completo','Ex.: Ana Paula Souza',1)+anGrupoQ('Você é aluna ou aluno?','Pra eu falar com você do jeito certo e deixar o app na sua versão.')+'<div class="an-seg" role="group" style="grid-template-columns:1fr 1fr">'+[['f','Aluna'],['m','Aluno']].map(function(x){var on=A.versao===x[0];return '<button type="button" class="'+(on?'on':'')+'" data-ank="versao" data-anc="'+x[0]+'" aria-pressed="'+on+'">'+x[1]+'</button>';}).join('')+'</div>';
+  if(p=='contato')return anH(pn?'Prazer, '+e(pn)+'!':'Seus contatos')+'<p class="fx-lead">Só pra eu conseguir falar com você e mandar o seu app.</p>'+
+    '<label class="fx-l">WhatsApp com DDD<input class="fx-in" data-ani="whats" inputmode="tel" autocomplete="tel" placeholder="65 99999 9999" value="'+e(A.whats)+'"></label>'+
+    '<label class="fx-l">E-mail<input class="fx-in" data-ani="email" type="email" inputmode="email" autocomplete="email" placeholder="voce@email.com" value="'+e(A.email)+'"></label>'+
+    '<p class="fx-l" style="margin-bottom:0">Data de nascimento</p><div class="an-data"><input class="fx-in" data-ani="nascD" inputmode="numeric" maxlength="2" placeholder="Dia" aria-label="Dia" value="'+e(A.nascD)+'"><input class="fx-in" data-ani="nascM" inputmode="numeric" maxlength="2" placeholder="Mês" aria-label="Mês" value="'+e(A.nascM)+'"><input class="fx-in" data-ani="nascA" inputmode="numeric" maxlength="4" placeholder="Ano" aria-label="Ano" value="'+e(A.nascA)+'"></div>'+
+    '<p class="small mut fx-dica" id="anmenor"'+(anNascOk()&&anIdade()<18?'':' hidden')+'>Como você é menor de idade, vou conversar também com seu responsável antes de começar.</p>';
+  if(p=='plano')return anH('Qual plano você escolheu?')+'<div class="fx-ops" role="group">'+ANPLANOS.map(function(x){return anOpc('plano',x[0],x[0],x[1]);}).join('')+'</div>'+
+    (A.plano&&A.plano!='Ainda não fechei'&&A.plano!='Planilha com vídeos'?anGrupoQ('Por quanto tempo?')+anSeg('dur',['Mensal','Trimestral','Semestral','Anual'],2):'')+
+    anTxt('ind','Alguém te indicou? <span class="mut">(opcional)</span>','Nome de quem indicou',1);
+  if(p=='pratica')return anH('Você treina hoje?')+'<div class="fx-ops" role="group">'+[['Treino regularmente','Toda semana, sem falhar muito'],['Treino às vezes','Vou e paro, sem muita constância'],['Parei há um tempo','Já treinei, mas estou parad'+a],['Nunca treinei','Vai ser a primeira vez']].map(function(x){return anOpc('sit',x[0],x[0],x[1]);}).join('')+'</div>'+
+    (A.sit&&A.sit!='Nunca treinei'?anGrupoQ(A.sit=='Parei há um tempo'?'O que você praticava?':'O que você pratica?','Pode marcar mais de um.')+'<div class="fx-ops an-dupla" role="group">'+ANATIV.map(function(x){return anMul('ativ',x);}).join('')+'</div>'+anTxt('ativOutro','Outro? <span class="mut">(opcional)</span>','Ex.: beach tennis',1)+
+      (A.ativ.some(function(x){return x!='Musculação';})||String(A.ativOutro).trim()?anTxt('esporteTxt','Quantas vezes por semana e quanto tempo, nesses outros? <span class="mut">(opcional)</span>','Ex.: futebol 2x por semana, 1 hora'):''):'');
+  if(p=='onde')return anH('Onde você treina?')+'<p class="fx-lead">Ou onde vai treinar, se ainda vai começar.</p><div class="fx-ops" role="group">'+[['Academia de rede','Smart Fit, Bluefit e outras grandes'],['Academia de bairro','Menor, perto de casa ou do trabalho'],['Centro de treinamento (CT)','Estúdio, CT ou box'],['Academia de condomínio',''],['Em casa','']].map(function(x){return anOpc('onde',x[0],x[0],x[1]);}).join('')+'</div>'+
+    anGrupoQ('Quantas vezes por semana você treina hoje?')+anNum('freq',0,7,' vezes');
+  if(p=='treinoatual')return anH('Como é seu treino hoje?')+anGrupoQ('Qual divisão você faz?')+'<div class="fx-ops" role="group">'+[['Full body (corpo inteiro por sessão)','Full body','Corpo inteiro em cada treino'],['AB (superior/inferior)','AB','Superior e inferior'],['ABC','ABC',''],['ABCD','ABCD',''],['ABCDE ou mais','ABCDE ou mais',''],['Push/Pull/Legs','Push, pull e legs','Empurrar, puxar e pernas'],['Não tenho uma divisão definida','Não tenho uma divisão','']].map(function(x){return anOpc('divisao',x[0],x[1],x[2]);}).join('')+'</div>'+
+    anTxt('treinoTxt','Se quiser, cola aqui os exercícios e séries <span class="mut">(opcional, do jeito que tiver)</span>','Ex.: Treino A: supino 4x10, remada 4x10…');
+  if(p=='nivel')return anH('Seu nível')+anGrupoQ('Como você se vê na musculação?')+'<div class="fx-ops" role="group">'+[['Iniciante (nunca treinei ou treino há pouco tempo)','Iniciante','Nunca treinei ou treino há pouco tempo'],['Intermediário (já treino há um tempo, conheço os exercícios básicos)','Intermediário','Já conheço os exercícios básicos'],['Avançado (treino há anos, domino técnica e periodização)','Avançado','Treino há anos e domino a técnica']].map(function(x){return anOpc('nivel',x[0],x[1],x[2]);}).join('')+'</div>'+
+    anGrupoQ('E a sua execução dos exercícios?')+'<div class="fx-ops" role="group">'+[['Ruim, preciso de bastante correção','Preciso de bastante correção'],['Razoável, erro em alguns pontos','Razoável, erro em alguns pontos'],['Boa, executo com segurança','Boa, faço com segurança'],['Ótima, tenho bom domínio técnico','Ótima, tenho domínio técnico']].map(function(x){return anOpc('tecnica',x[0],x[1]);}).join('')+'</div>';
+  if(p=='aparelhos')return anH('Aparelhos da sua academia')+'<p class="fx-lead">Marque o que tem lá. Não sabe o nome? Pode pular: a gente confere na chamada.</p>'+ANAP.map(function(g){return anGrupoQ(g[0])+'<div class="fx-ops" role="group">'+g[1].map(function(x){return anMul('aparelhos',x);}).join('')+'</div>';}).join('')+
+    anTxt('faltaMaq','Faltou alguma máquina que você gostaria de usar? <span class="mut">(opcional)</span>','');
+  if(p=='corpo')return anH('Seu corpo hoje')+'<p class="fx-lead">Do jeito que você souber. Se não lembrar o peso exato, vale o último que viu.</p><div class="an-vis2"><label class="fx-kgw"><input class="fx-kg" data-ani="altura" inputmode="decimal" autocomplete="off" placeholder="1,70" aria-label="Altura em metros" value="'+e(A.altura)+'"><span>m</span></label>'+
+    '<label class="fx-kgw"><input class="fx-kg" data-ani="peso" inputmode="decimal" autocomplete="off" placeholder="70" aria-label="Peso em quilos" value="'+e(A.peso)+'"><span>kg</span></label></div>';
+  if(p=='parq')return anH('Sua saúde')+'<p class="fx-lead">Perguntas padrão de qualquer avaliação física. Se algo valer pra você, não te impede de treinar: eu ajusto o treino e posso pedir uma liberação médica.</p>'+
+    '<div class="fx-ops" role="group">'+anNada('parqNada','Nenhum destes vale pra mim')+ANPARQ.map(function(x){return anMul('parq',x,'','','parqNada');}).join('')+'</div>'+(A.parq.length?anTxt('parqTxt','Conta um pouco: o que é, desde quando e se você tem liberação médica pra treinar',''):'');
+  if(p=='dores')return anH('Sente alguma dor?')+'<p class="fx-lead">Toque onde sente dor ou desconforto nas articulações. Pode marcar mais de um lugar.</p><div class="an-dor">'+anMapa()+'<div class="fx-ops" role="group">'+anNada('doresNada','Não sinto dor')+ANDOR.map(function(x){return anMul('dores',x[0],'','','doresNada');}).join('')+'</div></div>'+
+    (A.dores.length?anTxt('doresTxt','Qual lado e como é? <span class="mut">(opcional)</span>','Ex.: joelho direito dói quando agacho'):'');
+  if(p=='horm')return anH('Hormônios')+'<p class="fx-lead">Pergunta sem julgamento: muda o treino e a sua segurança. Fica só entre a gente.</p>'+anGrupoQ('Você usa ou já usou anabolizante ou outro hormônio pra treino?')+
+    '<div class="fx-ops" role="group">'+[['Não','Nunca usei'],['Já usei',''],['Uso agora','']].map(function(x){return anOpc('horm',x[0],x[0],x[1]);}).join('')+'</div>'+(A.horm&&A.horm!='Não'?anTxt('hormTxt','Quais e quais doses, se lembrar <span class="mut">(opcional)</span>',''):'');
+  if(p=='habitos')return anH('Cigarro e bebida')+anGrupoQ('Você fuma?')+anSeg('fuma',['Não fumo','Ocasionalmente','Diariamente'])+anGrupoQ('E bebida alcoólica?')+'<div class="fx-ops" role="group">'+[['Não bebo',''],['Ocasionalmente (socialmente/fins de semana)','Socialmente ou nos fins de semana'],['Regularmente (várias vezes por semana)','Várias vezes por semana']].map(function(x){return anOpc('alcool',x[0],x[0].split(' (')[0],x[1]);}).join('')+'</div>';
+  if(p=='sono')return anH('Seu sono')+anGrupoQ('De 0 a 10, quanto seu sono descansa você?')+anRegua('sono',ANFRASE,'Nada','Muito')+anGrupoQ('Quantas horas você dorme por noite?')+
+    '<div class="an-step"><button type="button" data-anstep="-1" aria-label="Menos meia hora">−</button><b id="anhoras">'+fxNum(A.horas)+' h</b><button type="button" data-anstep="1" aria-label="Mais meia hora">+</button></div>';
+  if(p=='estresse')return anH('Estresse e energia')+anGrupoQ('De 0 a 10, como está seu estresse no dia a dia?')+anRegua('estresse',ANSTR,'Tranquilo','No limite')+anGrupoQ('Como está sua disposição pra treinar?')+
+    '<div class="fx-ops" role="group">'+[['Alta - chego animado(a) e pronto para treinar','Alta','Chego animad'+a+' e pront'+a],['Média - varia bastante de um dia para o outro','Média','Varia de um dia pro outro'],['Baixa - treino mais por disciplina do que vontade','Baixa','Treino mais por disciplina que por vontade']].map(function(x){return anOpc('energia',x[0],x[1],x[2]);}).join('')+'</div>';
+  if(p=='agenda')return anH('Sua agenda')+anGrupoQ('Quantos dias por semana você tem pra treinar?')+anNum('dias',1,7,' dias')+anGrupoQ('Quanto tempo por treino?')+anSeg('tempo',['Até 30 minutos','30 a 45 minutos','45 a 60 minutos','60 a 90 minutos','Mais de 90 minutos'],3);
+  if(p=='alim1')return anH('Sua alimentação')+'<div class="fx-box"><b>Não é dieta.</b> Quem monta dieta é nutricionista. Aqui é só pra eu entender sua rotina e, se fizer sentido, te indicar um(a).</div>'+
+    anGrupoQ('Você acompanha com nutricionista?')+'<div class="fx-ops" role="group">'+[['Sim',''],['Não, mas quero uma indicação','Te passo um contato de confiança'],['Não','']].map(function(x){return anOpc('nutri',x[0],x[0],x[1]);}).join('')+'</div>'+
+    anGrupoQ('Quantas refeições você faz por dia?')+anSeg('refeicoes',['1 a 2','3','4 a 5','6 ou mais'])+anGrupoQ('Frutas, verduras e legumes')+anSeg('frutas',['Quase todo dia','Algumas vezes na semana','Quase nunca']);
+  if(p=='alim2')return anH('Sua alimentação')+anGrupoQ('Carne, frango, peixe, ovo ou feijão nas refeições principais')+anSeg('proteina',['Na maioria','Em algumas','Raramente'])+anGrupoQ('Fast food, doce ou refrigerante')+anSeg('ultra',['Quase nunca','1 a 2 vezes na semana','Quase todo dia'])+
+    anGrupoQ('Água por dia')+anSeg('agua',['Menos de 1 litro','1 a 2 litros','Mais de 2 litros'])+anGrupoQ('Usa algum suplemento?','Opcional. Pode marcar mais de um.')+'<div class="fx-ops an-dupla" role="group">'+['Whey','Creatina','Cafeína ou pré-treino','Multivitamínico','Outro'].map(function(x){return anMul('supl',x);}).join('')+'</div>';
+  if(p=='objetivo')return anH('O que você quer?')+'<div class="fx-ops" role="group">'+[['Hipertrofia (ganho de massa muscular)','Ganhar músculo',''],['Emagrecimento com preservação de massa muscular','Perder gordura sem perder músculo',''],['Condicionamento físico geral / saúde','Saúde e disposição',''],['Performance esportiva','Render mais num esporte',''],['Estética focada em um grupo muscular específico','Melhorar uma parte do corpo',''],['Reabilitação ou retorno pós-lesão','Voltar depois de uma lesão','Com liberação médica']].map(function(x){return anOpc('objetivo',x[0],x[1],x[2]);}).join('')+'</div>';
+  if(p=='prioridade')return anH('Músculos prioritários')+'<p class="fx-lead">Escolha até 2, na ordem. O primeiro que você tocar é a prioridade 1.</p><div class="an-musc" role="group">'+ANMUSC.map(function(x){var i=A.prio.indexOf(x);return '<button type="button" class="'+(i>=0?'on':'')+'" data-anprio="'+e(x)+'" aria-pressed="'+(i>=0)+'">'+(i>=0?'<i>'+(i+1)+'</i>':'')+e(x)+'</button>';}).join('')+
+    '<button type="button" class="an-sem'+(A.prio[0]=='Não tenho prioridade específica'?' on':'')+'" data-anprio="Não tenho prioridade específica">Sem prioridade</button></div>';
+  if(p=='preferencias')return anH('Do seu jeito')+anTxt('naoGosta','Tem algum exercício que você não gosta ou não quer fazer? <span class="mut">(opcional)</span>','Ex.: não gosto de burpee');
+  // 22/10 noite (Gui): avaliação séria. Escolha + autorização, depois o preparo conferido item por item, depois as fotos
+  if(p=='postura'){var vf=A.versao=='f',fm=A.modo=='banho'||A.modo=='treino';
+    return anH('Sua postura')+fxPostura(1)+anGrupoQ('Como você prefere ser avaliad'+(vf?'a':'o')+'?','A roupa é escolha sua; o protocolo das fotos é um só.')+fxModoOps(vf,1)+
+    (A.modo=='sem'?fxSemNota(1):'')+
+    (fm?anGrupoQ('Quando você vai tirar as fotos?')+'<div class="fx-ops" role="group">'+[[0,'Agora, com a câmera guiada','Com o preparo, leva uns 10 minutos'],[1,'Depois, antes da chamada de início','Você prepara o lugar com calma; eu te peço as fotos com o protocolo']].map(function(x){var on=!!A.fotosDepois===!!x[0];
+        return '<button type="button" class="fx-op'+(on?' on':'')+'" data-andepois="'+x[0]+'" aria-pressed="'+on+'"><span class="fx-opr" aria-hidden="true"></span><span class="fx-opt"><b>'+x[1]+'</b><small>'+x[2]+'</small></span></button>';}).join('')+'</div>'+
+      fxQuemVe(0)+anGrupoQ('Autorização de uso das fotos e vídeos')+fxOps([fxOpc('aut','sim','Autorizo, nas condições acima','Uso só pra sua avaliação e o seu acompanhamento'),fxOpc('aut','nao','Não autorizo','Prefiro sem fotos: avaliação pela chamada')]):'');}
+  if(p=='protocolo'){var vf2=A.versao=='f';return anH('Preparo das fotos')+fxPorque()+fxProtocolo(A.modo,vf2)+anGrupoQ('Antes de abrir a câmera, confira','Toque em cada item quando estiver pronto.')+fxChecklist(A,A.modo,vf2);}
+  if(p=='fotos'){var vf3=A.versao=='f';
+    return anH('Suas 3 fotos')+'<p class="fx-lead">'+e(fxModoNome(A.modo))+'. Siga a ordem: frente, costas e lado direito, sem mexer o celular entre uma foto e outra.'+(fxTemCam()?' Toque em cada quadro pra abrir a câmera guiada.':'')+'</p>'+
+      '<div class="fx-fg">'+['frente','costas','lado'].map(fxFotoCard).join('')+'</div>'+fxQualResumo()+fxRostoLinha()+fxComoTirar(A.modo,vf3,false)+
+      '<button type="button" class="fx-add" data-andepois="1">Prefiro mandar depois</button>';}
+  if(p=='regras')return anH('Como funciona')+'<p class="fx-lead">Pra gente ter uma ótima relação de aluno'+(A.versao=='f'?'a':'')+' e treinador, combinados simples:</p><ol class="an-regras">'+
+    '<li><b>Mensagem escrita, de preferência.</b> Respondo mais rápido. Se mandar áudio, entendo que é algo importante e posso demorar um pouco mais pra dar a atenção certa.</li>'+
+    '<li><b>Prazos:</b> respondo em até 24 horas nos dias úteis e ajusto o protocolo em até 72 horas. Quase sempre antes.</li>'+
+    '<li><b>Check-in toda semana:</b> é o que me deixa ajustar seu treino. Quem não responde as mensagens nem faz os check-ins não renova.</li>'+
+    '<li><b>Atualização do físico no fim de cada ciclo:</b> se for atrasar, me avisa. Sem aviso, depois de 15 dias sem a atualização, a consultoria é encerrada.</li></ol><p class="small mut">Não leve pro pessoal: é só pra nossa boa convivência.</p>'+
+    '<div class="fx-ops" role="group">'+anOpc('regras','Sim, li e estou de acordo')+anOpc('regras','Ainda tenho dúvidas, gostaria de conversar antes de começar','Ainda tenho dúvidas','Quero conversar antes de começar')+'</div>';
+  // revisão
+  var linhas=function(r){return r.filter(function(x){return x[1]!==''&&x[1]!=null;}).map(function(x){return '<div class="row"><span class="mut">'+x[0]+'</span><b>'+e(x[1])+'</b></div>';}).join('');};
+  var sec=function(t,n,ir,r){return '<div class="fx-rc"><div class="fx-rch"><b><i>'+n+'</i>'+t+'</b><button type="button" class="fx-ed" data-anir="'+ANP.indexOf(ir)+'">Editar</button></div>'+linhas(r)+'</div>';};
+  return anH('Tudo certo?')+'<p class="fx-lead">Confere antes de enviar. Dá pra mudar qualquer parte.</p><div class="fx-rev">'+
+    sec('Você',1,'nome',[['Nome',A.nome],['WhatsApp',A.whats],['E-mail',A.email],['Nascimento',A.nascD+'/'+A.nascM+'/'+A.nascA],['Plano',A.plano+(A.dur?' · '+A.dur:'')],['Indicação',A.ind]])+
+    sec('Treino',2,'pratica',[['Hoje',A.sit+(A.ativ.length?': '+A.ativ.join(', '):'')],['Onde',A.onde],['Por semana',A.freq!=null?A.freq+'x':''],['Divisão',anPula('treinoatual')?'':A.divisao.split(' (')[0]],['Nível',A.nivel.split(' (')[0]],['Execução',A.tecnica.split(',')[0]],['Aparelhos',anPula('aparelhos')?'':(A.aparelhos.length?A.aparelhos.length+' marcados':'Não marcou')]])+
+    sec('Saúde',3,'corpo',[['Altura e peso',fxNum(anAltura())+' m · '+fxNum(A.peso)+' kg'],['Triagem de saúde',A.parqNada?'Nenhum item':A.parq.length+' item(ns)'],['Dores',A.doresNada?'Nenhuma':A.dores.join(', ')],['Hormônios',A.horm],['Cigarro',A.fuma],['Bebida',A.alcool.split(' (')[0]]])+
+    sec('Rotina',4,'sono',[['Sono',A.sono+' de 10 · '+fxNum(A.horas)+' h'],['Estresse',A.estresse+' de 10'],['Disposição',A.energia.split(' -')[0]],['Treinos por semana',A.dias],['Tempo por treino',A.tempo],['Nutricionista',A.nutri]])+
+    sec('Objetivo',5,'objetivo',[['Objetivo',A.objetivo.split(' (')[0]],['Prioridades',A.prio.join(' e ')],['Não gosta de',A.naoGosta]])+
+    sec('Fotos e combinados',6,'postura',(A.modo=='sem'?[['Postura','Sem fotos: avaliação ao vivo na chamada']]:[['Jeito',fxModoNome(A.modo)+(A.rosto!==false?', rosto coberto':'')],['Fotos',A.fotosDepois?'Vai mandar depois':['frente','costas','lado'].filter(function(k){return A.fotos[k];}).length+' de 3'],['Uso das fotos',A.aut=='sim'?'Autorizado':'Não autorizado']]).concat([['Combinados',A.regras.split(',')[0]]]))+
+    '</div><p class="small mut fx-dica">Ao enviar, te chamo no WhatsApp pra marcar a chamada de início.</p>';}
+
+function anTela(){var b=document.getElementById('fxsh');if(!b||!AN)return;if(FXC)return fxCamTela();if(FXR)return fxRostoTela();
+  var p=ANP[AN.p],fim=AN.fim||AN.env,et=fim?{i:ANE.length,j:0,n:1}:anEtapa(p),corpo=b.querySelector('.fx2-body'),mesmo=ANU===AN.p&&!fim,sc=mesmo&&corpo?corpo.scrollTop:0;
+  ANNUM=fim||p=='boas'||p=='revisar'?'':(et.i+1)+'.'+(et.j+(et.i===0?0:1));
+  var pct=fim?100:Math.round((et.i+(et.j+1)/et.n)/ANE.length*1000)/10,p0=ANPCT;ANPCT=pct;
+  var h='<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><button type="button" class="fx2-ic" data-anv="1" aria-label="Voltar"'+(AN.p&&!fim?'':' hidden')+'>'+FXI.volta+'</button><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>Anamnese de treino</b></div><button type="button" class="fx2-sair" data-x="1" aria-label="Sair (fica salvo)">Sair</button></div>';
+  h+='<div class="fita" style="--p:'+p0+'%;--n:'+ANE.length+'" aria-hidden="true"><i class="fita-reg"></i><i class="fita-cheia"></i><i class="fita-mk"></i><div class="fita-et" style="grid-template-columns:repeat('+ANE.length+',minmax(0,1fr))">'+ANE.map(function(x,i){return '<span class="'+(i<et.i?'ok':i==et.i?'cur':'')+'">'+x[0]+'</span>';}).join('')+'</div></div></div></div>';
+  h+='<div class="fx2-body"><div class="fx-pg'+(mesmo?'':' an'+(ANDIR<0?' vt':''))+'" data-pg="'+p+'">'+anCorpo(p)+'</div></div>';
+  if(!fim){var r=p=='revisar',pd=anPode(p);h+='<div class="fx2-foot"><div class="fx2-in"><p class="fx2-hint" id="fxhint" aria-live="polite">'+(r||pd?'':anFalta(p))+'</p>'+(r?'<button type="button" class="bt" data-ane="1">Enviar anamnese</button>':'<button type="button" class="bt" data-ann2="1"'+(pd?'':' disabled')+'>'+anRotulo(p)+'</button>')+'</div></div>';}
+  b.innerHTML=h;ANU=AN.p;ANDIR=0;var nb=b.querySelector('.fx2-body');if(nb&&sc)nb.scrollTop=sc;
+  var fi=b.querySelector('.fita');if(fi){if(p0===pct)fi.style.setProperty('--p',pct+'%');else requestAnimationFrame(function(){requestAnimationFrame(function(){fi.style.setProperty('--p',pct+'%');});});}}
+function anProx(){if(!AN)return;var p=ANP[AN.p],b=document.querySelector('#fxsh [data-ann2]'),hi=document.getElementById('fxhint'),ok=anPode(p);if(b){b.disabled=!ok;b.textContent=anRotulo(p);}if(hi)hi.textContent=ok?'':anFalta(p);
+  var mn=document.getElementById('anmenor');if(mn)mn.hidden=!(anNascOk()&&anIdade()<18);}
+function anIr(i,dir){var vs=ANP.length;while(i>=0&&i<vs&&anPula(ANP[i]))i+=dir<0?-1:1;AN.p=Math.max(0,Math.min(vs-1,i));ANDIR=dir;anSalvar();anTela();}
+function anVoltar(){if(!AN||!document.getElementById('fxsh'))return false;if(FXC){fxCamFechar();fxHist();return true;}if(FXR){FXR=null;anTela();fxHist();return true;}
+  if(!AN.fim&&!AN.env&&AN.p>0){AN.rv=0;anIr(AN.p-1,-1);fxHist();return true;}return false;}
+function anDigitou(ev){var t=ev.target;if(!AN||!t.dataset||!t.dataset.ani)return;var k=t.dataset.ani;
+  if(k=='nascD'||k=='nascM'||k=='nascA'){t.value=t.value.replace(/\D/g,'');if(t.value.length>=(k=='nascA'?4:2)){var nx=t.nextElementSibling;if(nx&&nx.tagName=='INPUT'&&!nx.value)nx.focus();}}
+  AN[k]=t.value;anSalvar();anProx();}
+function anClique(ev){var t=ev.target,sx=t.closest&&t.closest('[data-x]');if(sx){sair();return;}
+  var g=t.closest&&t.closest('[data-andor]');if(g){var nm=ANDOR[Number(g.dataset.andor)][0],i=AN.dores.indexOf(nm);if(i>=0)AN.dores.splice(i,1);else{AN.dores.push(nm);AN.doresNada=false;}fxVibra(6);anSalvar();anTela();return;}
+  var b=t.closest&&t.closest('button');if(!b||b.disabled)return;var d=b.dataset;
+  if(d.fxcx){fxCamFechar();return;}if(d.fxtira){fxCamTirar();return;}if(d.fxvira){FXC.fac=FXC.fac=='user'?'environment':'user';fxCamTela();fxCamLigar();return;}
+  if(d.fxtm!=null){FXC.tim=Number(d.fxtm);try{localStorage.setItem('tg_fxtim',d.fxtm);}catch(x){}[].forEach.call(document.querySelectorAll('#fxsh [data-fxtm]'),function(x){x.classList.toggle('on',x===b);});var ct=document.querySelector('#fxsh .fx-ct');if(ct)ct.textContent=fxCamTexto();return;}
+  if(d.fxguia){fxCamAbrir(d.fxguia);return;}if(d.fxcam||d.fxgal){fxPegar(d.fxcam||d.fxgal,!!d.fxcam);return;}
+  if(d.ann2){fxVibra();if(AN.rv){AN.rv=0;anIr(ANP.indexOf('revisar'),1);}else anIr(AN.p+1,1);return;}
+  if(d.anv){AN.rv=0;anIr(AN.p-1,-1);return;}
+  if(d.anir!=null){AN.rv=1;anIr(Number(d.anir),-1);return;}
+  if(d.ank){fxVibra(6);AN[d.ank]=d.anc;if(d.ank=='plano'&&(d.anc=='Ainda não fechei'||d.anc=='Planilha com vídeos'))AN.dur='';if(d.ank=='sit'&&d.anc=='Nunca treinei'){AN.ativ=[];AN.freq=0;}anSalvar();anTela();return;}
+  if(d.anm){var k=d.anm,i=AN[k].indexOf(d.anc);if(i>=0)AN[k].splice(i,1);else AN[k].push(d.anc);if(d.anx&&AN[k].length)AN[d.anx]=false;fxVibra(6);anSalvar();anTela();return;}
+  if(d.annada){var kn=d.annada;AN[kn]=!AN[kn];if(AN[kn]){if(kn=='parqNada'){AN.parq=[];AN.parqTxt='';}if(kn=='doresNada'){AN.dores=[];AN.doresTxt='';}}fxVibra(6);anSalvar();anTela();return;}
+  if(d.ann){fxVibra(6);AN[d.ann]=Number(d.v);anSalvar();anTela();return;}
+  if(d.anstep){AN.horas=Math.max(3,Math.min(12,(Number(AN.horas)||7)+Number(d.anstep)*.5));anSalvar();var hb=document.getElementById('anhoras');if(hb)hb.textContent=fxNum(AN.horas)+' h';anProx();return;}
+  if(d.anprio){var v=d.anprio,sem='Não tenho prioridade específica';if(v==sem)AN.prio=AN.prio[0]==sem?[]:[sem];else{AN.prio=AN.prio.filter(function(x){return x!=sem;});var j=AN.prio.indexOf(v);if(j>=0)AN.prio.splice(j,1);else if(AN.prio.length<2)AN.prio.push(v);else toast('Já escolheu 2. Toque num deles pra trocar.');}fxVibra(6);anSalvar();anTela();return;}
+  if(d.andepois!=null){fxVibra(6);AN.fotosDepois=d.andepois=='1';anSalvar();if(AN.fotosDepois&&ANP[AN.p]!='postura'){toast('Combinado: as fotos ficam pra depois.');anIr(ANP.indexOf('regras'),1);}else anTela();return;}
+  if(d.fxchk){AN.chk=AN.chk||{};AN.chk[d.fxchk]=!AN.chk[d.fxchk];fxVibra(6);anSalvar();anTela();return;}
+  if(d.fxrok){fxRostoOk();return;}if(d.fxrnao){fxRostoNao();return;}
+  if(d.fxrosto){AN.rosto=AN.rosto===false;fxVibra(6);anSalvar();anTela();return;}
+  if(d.fxk=='aut'&&d.fxc=='nao'){if(!confirm(FXSEMQ))return;fxVibra(6);fxSemFotos();AN.fotosDepois=false;anSalvar();anTela();toast('Combinado: sem fotos. Eu olho sua postura na chamada de início.');return;}
+  if(d.fxk=='modo'&&d.fxc!='sem'&&AN.aut=='nao')AN.aut=null;
+  if(d.fxk){fxVibra(6);AN[d.fxk]=d.fxc;anSalvar();anTela();return;}
+  if(d.ane)anEnviar();}
+function anEnviar(){AN.env=true;anTela();
+  var c=AN,dados={conv:c.conv,ref:c.ref,site:c.site,seg:Math.round((Date.now()-c.t0)/1000),nome:String(c.nome).trim(),versao:c.versao,whats:c.whats,email:String(c.email).trim(),nascD:c.nascD,nascM:c.nascM,nascA:c.nascA,plano:c.plano,dur:c.dur,ind:c.ind,
+    sit:c.sit,ativ:c.ativ,ativOutro:c.ativOutro,esporteTxt:c.esporteTxt,onde:c.onde,freq:c.freq,divisao:anPula('treinoatual')?'':c.divisao,treinoTxt:anPula('treinoatual')?'':c.treinoTxt,nivel:c.nivel,tecnica:c.tecnica,
+    aparelhos:anPula('aparelhos')?[]:c.aparelhos,faltaMaq:anPula('aparelhos')?'':c.faltaMaq,altura:anAltura(),peso:c.peso,parq:c.parq,parqTxt:c.parqTxt,dores:c.dores,doresTxt:c.doresTxt,horm:c.horm,hormTxt:c.hormTxt,fuma:c.fuma,alcool:c.alcool,
+    sono:c.sono,horas:c.horas,estresse:c.estresse,energia:c.energia,dias:c.dias,tempo:c.tempo,nutri:c.nutri,refeicoes:c.refeicoes,frutas:c.frutas,proteina:c.proteina,ultra:c.ultra,agua:c.agua,supl:c.supl,
+    objetivo:c.objetivo,prio:c.prio,naoGosta:c.naoGosta,fotosModo:c.modo,rosto:c.rosto!==false,fotos:c.fotosDepois||c.modo=='sem'?{}:c.fotos,fotosDepois:!!c.fotosDepois&&c.modo!='sem',aut:c.modo=='sem'?'nao':c.aut,regras:c.regras};
+  google.script.run.withSuccessHandler(function(r){if(!AN)return;AN.env=false;
+      if(r&&r.ok){AN.fim=true;AN.fimNome=r.primeiro||anPrimeiro();fxVibra([20,40,20]);try{localStorage.removeItem(ANKEY);}catch(x){}anTela();return;}
+      if(r&&r.conv){anSalvar();if(r.conv=='vencido')return anVenceu(AN.conv,{});if(r.conv=='usado')return anUsado();return anPortaria('nao');}
+      toast((r&&r.erro)||'Não deu pra enviar. Tenta de novo?','erro');if(r&&r.fotos){['frente','costas','lado'].forEach(function(k){AN.st[k]='';delete AN.fotos[k];delete AN.th[k];});AN.p=ANP.indexOf('fotos');}anSalvar();anTela();})
+    .withFailureHandler(function(){if(!AN)return;AN.env=false;toast('Sem conexão. O que você preencheu está salvo: tenta de novo.','erro');anSalvar();anTela();}).anamneseEnviar(dados);}
+// v25: a anamnese abre com o convite pessoal que o Gui manda (?c=). O convite fica guardado no celular:
+// abrir o site de novo no mesmo celular continua de onde parou. Sem convite: tela pra achar pelo WhatsApp ou falar com o Gui.
+function anLS(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(x){}return null;}
+function anWa(t){return 'https://wa.me/'+ANWA+'?text='+encodeURIComponent(t);}
+function anCasca(corpo){return '<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><button type="button" class="fx2-ic" hidden></button><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>Anamnese de treino</b></div><button type="button" class="fx2-sair" data-x="1">Sair</button></div></div></div><div class="fx2-body"><div class="fx-pg an">'+corpo+'</div></div>';}
+function anPorta(corpo){AN=null;var sh=document.getElementById('fxsh');sh.onclick=anPortaClique;sh.oninput=null;sh.innerHTML=anCasca(corpo);}
+function anOk(){return '<div class="fx-okc">'+fxSvg('<path d="M8.5 16.5l5 5 10-11" stroke-width="2.6"/>',44)+'</div>';}
+function iniciarAnamnese(){MODO='an';document.title='Anamnese de treino · TEAM GO!';
+  var cu=String(qs('c')||'').toLowerCase().replace(/[^a-f0-9]/g,''),cod=cu||String(anLS(ANCK)||'');
+  if(!/^[a-f0-9]{10}$/.test(cod))return anPortaria(cu?'nao':'');
+  if(cu)anLS(ANCK,cu);
+  anPorta('<div class="fx-msg"><div class="fx-spin"></div><p class="mut">Abrindo sua anamnese…</p></div>');
+  google.script.run.withSuccessHandler(function(r){r=r||{};
+      if(r.st=='ok')return anAbrir(cod,r);
+      if(r.st=='usado')return anJaFoi(r);
+      if(r.st=='vencido')return anVenceu(cod,r);
+      anLS(ANCK,null);anPortaria(cu?'nao':'');})
+    .withFailureHandler(function(){anPorta('<h1>Não consegui conectar</h1><p class="fx-lead">Confere a internet e tenta de novo. O que você já preencheu continua salvo neste celular.</p><button type="button" class="bt" data-antenta="1">Tentar de novo</button>');}).anamneseConvite(cod);}
+function anRascunho(){try{var x=JSON.parse(anLS(ANKEY)||'null');return x&&x.v===1&&x.ref&&!x.fim?x:null;}catch(e){return null;}}
+var ANESC=null;
+function anAbrir(cod,r,escolha){var ra=anRascunho();
+  // rascunho de outro convite (link trocado, ou outra pessoa no mesmo celular): pergunta antes de apagar
+  if(ra&&ra.conv&&ra.conv!==cod&&ra.p>0&&!escolha){ANESC={cod:cod,r:r};return anPorta('<h1>Tem uma anamnese começada aqui</h1><p class="fx-lead">Neste celular já tem respostas'+(ra.nome?' de <b>'+e(String(ra.nome).trim().split(' ')[0])+'</b>':'')+', de outro link. São suas?</p><button type="button" class="bt" data-anesc="seguir">Sim, continuar de onde parei</button><button type="button" class="bt sec" data-anesc="zero">Não, começar do zero</button>');}
+  AN=!ra||escolha=='zero'||(ra.conv&&ra.conv!==cod&&escolha!='seguir')?anNovo():ra;
+  AN.conv=cod;if(!(AN.p>=0&&AN.p<ANP.length))AN.p=0;
+  if(r.nome&&!AN.nome)AN.nome=r.nome;if(r.whats&&!AN.whats)AN.whats=r.whats;
+  var pl=ANPL[r.plano]||ANPL[qs('plano')];if(pl&&!AN.plano)AN.plano=pl;
+  var ind=r.ind||qs('ind');if(ind&&!AN.ind)AN.ind=String(ind).slice(0,60);
+  AN.env=false;AN.rv=0;AN.st=AN.st||{};AN.q=AN.q||{};AN.ant={};AN.th={};FXR=null;if(AN.rosto==null)AN.rosto=true;if(AN.modo==null)AN.modo='';Object.keys(AN.st).forEach(function(k){if(AN.st[k]=='env')AN.st[k]=AN.fotos[k]?'ok':'';});
+  FX=AN;D={codigo:'',primeiro:'',f:AN.versao=='f',ciclo:{n:''},evolucao:[],links:{whats:'https://wa.me/'+ANWA}};
+  FXUP={fn:'anamneseFoto',args:function(p,b64){return [AN.conv,AN.ref,p,b64];}};
+  anSalvar();ANU=-1;var sh=document.getElementById('fxsh');sh.onclick=anClique;sh.oninput=anDigitou;anTela();fxHist();}
+function anPortaria(mot){var ind=qs('ind');
+  anPorta((mot=='nao'?'<div class="fx-box"><b>Esse link não vale mais.</b> Pode ter sido trocado ou cancelado. Procure pelo seu WhatsApp aqui embaixo ou me chama.</div>':'')+
+    '<h1>Sua anamnese abre com um link só seu</h1><p class="fx-lead">Depois que a gente fecha, eu te mando no WhatsApp o link pessoal da sua anamnese de treino. Assim só você responde a sua.</p>'+
+    '<div class="an-porta"><p class="fx-q">Já fechou e perdeu o link?</p><p class="small mut fx-sub">Digite o WhatsApp que você me passou.</p><label class="fx-l">WhatsApp com DDD<input class="fx-in" id="anrw" inputmode="tel" autocomplete="tel" placeholder="65 99999 9999"></label><button type="button" class="bt" data-anrec="1">Achar meu link</button><p class="small an-rmsg" id="anrmsg" aria-live="polite"></p></div>'+
+    '<div class="an-porta"><p class="fx-q">Ainda não fechou?</p><p class="small mut fx-sub">Me chama que eu te explico os planos e como funciona.</p><a class="bt sec" href="'+anWa('Oi, Gui! Vim pelo site e quero começar a consultoria TEAM GO!'+(ind?' Quem me indicou foi '+ind+'.':''))+'" target="_blank" rel="noopener">Falar com o Gui no WhatsApp</a></div>');}
+function anJaFoi(r){var cod=String(anLS('tg_codigo')||''),temApp=/^[A-Za-z0-9_-]{4,60}$/.test(cod);
+  anPorta('<div class="fx-fim">'+anOk()+'<h1>Já recebi'+(r.primeiro?', '+e(r.primeiro):'')+'!</h1><p>Sua anamnese chegou'+(r.quando?' em '+e(r.quando):'')+'. Cada link vale uma vez só, então não precisa mandar de novo.</p><p class="small mut">Esqueceu de contar alguma coisa? Me manda no WhatsApp que eu acrescento.'+(r.primeiro?' Não é '+e(r.primeiro)+'? Abra pelo link que eu te mandei.':'')+'</p>'+
+    (temApp?'<a class="bt" href="../app/?a='+encodeURIComponent(cod)+'">Abrir meu app TEAM GO!</a>':'')+
+    '<a class="bt'+(temApp?' sec':'')+'" href="'+anWa('Oi, Gui! Já mandei minha anamnese e queria acrescentar uma coisa:')+'" target="_blank" rel="noopener">Falar com o Gui no WhatsApp</a></div>');}
+function anVenceu(cod,r){var ra=anRascunho(),tem=ra&&ra.conv===cod&&ra.p>0;
+  anPorta('<h1>Seu link venceu'+(r.primeiro?', '+e(r.primeiro):'')+'</h1><p class="fx-lead">Cada link vale 90 dias. Me chama que eu renovo na hora: o link continua o mesmo'+(tem?' e o que você já preencheu neste celular continua salvo':'')+'.</p>'+
+    '<a class="bt" href="'+anWa('Oi, Gui! O link da minha anamnese venceu. Pode renovar? (código '+cod+')')+'" target="_blank" rel="noopener">Pedir pro Gui renovar</a><button type="button" class="bt sec" data-antenta="1">Já renovou? Abrir de novo</button>');}
+function anUsado(){anPorta('<h1>Esse link já foi usado</h1><p class="fx-lead">Cada link vale pra uma pessoa só, e alguém já mandou a anamnese por ele. Me pede um link seu: o que você preencheu continua salvo neste celular.</p>'+
+    '<a class="bt" href="'+anWa('Oi, Gui! Tentei mandar minha anamnese, mas o link já tinha sido usado. Pode me mandar um link meu?')+'" target="_blank" rel="noopener">Pedir meu link pro Gui</a>');}
+function anPortaClique(ev){var t=ev.target,sx=t.closest&&t.closest('[data-x]');if(sx){sair();return;}
+  var b=t.closest&&t.closest('button');if(!b||b.disabled)return;var d=b.dataset;
+  if(d.antenta){iniciarAnamnese();return;}
+  if(d.ancod&&/^[a-f0-9]{10}$/.test(d.ancod)){anLS(ANCK,d.ancod);try{history.replaceState(null,'','?f=anamnese&c='+d.ancod);}catch(x){}iniciarAnamnese();return;}
+  if(d.anesc&&ANESC){var x=ANESC;ANESC=null;anAbrir(x.cod,x.r,d.anesc);return;}
+  if(d.anrec){var w=String((document.getElementById('anrw')||{}).value||'').replace(/\D/g,''),m=document.getElementById('anrmsg');
+    if(w.length<10||w.length>13){m.textContent='Digite o WhatsApp com DDD (ex.: 65 99999 9999).';return;}
+    b.disabled=true;b.textContent='Procurando…';m.textContent='';
+    var ver=function(){try{m.scrollIntoView({block:'center',behavior:'smooth'});}catch(x){}};
+    google.script.run.withSuccessHandler(function(r){b.disabled=false;b.textContent='Achar meu link';r=r||{};setTimeout(ver,30);
+        if(r.erro){m.textContent=r.erro;return;}
+        if(r.varios){m.innerHTML='Achei mais de um link nesse número. Qual é o seu?'+r.varios.map(function(x){return '<button type="button" class="bt sec" data-ancod="'+e(x.cod)+'">Sou '+e(x.primeiro||'eu')+'</button>';}).join('');return;}
+        if(r.nada||!r.cod){m.innerHTML='Não achei link com esse número. <a href="'+anWa('Oi, Gui! Já fechei com você e não achei o link da minha anamnese. Meu WhatsApp é '+w+'.')+'" target="_blank" rel="noopener">Me chama no WhatsApp</a> que eu te mando.';return;}
+        anLS(ANCK,r.cod);try{history.replaceState(null,'','?f=anamnese&c='+r.cod);}catch(x){}iniciarAnamnese();})
+      .withFailureHandler(function(){b.disabled=false;b.textContent='Achar meu link';m.textContent='Sem conexão. Confere a internet e tenta de novo.';}).anamneseRecuperar(w);}}
+// 22/10 noite (Gui): "explicar como as fotos devem ser feitas, e não de qualquer jeito". Página pública do protocolo
+// (?f=protocolo; aceita &v=m pra aluno e &r=treino pra roupa de treino), pra mandar no WhatsApp sempre que pedir fotos.
+// Não fala com o servidor e não pede código: só o passo a passo, os desenhos e o checklist (marcado só nesta tela).
+var PR={m:'banho',f:true,chk:{}};
+function prTela(){var b=document.getElementById('fxsh');if(!b)return;var cb=b.querySelector('.fx2-body'),sc=cb?cb.scrollTop:0;
+  var seg=function(k,ops){return '<div class="an-seg" role="group" style="grid-template-columns:repeat('+ops.length+',minmax(0,1fr))">'+ops.map(function(o){var on=String(PR[k])===o[0];return '<button type="button" class="'+(on?'on':'')+'" data-prk="'+k+'" data-prv="'+o[0]+'" aria-pressed="'+on+'">'+o[1]+'</button>';}).join('')+'</div>';};
+  var h='<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><span class="fx2-ic" aria-hidden="true"></span><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>Protocolo das fotos</b></div><span class="fx2-ic" aria-hidden="true"></span></div></div></div>';
+  h+='<div class="fx2-body"><div class="fx-pg pr-pg">'+fxH('Avaliação postural por fotos')+fxPorque()+
+    '<div class="pr-op"><div><p class="fx-q">Roupa</p>'+seg('m',[['banho','De banho'],['treino','De treino']])+'</div><div><p class="fx-q">Para</p>'+seg('f',[['true','Aluna'],['false','Aluno']])+'</div></div>'+
+    '<p class="small mut fx-sub">'+e(fxModoTxt(PR.m,PR.f)[1])+'</p>'+fxProtocolo(PR.m,PR.f)+
+    '<p class="fx-q">Antes de tirar, confira</p><p class="small mut fx-sub">Toque em cada item quando estiver pronto.</p>'+fxChecklist(PR,PR.m,PR.f)+
+    (fxCheckOk(PR,PR.m,PR.f)?'<p class="fx-ok-ver">'+ico('ok',16)+'<span><b>Tudo pronto.</b> Agora é só tirar as 3 fotos: frente, costas e lado direito, sem mexer o celular.</span></p>':'')+
+    fxQuemVe(false)+'<p class="small mut fx-dica">Dúvida? <a href="https://wa.me/5565993497692" target="_blank" rel="noopener">Fale comigo no WhatsApp</a>.</p></div></div>';
+  b.innerHTML=h;var nb=b.querySelector('.fx2-body');if(nb&&sc)nb.scrollTop=sc;}
+function iniciarProtocolo(){PR.f=qs('v')!='m';PR.m=qs('r')=='treino'?'treino':'banho';try{document.title='Protocolo das fotos · TEAM GO!';}catch(x){}
+  var b=document.getElementById('fxsh');b.onclick=function(ev){var x=ev.target.closest&&ev.target.closest('button');if(!x)return;var d=x.dataset;
+    if(d.prk){PR[d.prk]=d.prk=='f'?d.prv=='true':d.prv;fxVibra(6);prTela();return;}if(d.fxchk){PR.chk[d.fxchk]=!PR.chk[d.fxchk];fxVibra(6);prTela();}};prTela();}
+iniciar();
+</script>
+</body>
+</html>

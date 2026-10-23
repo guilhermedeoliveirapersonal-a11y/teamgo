@@ -41,6 +41,10 @@ html{background:#111111}
 .tgs-btn{font:inherit;font-weight:700;font-size:16px;padding:14px 18px;border-radius:12px;border:0;background:linear-gradient(180deg,#FF2A3B,#C80016);color:#fff;cursor:pointer}
 .tgs-btn.gh{background:transparent;border:1px solid var(--tgs-line);color:#F7F3EF}
 .tgs-erro{color:var(--tgs-redt);font-size:14px;min-height:1em}
+/* v25: "perdi meu link" (o link vai pro e-mail da planilha); tela rola se não couber, sem cortar o topo */
+.tgs-tela{justify-content:flex-start;overflow-y:auto}.tgs-tela>:first-child{margin-top:auto}.tgs-tela>:last-child{margin-bottom:auto}
+.tgs-lnk{font:inherit;font-size:14.5px;background:none;border:0;color:#F7F3EF;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:8px}
+.tgs-ok{color:#9be3a8}
 /* plano B: o app do Google dentro de um quadro (jeito da v17) */
 html.tgs-q,html.tgs-q body{margin:0;height:100%;background:#111111;overflow:hidden}
 #tgs-quadro{position:fixed;inset:0;bottom:var(--tgs-barra,0px);width:100%;height:calc(100% - var(--tgs-barra,0px));border:0;display:block;background:#111111}
@@ -89,6 +93,8 @@ html.tgs-convite:not(.tgs-q) body{padding-bottom:var(--tgs-barra,0px)}
   var MARCA = '<div class="tgs-marca"><small>Team</small><b>GO!</b></div>';
   var FORM = '<form class="tgs-caixa" id="tgs-f"><input id="tgs-lk" inputmode="url" autocomplete="off" placeholder="Cole aqui o seu link" aria-label="Seu link do app">' +
     '<button class="tgs-btn" type="submit">Entrar</button><div class="tgs-erro" id="tgs-er" role="alert"></div></form>';
+  var PERDI = '<button class="tgs-lnk" type="button" id="tgs-pl">Perdi meu link</button><form class="tgs-caixa" id="tgs-pf" hidden><p style="margin:0 auto">Digite o seu e-mail. Se for de um aluno do time, o link chega nele em alguns minutos.</p>' +
+    '<input id="tgs-em" type="email" inputmode="email" autocomplete="email" placeholder="Seu e-mail" aria-label="Seu e-mail"><button class="tgs-btn gh" type="submit">Mandar o link pro meu e-mail</button><div class="tgs-erro" id="tgs-pm" role="status"></div></form>';
 
   // 1) qual aluno: o código vem no link pessoal (?a=...) e fica guardado no celular
   var url = new URL(location.href), codigo = url.searchParams.get('a');
@@ -181,12 +187,31 @@ html.tgs-convite:not(.tgs-q) body{padding-bottom:var(--tgs-barra,0px)}
       location.replace(location.pathname + '?a=' + encodeURIComponent(c));
     });
   }
+  // v25: perdeu o link? o servidor manda pro e-mail que está na planilha (quem digitou não vê o link)
+  function perdi(d) {
+    var f = d.querySelector('#tgs-pf'), b = d.querySelector('#tgs-pl'); if (!f || !b) return;
+    b.addEventListener('click', function () { f.hidden = false; b.hidden = true; d.querySelector('#tgs-em').focus(); });
+    f.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var em = d.querySelector('#tgs-em').value.trim(), m = d.querySelector('#tgs-pm'), bt = f.querySelector('button');
+      m.className = 'tgs-erro';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) { m.textContent = 'Confira o e-mail.'; return; }
+      bt.disabled = true; m.textContent = 'Enviando…';
+      P.porta('appRecuperar', [em]).then(function (r) {
+        if (r && r.erro) { bt.disabled = false; m.textContent = r.erro; return; }
+        m.className = 'tgs-erro tgs-ok'; m.textContent = (r && r.msg) || 'Pronto! Confira o seu e-mail.';
+        setTimeout(function () { bt.disabled = false; }, 20000);
+      }).catch(function (e) { bt.disabled = false; m.textContent = (e && e.servidor && e.message) || 'Sem conexão. Tente de novo.'; });
+    });
+  }
   function semLink() {
-    caixaLink(tela(MARCA + '<h1>Bem-vindo ao seu app</h1><p>Abra pelo link que o Gui te mandou no WhatsApp. Se preferir, cole o link aqui embaixo.</p>' + FORM));
+    var d = tela(MARCA + '<h1>Bem-vindo ao seu app</h1><p>Abra pelo link que o Gui te mandou no WhatsApp. Se preferir, cole o link aqui embaixo.</p>' + FORM + PERDI);
+    caixaLink(d); perdi(d);
   }
   function naoAchou() {
     guarda.tira(CHAVE); guarda.tira(CASCA);
-    caixaLink(tela(MARCA + '<h1>Link não encontrado</h1><p>Esse link não é de nenhum aluno do time. Confere a mensagem do Gui ou fala com ele no WhatsApp: (65) 99349-7692.</p>' + FORM));
+    var d = tela(MARCA + '<h1>Link não encontrado</h1><p>Esse link não é de nenhum aluno do time. Confere a mensagem do Gui ou fala com ele no WhatsApp: (65) 99349-7692.</p>' + FORM + PERDI);
+    caixaLink(d); perdi(d);
   }
   function semInternet() {
     var d = tela(MARCA + '<h1>Sem internet</h1><p>O app precisa de internet pra abrir. Assim que o sinal voltar, ele abre sozinho.</p>' +
