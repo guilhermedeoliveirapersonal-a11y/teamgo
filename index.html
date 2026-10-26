@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<script>if(/[?&#]a=/.test(location.search+location.hash))location.replace('app/'+location.search+location.hash);</script>
+<script>if(/[?&#]a=/.test(location.search+location.hash))location.replace('app/'+location.search+location.hash);else if(/^#(aluno|compromissos)$/.test(location.hash))location.replace('aluno/'+(location.hash=='#compromissos'?'#compromissos':''));</script>
 <title>TEAM GO! — Personal Trainer em Cuiabá e Consultoria de Treino Online</title>
 <meta name="description" content="Eu sou o Guilherme, personal trainer em Cuiabá (MT). Te acompanho no presencial ou na consultoria online, de qualquer lugar do mundo. TEAM GO!">
 <meta property="og:type" content="website">
@@ -541,6 +541,13 @@
 
 .app-acoes{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:18px}.app-acoes span{color:var(--text-muted);font-size:.9rem;min-width:0}
 .tg-meu-app{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--accent-btn);color:var(--on-accent);font:700 .95rem/1 'Libre Franklin',sans-serif;padding:13px 18px;border-radius:999px;box-shadow:0 6px 22px rgba(0,0,0,.5);text-decoration:none}
+.faixa-aluno{display:none;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));background:var(--bg-elevated);border-bottom:1px solid var(--line);color:var(--text-muted);font-size:.92rem;text-decoration:none}
+.faixa-aluno b{color:var(--text);text-transform:uppercase;letter-spacing:.04em;font-size:.88rem}.faixa-aluno span{color:var(--accent-text);font-weight:700}
+.faixa-aluno:focus-visible{outline:2px solid var(--accent-text);outline-offset:-4px}
+@media (max-width:820px){.faixa-aluno{display:flex}}
+.navcta{gap:10px}.btn-aluno{white-space:nowrap}
+@media (min-width:821px) and (max-width:1100px){nav.links{gap:16px}nav.links a{font-size:.8rem}.navcta .btn-sm{padding:9px 12px;font-size:.8rem}.nav-inner{gap:12px;padding-left:16px;padding-right:16px}}
+.mobile-menu a.mm-aluno{color:var(--accent-text)}
 .hero-cred{display:flex;gap:10px;align-items:center;margin:16px 0 0;font-size:.92rem;color:var(--text-muted);max-width:52ch;line-height:1.35}.hero-cred i{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center}.hero-cred svg{width:17px;height:17px;fill:none;stroke:var(--accent-text);stroke-width:1.8;stroke-linejoin:round}
 .hero-preco{margin:14px 0 0;font-size:.98rem;color:var(--text-muted)}.hero-preco b{color:var(--text)}
 .tg-whats{display:flex;align-items:center;gap:8px}.tg-whats[hidden]{display:none}.tg-whats svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
@@ -606,6 +613,7 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
 </style>
 </head>
 <body>
+<a class="faixa-aluno" href="aluno/" data-so-site>Já é aluno? <b>Área do aluno</b><span aria-hidden="true">→</span></a>
 <header class="nav">
   <div class="nav-inner">
     <a class="wordmark brand-chip" href="#top"><img class="brand-logo" src="site/img/logo-h.svg" alt="TEAM GO!" width="191" height="30"></a>
@@ -615,20 +623,20 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
       <a href="#loja">Loja</a>
       <a href="#sobre">Sobre</a>
       <a href="#faq">FAQ</a>
-      <a href="#aluno">Área do aluno</a>
     </nav>
     <div class="navcta">
+      <a class="btn btn-ghost btn-sm btn-aluno" href="aluno/" data-so-site>Área do aluno</a>
       <a class="btn btn-primary btn-sm" href="https://wa.me/5565993497692?text=Oi%21%20Vim%20pelo%20site%20e%20quero%20saber%20mais%20sobre%20o%20TEAM%20GO%21" target="_blank" rel="noopener">Chamar no WhatsApp</a>
     </div>
     <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu" onclick="var m=document.getElementById('mobile-menu');var open=m.classList.toggle('open');this.setAttribute('aria-expanded',String(open));this.textContent=open?'✕':'☰';">☰</button>
   </div>
   <nav id="mobile-menu" class="mobile-menu">
+    <a href="aluno/" class="mm-aluno" data-so-site>Área do aluno →</a>
     <a href="#consultoria" onclick="document.getElementById('mobile-menu').classList.remove('open')">Consultoria</a>
     <a href="#personal" onclick="document.getElementById('mobile-menu').classList.remove('open')">Personal</a>
     <a href="#loja" onclick="document.getElementById('mobile-menu').classList.remove('open')">Loja</a>
     <a href="#sobre" onclick="document.getElementById('mobile-menu').classList.remove('open')">Sobre</a>
     <a href="#faq" onclick="document.getElementById('mobile-menu').classList.remove('open')">FAQ</a>
-    <a href="#aluno" onclick="document.getElementById('mobile-menu').classList.remove('open')">Área do aluno</a>
     <div class="mobile-cta"><a class="btn btn-primary btn-sm" href="https://wa.me/5565993497692?text=Oi%21%20Vim%20pelo%20site%20e%20quero%20saber%20mais%20sobre%20o%20TEAM%20GO%21" target="_blank" rel="noopener">Chamar no WhatsApp</a></div>
   </nav>
 </header>
@@ -959,92 +967,10 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
 
 <div class="lane thin"></div>
 
-<section class="sec" id="aluno">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-num mono depth">05</span>
-      <div>
-        <h2>Área do <span class="depth">aluno</span></h2>
-        <p class="lede">Já é do time? Aqui ficam todos os links do seu acompanhamento. Salva esta página nos favoritos que fica fácil achar.</p>
-      </div>
-    </div>
-    <div class="cards aluno-grid">
-      <div class="card aluno-card">
-        <span class="when">Antes de começar</span>
-        <h3>Anamnese de treino</h3>
-        <p>Um questionário sobre sua rotina, seu histórico e seus objetivos. É a base de todo o seu plano. O link chega no seu WhatsApp quando a gente fecha.</p>
-        <a class="btn btn-ghost btn-sm" href="avaliacao/?f=anamnese">Preencher anamnese</a>
-      </div>
-      <div class="card aluno-card">
-        <span class="when">Todo domingo</span>
-        <h3>Check-in da semana</h3>
-        <p>Uns 3 minutos pra me contar como foram os treinos, o sono e se sentiu alguma dor. Eu te respondo e ajusto o que precisar.</p>
-        <a class="btn btn-primary btn-sm" href="https://docs.google.com/forms/d/e/1FAIpQLSchncxWRYx89tT8hqSnp0zGPNki9xi0a1ceQcHBNtL4-7QMuA/viewform" target="_blank" rel="noopener">Fazer meu check-in</a>
-      </div>
-      <div class="card aluno-card">
-        <span class="when">A cada 4 semanas</span>
-        <h3>Atualização do físico</h3>
-        <p>No fim de cada ciclo você me conta como foi o mês e manda as fotos pelo protocolo (ou, se preferir, medidas e peso). Com isso eu monto seu relatório de evolução.</p>
-        <a class="btn btn-ghost btn-sm" id="tg-ficha" href="app/">Fazer minha atualização</a>
-        <a class="aluno-lnk" href="avaliacao/?f=protocolo">Ver o protocolo das fotos</a>
-      </div>
-      <div class="card aluno-card">
-        <span class="when">Sempre que precisar</span>
-        <h3>Falar comigo</h3>
-        <p>Dúvida de exercício, dor, viagem, mudança de horário? Me chama direto no WhatsApp.</p>
-        <a class="btn btn-ghost btn-sm" href="https://wa.me/5565993497692?text=Oi%20Gui%21%20Sou%20aluno%28a%29%20do%20TEAM%20GO%21%20e%20queria%20falar%20com%20voc%C3%AA" target="_blank" rel="noopener">Chamar no WhatsApp</a>
-      </div>
-    </div>
-    <div class="card" style="margin-top:2px;border:2px solid var(--accent);background:var(--brand-ink)">
-      <span class="when" style="font-family:'Space Mono',monospace;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent-text)">Exclusivo pra alunos</span>
-      <h3 style="font-family:'Big Shoulders Display',sans-serif;text-transform:uppercase;font-size:1.8rem;font-weight:800">Seu app <span style="color:var(--accent)">TEAM GO!</span></h3>
-      <p style="color:var(--text-muted);margin:0">Todo aluno recebe um app só seu, com a sua foto, a sua sequência de check-ins, as medalhas que você já conquistou e a sua evolução semana a semana. E tem os níveis: todo mundo começa Franguito e, treinando com constância, vira Monstrão. Cada missão cumprida (treinar, beber água, dormir bem, fazer o check-in) rende GO Coins, que você troca na loja do app por acessórios pro seu mascote, desconto na mensalidade, treino comigo e até a camiseta TEAM GO!. Todo mês tem a liga do time, e quem soma mais pontos ganha moedas extras. Quem fizer check-in 1 ano sem falhar ganha uma camiseta TEAM GO!. No primeiro mês, o Mestre Galo (ou a Mestra Franga) te mostra o caminho dentro do app e responde dúvidas de treino, sono, alimentação e dor. Eu te mando o link no WhatsApp assim que você começa.</p>
-        <p>Você aí que é mais da “velha guarda” também tem a opção de receber uma planilha personalizada, com o link dos vídeos de execução de cada movimento e as explicações.</p>
-      <div class="app-acoes"><a class="btn btn-primary btn-sm" href="app/">Abrir meu app</a><span>Primeira vez neste celular? Abra pelo link que eu te mandei no WhatsApp. Perdeu o link? Toque em "Abrir meu app" e depois em "Perdi meu link": ele chega no seu e-mail.</span></div>
-    </div>
-
-    <div id="compromissos" style="scroll-margin-top:88px">
-      <p class="eyebrow" style="margin-top:56px">Compromissos TEAM GO!</p>
-      <p class="lede" style="margin-top:12px">Acompanhamento de verdade é combinado dos dois lados. Aqui está o que você pode esperar de mim e o que eu preciso de você pro seu resultado acontecer.</p>
-      <div class="pact" style="margin-top:24px">
-        <div class="pact-col">
-          <h3>O que eu faço</h3>
-          <ul>
-            <li><b>Respondo suas dúvidas no WhatsApp em até 24 horas úteis.</b></li>
-            <li><b>Respondo seu check-in em até 48 horas</b>, com um áudio ou vídeo curto dizendo o que eu vi e o que muda no seu treino.</li>
-            <li><b>Ajusto seu treino em até 72 horas úteis</b> depois que você manda as fotos.</li>
-            <li><b>Troco seu treino a cada 4 semanas</b>, ou antes se você sentir dor ou se sua rotina mudar.</li>
-            <li><b>Te entrego um relatório no fim de cada ciclo</b>, mostrando sua evolução e o plano pras próximas 4 semanas.</li>
-            <li>Corrijo os vídeos de execução que você me mandar.</li>
-          </ul>
-        </div>
-        <div class="pact-col">
-          <h3>O que eu preciso de você</h3>
-          <ul>
-            <li><b>Fazer o check-in toda semana, de preferência no domingo.</b> Leva uns 3 minutos e é assim que eu te acompanho de perto.</li>
-            <li><b>A cada 4 semanas, mandar suas fotos</b> (frente, costas e lado).</li>
-            <li><b>Marcar os treinos como feitos no aplicativo PersonalGO</b>, anotando as cargas sempre que der.</li>
-            <li><b>Me avisar quando algo mudar</b>: viagem, dor, mudança de horário ou de academia.</li>
-            <li>Ser sincero(a) nas respostas. Não estou aqui pra julgar, e sim pra ajustar.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="cycle">
-        <p class="eyebrow">Como funciona cada ciclo de 4 semanas</p>
-        <ol>
-          <li><b>Semanas 1 a 4</b>Você treina pelo aplicativo e faz o check-in todo domingo. Eu respondo e faço pequenos ajustes.</li>
-          <li><b>Fim da semana 4</b>Você manda as fotos e eu monto seu relatório do ciclo.</li>
-          <li><b>Novo ciclo</b>Treino atualizado no aplicativo, com base em tudo que aconteceu nas últimas semanas.</li>
-        </ol>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="sec" id="faq" style="background:var(--bg-elevated)">
   <div class="wrap">
     <div class="sec-head">
-      <span class="sec-num mono depth">06</span>
+      <span class="sec-num mono depth">05</span>
       <div>
         <h2>Perguntas frequentes</h2>
         <p class="lede">O que mais me perguntam antes de começar.</p>
@@ -1106,7 +1032,7 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
     <span style="display:flex;gap:16px;flex-wrap:wrap">
       <a href="https://wa.me/5565993497692?text=Oi%21%20Vim%20pelo%20site%20e%20quero%20saber%20mais%20sobre%20o%20TEAM%20GO%21" target="_blank" rel="noopener">WhatsApp</a>
       <a href="https://instagram.com/treinadorguilhermedeoliveira" target="_blank" rel="noopener">Instagram</a>
-      <a href="#aluno">Área do aluno</a>
+      <a href="aluno/" data-so-site>Área do aluno</a>
       <a href="#top">Voltar ao topo</a>
     </span>
   </div>
@@ -1116,7 +1042,7 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
 <script>
 // quem já usa o app neste celular ganha o atalho
 var TGC='';try{TGC=localStorage.getItem('tg_codigo')||'';if(!/^[A-Za-z0-9_-]{4,60}$/.test(TGC))TGC='';}catch(e){}
-if(TGC){document.getElementById('tg-meu-app').hidden=false;document.getElementById('tg-ficha').href='avaliacao/?a='+encodeURIComponent(TGC);} // v26: atualização do físico direto na área de avaliação
+if(TGC){document.getElementById('tg-meu-app').hidden=false;}
 else(function(){var w=document.getElementById('tg-whats'),h=document.querySelector('.hero'),fim=document.querySelector('footer');if(!w||!('IntersectionObserver' in window)){if(w)w.hidden=false;return;} // v26: WhatsApp flutuante pra visitante, depois do topo e longe do rodapé
   var vh=true,vf=false,at=function(){w.hidden=vh||vf;};
   new IntersectionObserver(function(e){vh=e[0].isIntersecting;at();}).observe(h);
