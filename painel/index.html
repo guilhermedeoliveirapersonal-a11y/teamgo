@@ -2,6 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'">
+<script>if(window.top!==window.self){document.documentElement.style.display='none';try{window.top.location.replace(window.location.href)}catch(e){}}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Painel TEAM GO!</title>
 <meta name="robots" content="noindex">
@@ -38,6 +40,12 @@ html{background:#111111}
 .tgs-btn{font:inherit;font-weight:700;font-size:16px;padding:14px 18px;border-radius:12px;border:0;background:linear-gradient(180deg,#FF2A3B,#C80016);color:#fff;cursor:pointer}
 .tgs-btn.gh{background:transparent;border:1px solid rgba(247,243,239,.13);color:#F7F3EF}
 .tgs-erro{color:#FF3B4A;font-size:14px;min-height:1em}
+.tgs-caixa[hidden],.tgs-tela [hidden]{display:none}
+/* v27: liberar este aparelho (código de 6 números no e-mail) */
+.tgs-tela{justify-content:flex-start;overflow-y:auto}.tgs-tela>:first-child{margin-top:auto}.tgs-tela>:last-child{margin-bottom:auto}
+.tgs-cod{text-align:center;font-size:26px!important;letter-spacing:.3em;font-weight:700}
+.tgs-lnk{font:inherit;font-size:14.5px;background:none;border:0;color:#F7F3EF;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:8px}
+.tgs-ok{color:#9be3a8;font-size:14px}
 </style>
 <script src="../ponte.js"></script>
 </head>
@@ -45,7 +53,7 @@ html{background:#111111}
 <div id="tgs-abre"><div class="tgs-marca tgs-pulsa"><small>Team</small><b>GO!</b><i>Painel</i></div></div>
 <script>
 (function () {
-  var P = window.TGPonte, guarda = P.guarda, CHAVE = 'tg_painel_k';
+  var P = window.TGPonte, guarda = P.guarda, CHAVE = 'tg_painel_k', APAR = 'tg_painel_t';
   var $ = function (id) { return document.getElementById(id); };
   var sai = function () { $('tgs-abre').classList.add('sai'); };
   var MARCA = '<div class="tgs-marca"><small>Team</small><b>GO!</b><i>Painel</i></div>';
@@ -64,9 +72,13 @@ html{background:#111111}
   if (!valida(k)) return pedirLink('Abra pelo botão "Abrir meu painel" do e-mail "Seu painel TEAM GO!", ou cole o link do painel aqui.');
   if (navigator.onLine === false) return semInternet();
   P.instalarGoogle();
-  P.porta('cascaPainel', [k]).then(function (r) {
+  // v27: com a liberação de aparelho ligada, cada chamada leva também a senha deste aparelho (chave.senha)
+  var t = guarda.ler(APAR) || '';
+  if (!/^[a-f0-9]{32}$/.test(t)) t = '';
+  P.porta('cascaPainel', [t ? k + '.' + t : k]).then(function (r) {
     P.montar(r.html, $('tgs-abre')); sai(); window.TG_MODO = 'direto';
   }, function (e) {
+    if (e && e.servidor && /Aparelho não liberado/.test(e.message)) { guarda.tira(APAR); return liberar(); }
     if (e && e.servidor) { guarda.tira(CHAVE); return pedirLink('Essa chave não abre o painel. Cole o link do painel mais recente.'); }
     // plano B: o painel no endereço do Google (jeito antigo)
     window.TG_MODO = 'google';
@@ -92,6 +104,47 @@ html{background:#111111}
       if (!c) { d.querySelector('#tgs-er').textContent = 'Esse não parece ser o link do painel.'; return; }
       guarda.por(CHAVE, c);
       location.replace(location.pathname);
+    });
+  }
+  // v27: aparelho novo. O código vai pro e-mail do Gui e vale 10 minutos; a senha do aparelho fica guardada aqui.
+  function nomeAparelho() {
+    var u = navigator.userAgent || '';
+    var so = /iPhone/.test(u) ? 'iPhone' : /iPad/.test(u) ? 'iPad' : /Android/.test(u) ? 'Android' : /Windows/.test(u) ? 'Windows' : /Mac OS X|Macintosh/.test(u) ? 'Mac' : /Linux|CrOS/.test(u) ? 'Computador' : 'Aparelho';
+    var nav = /Edg\//.test(u) ? 'Edge' : /OPR\//.test(u) ? 'Opera' : /SamsungBrowser/.test(u) ? 'Samsung Internet' : /CriOS|Chrome\//.test(u) ? 'Chrome' : /FxiOS|Firefox\//.test(u) ? 'Firefox' : /Safari\//.test(u) ? 'Safari' : '';
+    var ins = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+    return so + (nav ? ' · ' + nav : '') + (ins ? ' (app instalado)' : '');
+  }
+  function liberar() {
+    var d = tela(MARCA + '<h1>Liberar este aparelho</h1><p>Por segurança, o painel só abre nos aparelhos que você liberou. Vou mandar um código de 6 números pro seu e-mail de personal.</p>' +
+      '<div class="tgs-caixa"><button class="tgs-btn" type="button" id="tgs-pc">Mandar código</button>' +
+      '<form class="tgs-caixa" id="tgs-cf" hidden><input id="tgs-cd" class="tgs-cod" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="000000" aria-label="Código de 6 números">' +
+      '<button class="tgs-btn" type="submit">Liberar</button><button class="tgs-lnk" type="button" id="tgs-pn">Mandar outro código</button></form>' +
+      '<div class="tgs-erro" id="tgs-ce" role="status"></div></div>');
+    var pc = d.querySelector('#tgs-pc'), cf = d.querySelector('#tgs-cf'), cd = d.querySelector('#tgs-cd'), ce = d.querySelector('#tgs-ce');
+    var msg = function (txt, ok) { ce.textContent = txt || ''; ce.className = ok ? 'tgs-ok' : 'tgs-erro'; };
+    var pedir = function (b) {
+      b.disabled = true; msg('Mandando…', true);
+      P.porta('painelAparelhoPedir', [k, nomeAparelho()]).then(function (r) {
+        b.disabled = false;
+        if (r && r.livre) return location.replace(location.pathname);
+        if (!r || r.erro) return msg((r && r.erro) || 'Não deu pra mandar. Tente de novo.');
+        pc.hidden = true; cf.hidden = false; cd.value = ''; cd.focus();
+        msg('Mandei pro ' + r.para + '. Pode levar 1 minuto; olhe também o spam.', true);
+      }, function (e) { b.disabled = false; msg((e && e.servidor && e.message) || 'Sem conexão. Tente de novo.'); });
+    };
+    pc.addEventListener('click', function () { pedir(pc); });
+    d.querySelector('#tgs-pn').addEventListener('click', function (ev) { pedir(ev.currentTarget); });
+    cf.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var c = cd.value.replace(/\D/g, ''), b = cf.querySelector('button[type=submit]');
+      if (c.length !== 6) return msg('O código tem 6 números.');
+      b.disabled = true; msg('Conferindo…', true);
+      P.porta('painelAparelhoConfirmar', [k, c, nomeAparelho()]).then(function (r) {
+        b.disabled = false;
+        if (!r || r.erro || !r.t) return msg((r && r.erro) || 'Não deu certo. Tente de novo.');
+        if (!guarda.por(APAR, r.t)) return msg('Este navegador não deixa guardar a liberação (aba anônima?). Abra o painel numa aba normal.');
+        location.replace(location.pathname);
+      }, function (e) { b.disabled = false; msg((e && e.servidor && e.message) || 'Sem conexão. Tente de novo.'); });
     });
   }
   function semInternet() {

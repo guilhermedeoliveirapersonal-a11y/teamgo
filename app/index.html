@@ -2,6 +2,9 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'">
+<meta name="referrer" content="no-referrer">
+<script>if(window.top!==window.self){document.documentElement.style.display='none';try{window.top.location.replace(window.location.href)}catch(e){}}</script>
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TEAM GO!</title>
@@ -45,6 +48,9 @@ html{background:#111111}
 .tgs-tela{justify-content:flex-start;overflow-y:auto}.tgs-tela>:first-child{margin-top:auto}.tgs-tela>:last-child{margin-bottom:auto}
 .tgs-lnk{font:inherit;font-size:14.5px;background:none;border:0;color:#F7F3EF;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:8px}
 .tgs-ok{color:#9be3a8}
+.tgs-caixa[hidden],.tgs-tela [hidden]{display:none}
+/* v27: "Sair deste celular" */
+.tgs-tela a.tgs-btn{display:block;text-decoration:none;box-sizing:border-box}
 /* plano B: o app do Google dentro de um quadro (jeito da v17) */
 html.tgs-q,html.tgs-q body{margin:0;height:100%;background:#111111;overflow:hidden}
 #tgs-quadro{position:fixed;inset:0;bottom:var(--tgs-barra,0px);width:100%;height:calc(100% - var(--tgs-barra,0px));border:0;display:block;background:#111111}
@@ -98,6 +104,8 @@ html.tgs-convite:not(.tgs-q) body{padding-bottom:var(--tgs-barra,0px)}
 
   // 1) qual aluno: o código vem no link pessoal (?a=...) e fica guardado no celular
   var url = new URL(location.href), codigo = url.searchParams.get('a');
+  // v27: "Sair deste celular" (link no card "Seu plano"): apaga tudo do TEAM GO! guardado neste aparelho
+  if (url.searchParams.get('sair') === '1') return sair();
   // v21: "Ver app" do painel (o Gui olhando): não conta como acesso do aluno e não guarda o código neste celular
   window.TG_OLHAR = url.searchParams.get('olhar') === '1';
   if (valido(codigo)) { if (!window.TG_OLHAR) guarda.por(CHAVE, codigo); }
@@ -202,6 +210,21 @@ html.tgs-convite:not(.tgs-q) body{padding-bottom:var(--tgs-barra,0px)}
         m.className = 'tgs-erro tgs-ok'; m.textContent = (r && r.msg) || 'Pronto! Confira o seu e-mail.';
         setTimeout(function () { bt.disabled = false; }, 20000);
       }).catch(function (e) { bt.disabled = false; m.textContent = (e && e.servidor && e.message) || 'Sem conexão. Tente de novo.'; });
+    });
+  }
+  function sair() {
+    var d = tela(MARCA + '<h1>Sair deste celular?</h1><p>O app esquece o seu link e tudo o que guardou neste aparelho. Seus pontos, moedas, fotos e avaliações continuam guardados com o Gui.</p>' +
+      '<p>Pra entrar de novo é só abrir o seu link (ou pedir em "Perdi meu link").</p>' +
+      '<div class="tgs-caixa"><button class="tgs-btn" type="button" id="tgs-sim">Sim, sair</button><button class="tgs-btn gh" type="button" id="tgs-nao">Voltar pro app</button></div>');
+    d.querySelector('#tgs-nao').addEventListener('click', function () { location.replace(location.pathname); });
+    d.querySelector('#tgs-sim').addEventListener('click', function () {
+      try { var tira = []; for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (/^tg_/.test(k)) tira.push(k); } tira.forEach(function (k) { localStorage.removeItem(k); }); } catch (e) {}
+      try { sessionStorage.clear(); } catch (e) {}
+      try { if (window.caches) caches.keys().then(function (l) { l.forEach(function (n) { if (/^tg-/.test(n)) caches.delete(n); }); }); } catch (e) {}
+      history.replaceState(null, '', location.pathname);
+      d.remove();
+      tela(MARCA + '<h1>Pronto</h1><p>Este celular não guarda mais nada do seu app.</p><p>Se o ícone do TEAM GO! estiver na tela inicial, pode tirar ele também: segure o ícone e escolha remover.</p>' +
+        '<div class="tgs-caixa"><a class="tgs-btn gh" href="../aluno/">Ir pra Área do aluno</a></div>');
     });
   }
   function semLink() {

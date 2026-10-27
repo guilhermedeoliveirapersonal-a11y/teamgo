@@ -2,6 +2,9 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src https://script.google.com https://script.googleusercontent.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="no-referrer">
+<script>if(window.top!==window.self){document.documentElement.style.display='none';try{window.top.location.replace(window.location.href)}catch(e){}}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>Atualização do físico · TEAM GO!</title>
@@ -275,6 +278,10 @@ h1 .fx-n{display:inline-block;margin-right:10px;color:var(--red);font-weight:600
 .pr-op{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pr-op .fx-q{margin-top:18px}
 @media print{.fx2-top{position:static}.fx2-body{overflow:visible;height:auto}.fx-cki i{border-color:#000}}
 .pr-op+.fx-sub{margin-top:10px}.pr-pg a{color:var(--red)}
+
+/* 26/10: Política de Privacidade (link e autorização em destaque na anamnese) */
+.fx-priv{margin:10px 0 0;font-size:13.5px;color:var(--ink2)}.fx-priv a,.an-priv a{color:var(--red);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.an-priv{margin-top:26px}.an-priv p{margin:6px 0 8px}
 </style>
 </head>
 <body>
@@ -303,7 +310,9 @@ function fxHist(){try{history.pushState({fx:1},'',location.href);}catch(x){}}
 window.addEventListener('popstate',function(){if(typeof MODO!='undefined'&&MODO=='an'?anVoltar():(typeof fxVoltar=='function'&&fxVoltar()))return;sair();});
 function telaMsg(t,txt,tentar){var b=document.getElementById('fxsh');b.onclick=function(ev){var x=ev.target.closest('button');if(!x)return;if(x.dataset.tentar)iniciar();else if(x.dataset.app)sair();};
   b.innerHTML='<div class="fx2-body"><div class="fx-msg"><h1>'+e(t)+'</h1><p>'+e(txt)+'</p>'+(tentar?'<button type="button" class="bt" data-tentar="1">Tentar de novo</button>':'')+'<button type="button" class="bt sec" style="margin-top:10px" data-app="1">Ir pro app TEAM GO!</button></div></div>';}
-function iniciar(){if(qs('f')=='protocolo')return iniciarProtocolo();if(qs('f')=='anamnese')return iniciarAnamnese();var c=qs('a');
+// rascunhos (anamnese e atualização) com mais de 30 dias saem do celular, mesmo os de outro link
+function limparRascunhos(){try{var ag=Date.now();for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(!/^tg_(ficha_|anamnese$)/.test(k||''))continue;var x=null;try{x=JSON.parse(localStorage.getItem(k));}catch(e){}if(!x||!x.t||ag-x.t>30*864e5)localStorage.removeItem(k);}}catch(e){}}
+function iniciar(){limparRascunhos();if(qs('f')=='protocolo')return iniciarProtocolo();if(qs('f')=='anamnese')return iniciarAnamnese();var c=qs('a');
   if(!/^[A-Za-z0-9_-]{4,60}$/.test(c))return telaMsg('Abra pelo app','A atualização do físico abre pelo botão "Fazer minha atualização", no seu app TEAM GO!.');
   document.getElementById('fxsh').innerHTML='<div class="fx-msg"><div class="fx-spin"></div><p class="mut">Abrindo sua ficha…</p></div>';
   google.script.run.withSuccessHandler(function(r){
@@ -363,7 +372,7 @@ function fxVibra(ms){try{if(navigator.vibrate)navigator.vibrate(ms||8);}catch(x)
 function iniciarFicha(){
   try{FX=JSON.parse(localStorage.getItem(fxKey())||'null');}catch(x){}
   // rascunho velho não serve: os passos mudaram de lugar (v3: fotos por último e o jeito de acompanhar)
-  if(!FX||FX.v!==3||!FX.ref||FX.fim||Date.now()-(FX.t||0)>12*864e5)FX=fxNovo();
+  if(!FX||FX.v!==3||!FX.ref||FX.fim||Date.now()-(FX.t||0)>12*864e5){if(FX)try{localStorage.removeItem(fxKey());}catch(x){}FX=fxNovo();} // rascunho velho sai do celular
   if(!(FX.p>=0&&FX.p<FXP.length))FX.p=0;
   FX.env=false;FX.rv=0;FX.st=FX.st||{};FX.q=FX.q||{};FX.med2=FX.med2||{};FX.th={};FX.ant=null;FXR=null;Object.keys(FX.st).forEach(function(k){if(FX.st[k]=='env')FX.st[k]=FX.fotos[k]?'ok':'';});
   while(FX.p>0&&fxPula(FXP[FX.p]))FX.p--;fxSalvar();
@@ -501,7 +510,7 @@ function fxCorpo(p){var ev=D.evolucao||[],u=ev[ev.length-1],h='',o=D.f?'a':'o';
     '<a class="fx-wa" href="'+e((D.links||{}).whats||'#')+'" target="_blank" rel="noopener">'+FXO.video(26)+'<span><b>Mandar vídeo de exercício</b><small>Pelo WhatsApp, pra eu corrigir a execução</small></span></a>';
   var fo=['frente','costas','lado'].filter(function(k){return FX.fotos[k];}).length,md=FXM.filter(function(m){return !isNaN(fxMedia(m[0]));}).map(function(m){return m[1]+' '+fxNum(fxMedia(m[0]));}).join(' · ');
   var mi='<div class="fx-rth">'+['frente','costas','lado','livre'].filter(function(k){return FX.th[k];}).map(function(k){return '<img src="'+FX.th[k]+'" alt="'+FXN[k]+'">';}).join('')+'</div>';
-  return fxH('Tudo certo?')+'<p class="fx-lead">Confere antes de enviar. Dá pra mudar qualquer parte.</p>'+fxComparar()+'<div class="fx-rev">'+
+  return fxH('Tudo certo?')+'<p class="fx-lead">Confere antes de enviar. Dá pra mudar qualquer parte.</p><p class="fx-priv">Seus dados são cuidados como explica a <a href="../privacidade/" target="_blank" rel="noopener">Política de Privacidade</a>.</p>'+fxComparar()+'<div class="fx-rev">'+
     fxRevCard('Corpo',1,'peso',[['Peso em jejum',fxNum(FX.peso)+' kg'],['Medidas',md||'Não mediu']].concat(FX.modo=='sem'?[['Roupa de prova',(FX.roupaQual?FX.roupaQual+': ':'')+FX.roupa]]:[]))+
     fxRevCard('Seu mês',2,'adesao',[['Nota do ciclo',FX.adesao+' de 10'],['Fome',FX.fome],['Cardio',FX.cardio],['Refeições livres',FX.refl],['Frutas e verduras',FX.frutas],['Fast food e doce',FX.ultra],['Água por dia',FX.agua]].concat(FX.nutri?[['Nutricionista',FX.nutri]]:[]).concat([['Físico',FX.perc]]))+
     fxRevCard('Treino',3,'recuperacao',[['Recuperação',FX.recup],['Mais séries',FX.vol+(FX.vol=='Sim'&&FX.tempo?' · '+FX.tempo:'')],['Travou na carga',FX.carga]])+
@@ -687,7 +696,7 @@ function fxQuemVe(apagar){return '<div class="fx-box fx-qv"><b>Quem vê suas fot
   '<li>A câmera guiada daqui não salva nada na galeria do seu celular.</li>'+
   '<li>Uso só pra ver sua postura e sua evolução: pés, joelhos, quadril e ombros.</li>'+
   '<li>Quer apagar? '+(apagar?'Toque aqui embaixo e eu apago todas.':'É só me pedir no WhatsApp.')+'</li></ul>'+
-  (apagar?'<button type="button" class="fx-add" data-fxapaga="1">Apagar minhas fotos</button>':'')+'</div>';}
+  (apagar?'<button type="button" class="fx-add" data-fxapaga="1">Apagar minhas fotos</button>':'')+'<p class="fx-priv"><a href="../privacidade/" target="_blank" rel="noopener">Ler a Política de Privacidade</a></p></div>';}
 function fxRostoLinha(){var on=FX.rosto!==false;return '<button type="button" class="fx-sw'+(on?' on':'')+'" data-fxrosto="1" role="switch" aria-checked="'+on+'"><span><b>Esconder meu rosto</b><small>O celular cobre o rosto antes de mandar.</small></span><i aria-hidden="true"></i></button>';}
 // ---- faixa no rosto: depois de tirar, a pessoa confere (e ajusta) a faixa; só então a foto sobe
 var FXR=null;
@@ -736,7 +745,9 @@ function anNovo(){return {v:1,t:Date.now(),t0:Date.now(),p:0,ref:'an'+Date.now()
   sit:'',ativ:[],ativOutro:'',esporteTxt:'',onde:'',freq:null,divisao:'',treinoTxt:'',nivel:'',tecnica:'',aparelhos:[],naoSeiAp:false,faltaMaq:'',
   altura:'',peso:'',parq:[],parqNada:false,parqTxt:'',dores:[],doresNada:false,doresTxt:'',horm:'',hormTxt:'',fuma:'',alcool:'',
   sono:null,horas:7,estresse:null,energia:'',dias:null,tempo:'',nutri:'',refeicoes:'',frutas:'',proteina:'',ultra:'',agua:'',supl:[],
-  objetivo:'',prio:[],naoGosta:'',modo:'',rosto:true,fotos:{},th:{},st:{},q:{},ant:{},fotosDepois:false,aut:null,chk:{},regras:''};}
+  objetivo:'',prio:[],naoGosta:'',modo:'',rosto:true,fotos:{},th:{},st:{},q:{},ant:{},fotosDepois:false,aut:null,chk:{},regras:'',priv:''};}
+// Política de Privacidade (…/teamgo/privacidade/): a versão aceita vai junto com a anamnese
+var ANPRIV='Versão 1.0 de 26/10/2026';
 function anSalvar(){try{localStorage.setItem(ANKEY,fxRascunho(AN,['th','ant']));}catch(x){}} // v25: a imagem das fotos nunca fica no celular
 function anA(){return AN.versao=='f'?'a':AN.versao=='m'?'o':'o(a)';}
 function anPrimeiro(){var n=String(AN.nome||'').trim().split(/\s+/)[0]||'';return n?n.charAt(0).toUpperCase()+n.slice(1).toLowerCase():'';}
@@ -776,9 +787,10 @@ function anPode(p){var A=AN;
   if(p=='postura')return FXMODOS.indexOf(A.modo)>=0&&(A.modo=='sem'||A.aut=='sim');
   if(p=='protocolo')return fxCheckOk(A,A.modo,A.versao=='f');
   if(p=='fotos')return A.aut=='sim'&&['frente','costas','lado'].every(function(k){return A.st[k]=='ok'&&!!A.fotos[k];});
-  if(p=='regras')return !!A.regras;
+  if(p=='regras')return !!A.regras&&A.priv===ANPRIV;
   return true;}
 function anFalta(p){var A=AN;
+  if(p=='regras')return !A.regras?'Responda sobre os combinados.':'Marque a autorização dos seus dados pra continuar.';
   if(p=='nome')return String(A.nome).trim().split(/\s+/).length<2?'Escreva seu nome completo (nome e sobrenome).':'Toque em aluna ou aluno.';
   if(p=='contato'){if(anZap().length<10||anZap().length>13)return 'Confere o WhatsApp com DDD (ex.: 65 99999 9999).';if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(A.email).trim()))return 'Confere o e-mail.';return 'Confere a data de nascimento (dia, mês e ano).';}
   if(p=='plano')return A.plano?'Escolha por quanto tempo.':'Escolha uma opção.';
@@ -883,7 +895,9 @@ function anCorpo(p){var A=AN,a=anA(),pn=anPrimeiro();
     '<li><b>Prazos:</b> respondo em até 24 horas nos dias úteis e ajusto o protocolo em até 72 horas. Quase sempre antes.</li>'+
     '<li><b>Check-in toda semana:</b> é o que me deixa ajustar seu treino. Quem não responde as mensagens nem faz os check-ins não renova.</li>'+
     '<li><b>Atualização do físico no fim de cada ciclo:</b> se for atrasar, me avisa. Sem aviso, depois de 15 dias sem a atualização, a consultoria é encerrada.</li></ol><p class="small mut">Não leve pro pessoal: é só pra nossa boa convivência.</p>'+
-    '<div class="fx-ops" role="group">'+anOpc('regras','Sim, li e estou de acordo')+anOpc('regras','Ainda tenho dúvidas, gostaria de conversar antes de começar','Ainda tenho dúvidas','Quero conversar antes de começar')+'</div>';
+    '<div class="fx-ops" role="group">'+anOpc('regras','Sim, li e estou de acordo')+anOpc('regras','Ainda tenho dúvidas, gostaria de conversar antes de começar','Ainda tenho dúvidas','Quero conversar antes de começar')+'</div>'+
+    '<div class="fx-box an-priv"><b>Seus dados de saúde e suas fotos</b><p>O que você me contou sobre a sua saúde (triagem, dores, remédios ou hormônios, medidas e hábitos) e as suas fotos, se mandar, eu uso só pra montar e acompanhar o seu treino. Só eu vejo. Você pode pedir pra ver, corrigir ou apagar quando quiser.</p><p><b>Guardado no Google:</b> os dados e as fotos ficam nos serviços do Google, que podem usar servidores fora do Brasil (como nos Estados Unidos). Ao autorizar, você concorda com isso também.</p><a href="../privacidade/" target="_blank" rel="noopener">Ler a Política de Privacidade</a></div>'+
+    '<div class="fx-ops" role="group">'+anOpc('priv',ANPRIV,'Li e autorizo o uso dos meus dados de saúde e das minhas fotos','Só pro meu treino e guardados no Google, como explica a Política de Privacidade')+'</div>';
   // revisão
   var linhas=function(r){return r.filter(function(x){return x[1]!==''&&x[1]!=null;}).map(function(x){return '<div class="row"><span class="mut">'+x[0]+'</span><b>'+e(x[1])+'</b></div>';}).join('');};
   var sec=function(t,n,ir,r){return '<div class="fx-rc"><div class="fx-rch"><b><i>'+n+'</i>'+t+'</b><button type="button" class="fx-ed" data-anir="'+ANP.indexOf(ir)+'">Editar</button></div>'+linhas(r)+'</div>';};
@@ -893,7 +907,7 @@ function anCorpo(p){var A=AN,a=anA(),pn=anPrimeiro();
     sec('Saúde',3,'corpo',[['Altura e peso',fxNum(anAltura())+' m · '+fxNum(A.peso)+' kg'],['Triagem de saúde',A.parqNada?'Nenhum item':A.parq.length+' item(ns)'],['Dores',A.doresNada?'Nenhuma':A.dores.join(', ')],['Hormônios',A.horm],['Cigarro',A.fuma],['Bebida',A.alcool.split(' (')[0]]])+
     sec('Rotina',4,'sono',[['Sono',A.sono+' de 10 · '+fxNum(A.horas)+' h'],['Estresse',A.estresse+' de 10'],['Disposição',A.energia.split(' -')[0]],['Treinos por semana',A.dias],['Tempo por treino',A.tempo],['Nutricionista',A.nutri]])+
     sec('Objetivo',5,'objetivo',[['Objetivo',A.objetivo.split(' (')[0]],['Prioridades',A.prio.join(' e ')],['Não gosta de',A.naoGosta]])+
-    sec('Fotos e combinados',6,'postura',(A.modo=='sem'?[['Postura','Sem fotos: avaliação ao vivo na chamada']]:[['Jeito',fxModoNome(A.modo)+(A.rosto!==false?', rosto coberto':'')],['Fotos',A.fotosDepois?'Vai mandar depois':['frente','costas','lado'].filter(function(k){return A.fotos[k];}).length+' de 3'],['Uso das fotos',A.aut=='sim'?'Autorizado':'Não autorizado']]).concat([['Combinados',A.regras.split(',')[0]]]))+
+    sec('Fotos e combinados',6,'postura',(A.modo=='sem'?[['Postura','Sem fotos: avaliação ao vivo na chamada']]:[['Jeito',fxModoNome(A.modo)+(A.rosto!==false?', rosto coberto':'')],['Fotos',A.fotosDepois?'Vai mandar depois':['frente','costas','lado'].filter(function(k){return A.fotos[k];}).length+' de 3'],['Uso das fotos',A.aut=='sim'?'Autorizado':'Não autorizado']]).concat([['Combinados',A.regras.split(',')[0]],['Privacidade',A.priv?'Autorizado ('+A.priv+')':'']]))+
     '</div><p class="small mut fx-dica">Ao enviar, te chamo no WhatsApp pra marcar a chamada de início.</p>';}
 
 function anTela(){var b=document.getElementById('fxsh');if(!b||!AN)return;if(FXC)return fxCamTela();if(FXR)return fxRostoTela();
@@ -942,7 +956,7 @@ function anEnviar(){AN.env=true;anTela();
     sit:c.sit,ativ:c.ativ,ativOutro:c.ativOutro,esporteTxt:c.esporteTxt,onde:c.onde,freq:c.freq,divisao:anPula('treinoatual')?'':c.divisao,treinoTxt:anPula('treinoatual')?'':c.treinoTxt,nivel:c.nivel,tecnica:c.tecnica,
     aparelhos:anPula('aparelhos')?[]:c.aparelhos,faltaMaq:anPula('aparelhos')?'':c.faltaMaq,altura:anAltura(),peso:c.peso,parq:c.parq,parqTxt:c.parqTxt,dores:c.dores,doresTxt:c.doresTxt,horm:c.horm,hormTxt:c.hormTxt,fuma:c.fuma,alcool:c.alcool,
     sono:c.sono,horas:c.horas,estresse:c.estresse,energia:c.energia,dias:c.dias,tempo:c.tempo,nutri:c.nutri,refeicoes:c.refeicoes,frutas:c.frutas,proteina:c.proteina,ultra:c.ultra,agua:c.agua,supl:c.supl,
-    objetivo:c.objetivo,prio:c.prio,naoGosta:c.naoGosta,fotosModo:c.modo,rosto:c.rosto!==false,fotos:c.fotosDepois||c.modo=='sem'?{}:c.fotos,fotosDepois:!!c.fotosDepois&&c.modo!='sem',aut:c.modo=='sem'?'nao':c.aut,regras:c.regras};
+    objetivo:c.objetivo,prio:c.prio,naoGosta:c.naoGosta,fotosModo:c.modo,rosto:c.rosto!==false,fotos:c.fotosDepois||c.modo=='sem'?{}:c.fotos,fotosDepois:!!c.fotosDepois&&c.modo!='sem',aut:c.modo=='sem'?'nao':c.aut,regras:c.regras,priv:c.priv};
   google.script.run.withSuccessHandler(function(r){if(!AN)return;AN.env=false;
       if(r&&r.ok){AN.fim=true;AN.fimNome=r.primeiro||anPrimeiro();fxVibra([20,40,20]);try{localStorage.removeItem(ANKEY);}catch(x){}anTela();return;}
       if(r&&r.conv){anSalvar();if(r.conv=='vencido')return anVenceu(AN.conv,{});if(r.conv=='usado')return anUsado();return anPortaria('nao');}
@@ -966,7 +980,7 @@ function iniciarAnamnese(){MODO='an';document.title='Anamnese de treino · TEAM 
       if(r.st=='vencido')return anVenceu(cod,r);
       anLS(ANCK,null);anPortaria(cu?'nao':'');})
     .withFailureHandler(function(){anPorta('<h1>Não consegui conectar</h1><p class="fx-lead">Confere a internet e tenta de novo. O que você já preencheu continua salvo neste celular.</p><button type="button" class="bt" data-antenta="1">Tentar de novo</button>');}).anamneseConvite(cod);}
-function anRascunho(){try{var x=JSON.parse(anLS(ANKEY)||'null');return x&&x.v===1&&x.ref&&!x.fim?x:null;}catch(e){return null;}}
+function anRascunho(){try{var x=JSON.parse(anLS(ANKEY)||'null');if(x&&Date.now()-(x.t||Date.now())>30*864e5){anLS(ANKEY,null);return null;}return x&&x.v===1&&x.ref&&!x.fim?x:null;}catch(e){return null;}} // rascunho com mais de 30 dias é apagado
 var ANESC=null;
 function anAbrir(cod,r,escolha){var ra=anRascunho();
   // rascunho de outro convite (link trocado, ou outra pessoa no mesmo celular): pergunta antes de apagar
