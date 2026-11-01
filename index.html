@@ -625,6 +625,8 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
 .dep-q b{display:block}.dep-q small{color:var(--text-muted);font-size:.84rem}
 .dep-ok{font-size:.72rem;color:var(--text-muted);font-family:"Space Mono",monospace}
 .mesmo-que{margin:14px 0 4px;padding:12px 14px;border-radius:12px;background:rgba(43,217,107,.08);border:1px solid rgba(43,217,107,.25);color:var(--text);font-size:.95rem}
+.dep-fotos{display:grid;grid-template-columns:1fr 1fr;gap:8px}.dep-fotos div{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:3/4;background:#1b1b1b}.dep-fotos img{width:100%;height:100%;object-fit:cover;display:block}.dep-fotos span{position:absolute;left:8px;bottom:8px;padding:3px 8px;border-radius:999px;background:rgba(0,0,0,.65);font:700 11px "Space Mono",monospace;text-transform:uppercase;letter-spacing:.06em;color:#fff}.dep-fotos div+div span{background:var(--accent-btn)}
+.dep.dep-ad2::before{display:none}
 /* v29 (31/10): site mais vivo — faixa ao vivo, teste do plano, entrada suave, brilho do topo */
 @keyframes tgDrift{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-40px,30px,0) scale(1.08)}100%{transform:translate3d(0,0,0) scale(1)}}
 .hero::before{animation:tgDrift 16s ease-in-out infinite;will-change:transform}
@@ -1168,15 +1170,17 @@ window.addEventListener('load',function(){setTimeout(function(){(window.requestI
 </script>
 <script>
 // DEPOIMENTOS: só entra quem autorizou POR ESCRITO (data em "autorizado"). Sem nenhum, a seção mostra só o texto de sempre.
+// Com fotos de antes e depois (com autorização pra foto): antesImg:'site/img/dep/rodrigo-antes.webp', depoisImg:'site/img/dep/rodrigo-depois.webp', tempoFoto:'Depois de 8 meses'
 // Modelo: {nome:'Rodrigo M.', plano:'Personal presencial', tempo:'8 meses no time', antes:'Treinava sozinho e vivia com dor nas costas', hoje:'Treina 4x por semana, sem dor', frase:'O que ele disse, com as palavras dele.', foto:'site/img/dep/rodrigo.webp', autorizado:'05/11/2026'}
 var DEPOIMENTOS = [
 ];
 window.tgDepMostrar=function(lista){var el=document.getElementById('dep-lista');if(!el)return;
  var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
- var ok=(lista||[]).filter(function(d){return d&&d.autorizado&&d.nome&&d.frase;});if(!ok.length){el.hidden=true;return;}
+ var img=function(p){return /^site\/img\/dep\/[\w-]+\.(webp|jpg|png)$/.test(p||'');};
+ var ok=(lista||[]).filter(function(d){return d&&d.autorizado&&d.nome&&(d.frase||(img(d.antesImg)&&img(d.depoisImg)));});if(!ok.length){el.hidden=true;return;}
  el.innerHTML=ok.map(function(d){var ini=esc(String(d.nome).trim().charAt(0).toUpperCase());
   var foto=/^site\/img\/dep\/[\w-]+\.(webp|jpg|png)$/.test(d.foto||'')?'<img data-f="'+d.foto+'" alt="" loading="lazy" width="48" height="48">':'<span class="dep-in" aria-hidden="true">'+ini+'</span>';
-  return '<figure class="dep"><blockquote class="dep-fr">'+esc(d.frase)+'</blockquote>'+(d.antes&&d.hoje?'<div class="dep-ad"><div><span>Antes</span><b>'+esc(d.antes)+'</b></div><i aria-hidden="true">→</i><div><span>Hoje</span><b>'+esc(d.hoje)+'</b></div></div>':'')+'<figcaption class="dep-q">'+foto+'<div><b>'+esc(d.nome)+'</b><small>'+esc([d.plano,d.tempo].filter(Boolean).join(' · '))+'</small></div></figcaption><span class="dep-ok">Depoimento autorizado pelo aluno</span></figure>';}).join('');
+  return '<figure class="dep'+(img(d.antesImg)&&img(d.depoisImg)?' dep-ad2':'')+'">'+(img(d.antesImg)&&img(d.depoisImg)?'<div class="dep-fotos"><div><img data-f="'+d.antesImg+'" alt="Antes" loading="lazy"><span>Antes</span></div><div><img data-f="'+d.depoisImg+'" alt="Depois" loading="lazy"><span>'+esc(d.tempoFoto||'Depois')+'</span></div></div>':'')+(d.frase?'<blockquote class="dep-fr">'+esc(d.frase)+'</blockquote>':'')+(d.antes&&d.hoje?'<div class="dep-ad"><div><span>Antes</span><b>'+esc(d.antes)+'</b></div><i aria-hidden="true">→</i><div><span>Hoje</span><b>'+esc(d.hoje)+'</b></div></div>':'')+'<figcaption class="dep-q">'+foto+'<div><b>'+esc(d.nome)+'</b><small>'+esc([d.plano,d.tempo].filter(Boolean).join(' · '))+'</small></div></figcaption><span class="dep-ok">Depoimento autorizado pelo aluno</span></figure>';}).join('');
  [].forEach.call(el.querySelectorAll('img[data-f]'),function(i){i.src=i.getAttribute('data-f');});el.hidden=false;var l=document.getElementById('dep-lede');if(l)l.textContent='Palavras de quem treina comigo, com a autorização de cada um.';};
 tgDepMostrar(DEPOIMENTOS);
 </script>
