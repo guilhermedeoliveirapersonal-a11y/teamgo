@@ -662,6 +662,7 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
 @media (max-width:640px){.quiz{padding:22px 18px}.qz-op{grid-template-columns:1fr}.quiz-sec{padding:52px 0}}
 .rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
 .rv.rv-on{opacity:1;transform:none}
+@media print{.rv{opacity:1!important;transform:none!important}}
 @media (prefers-reduced-motion:reduce){.hero::before,.av-pt{animation:none}.hero h1 em.depth{animation:none;background-size:100% 4px}.rv{opacity:1;transform:none;transition:none}.qz-anim{animation:none}}
 </style>
 </head>

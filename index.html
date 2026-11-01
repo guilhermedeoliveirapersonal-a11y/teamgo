@@ -663,6 +663,7 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
 @media (max-width:640px){.quiz{padding:22px 18px}.qz-op{grid-template-columns:1fr}.quiz-sec{padding:52px 0}}
 .rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
 .rv.rv-on{opacity:1;transform:none}
+@media print{.rv{opacity:1!important;transform:none!important}}
 @media (prefers-reduced-motion:reduce){.hero::before,.av-pt{animation:none}.hero h1 em.depth{animation:none;background-size:100% 4px}.rv{opacity:1;transform:none;transition:none}.qz-anim{animation:none}}
 </style>
 </head>
@@ -1190,7 +1191,7 @@ var P=[
  {k:'perto',q:'Quanto de mim você quer por perto?',o:[['go','📱','Treino no app + check-in','eu respondo toda semana'],['premium','🎥','Isso + videochamada','comigo todo mês']]}
 ];
 var R={},i=0,bar=[].slice.call(document.querySelectorAll('#qz-bar i'));
-var nomeInd=(function(){try{var n=new URLSearchParams(location.search).get('ind')||'';return n.replace(/[^\p{L}\p{N} .'-]/gu,'').trim().slice(0,40);}catch(e){return '';}})();
+var nomeInd=(function(){try{var n=new URLSearchParams(location.search).get('ind')||'';var rx;try{rx=new RegExp("[^\\p{L}\\p{N} .'-]",'gu');}catch(x){rx=/[^A-Za-zÀ-ÿ0-9 .'-]/g;}return n.replace(rx,'').trim().slice(0,40);}catch(e){return '';}})();
 function txt(k,v){for(var a=0;a<P.length;a++)if(P[a].k===k)for(var b=0;b<P[a].o.length;b++)if(P[a].o[b][0]===v)return P[a].o[b][2]+' '+P[a].o[b][3];return v;}
 function pinta(){bar.forEach(function(e,n){e.classList.toggle('on',n<=i);});
  var p=P[i],ops=p.o.slice();if(p.k==='perto'&&R.onde==='cuiaba')ops.unshift(['presencial','🤝','Aula presencial','eu do seu lado na academia']);
