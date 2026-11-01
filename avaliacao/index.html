@@ -282,6 +282,27 @@ h1 .fx-n{display:inline-block;margin-right:10px;color:var(--red);font-weight:600
 /* 26/10: Política de Privacidade (link e autorização em destaque na anamnese) */
 .fx-priv{margin:10px 0 0;font-size:13.5px;color:var(--ink2)}.fx-priv a,.an-priv a{color:var(--red);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .an-priv{margin-top:26px}.an-priv p{margin:6px 0 8px}
+/* v28: check-in da semana */
+.ck-tr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:22px 0 6px}
+.ck-tr button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:72px;border:1px solid var(--line2);border-radius:8px;background:var(--sf);color:var(--ink2);font-family:var(--disp);transition:background-color .15s,border-color .15s,transform .1s}
+.ck-tr button b{font-size:34px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.ck-tr button small{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-top:3px}
+.ck-tr button.meta{border-color:var(--line2)}.ck-tr button.on{background:var(--red);border-color:var(--red);color:#fff;transform:scale(1.03)}.ck-tr button.on small{color:#fff}
+.ck-fala{display:flex;gap:8px;align-items:flex-start;margin:14px 0 0;font-size:15px;line-height:1.5;color:var(--ink2)}.ck-fala.ok{color:var(--ok);font-weight:600}.ck-fala svg{flex:none;margin-top:2px}
+.ck-sub{display:block;font-size:13.5px;font-weight:500;color:var(--ink3);margin-top:2px}
+.ck-peso{max-width:180px;font-family:var(--disp);font-size:24px}
+.ck-fim .fx-okc{color:var(--ok)}.ck-moeda{display:inline-block;margin-top:14px;padding:8px 14px;border-radius:999px;background:var(--warnt);color:var(--warn);font-weight:700}
+@media (hover:hover){.ck-tr button:not(.on):hover{border-color:var(--ink3);color:var(--ink)}}
+
+/* v28: pressão e vitórias da semana */
+.ck-como ul{margin:6px 0 0;padding-left:18px}.ck-como li{margin:2px 0}
+.ck-pa{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:end;margin-top:14px}.ck-pa .fx-l{margin:0}.ck-pa small{display:block;font-weight:400}.ck-x{padding-bottom:14px;color:var(--mut,#6B6461)}
+.ck-pa input{font-size:28px;text-align:center;font-variant-numeric:tabular-nums}
+.ck-alerta{text-align:left;border-color:var(--red,#C8102E);margin-top:16px}
+.ck-vit{text-align:left;margin:18px auto 0;max-width:420px;padding:14px 16px;border:1px solid currentColor;border-color:rgba(127,127,127,.3);border-radius:12px}
+.ck-vit-t{display:block;font:700 12px/1.2 inherit;letter-spacing:.12em;text-transform:uppercase;color:var(--red,#C8102E);margin-bottom:8px}
+.ck-vit p{display:flex;gap:8px;align-items:flex-start;margin:6px 0;font-weight:600}.ck-vit p svg{flex:none;color:#1E9E5A;margin-top:2px}.ck-vit small{display:block;margin-top:8px}
+.ck-quero{display:flex;align-items:center;justify-content:center;gap:6px;margin:4px 0 14px;width:100%}
 </style>
 </head>
 <body>
@@ -307,12 +328,12 @@ function call(fn,args,ok,falhou){google.script.run.withSuccessHandler(function(r
 // sair volta pro app (o rascunho fica salvo); "j" abre o app direto na Jornada, onde aparece o que acabou de ser enviado
 function sair(j){if(typeof fxCamParar=='function')fxCamParar();if(typeof MODO!='undefined'&&MODO=='an'){location.href='../';return;}var c=(D&&D.codigo)||qs('a');try{if(j)sessionStorage.setItem('aba','jornada');}catch(x){}location.href=APP_URL+(c?'?a='+encodeURIComponent(c):'');}
 function fxHist(){try{history.pushState({fx:1},'',location.href);}catch(x){}}
-window.addEventListener('popstate',function(){if(typeof MODO!='undefined'&&MODO=='an'?anVoltar():(typeof fxVoltar=='function'&&fxVoltar()))return;sair();});
+window.addEventListener('popstate',function(){if(typeof MODO!='undefined'&&MODO=='ck'?ckVoltar():typeof MODO!='undefined'&&MODO=='an'?anVoltar():(typeof fxVoltar=='function'&&fxVoltar()))return;sair();});
 function telaMsg(t,txt,tentar){var b=document.getElementById('fxsh');b.onclick=function(ev){var x=ev.target.closest('button');if(!x)return;if(x.dataset.tentar)iniciar();else if(x.dataset.app)sair();};
   b.innerHTML='<div class="fx2-body"><div class="fx-msg"><h1>'+e(t)+'</h1><p>'+e(txt)+'</p>'+(tentar?'<button type="button" class="bt" data-tentar="1">Tentar de novo</button>':'')+'<button type="button" class="bt sec" style="margin-top:10px" data-app="1">Ir pro app TEAM GO!</button></div></div>';}
 // rascunhos (anamnese e atualização) com mais de 30 dias saem do celular, mesmo os de outro link
-function limparRascunhos(){try{var ag=Date.now();for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(!/^tg_(ficha_|anamnese$)/.test(k||''))continue;var x=null;try{x=JSON.parse(localStorage.getItem(k));}catch(e){}if(!x||!x.t||ag-x.t>30*864e5)localStorage.removeItem(k);}}catch(e){}}
-function iniciar(){limparRascunhos();if(qs('f')=='protocolo')return iniciarProtocolo();if(qs('f')=='anamnese')return iniciarAnamnese();var c=qs('a');
+function limparRascunhos(){try{var ag=Date.now();for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(!/^tg_(ficha_|ck_|anamnese$)/.test(k||''))continue;var x=null;try{x=JSON.parse(localStorage.getItem(k));}catch(e){}if(!x||!x.t||ag-x.t>30*864e5)localStorage.removeItem(k);}}catch(e){}}
+function iniciar(){limparRascunhos();if(qs('f')=='protocolo')return iniciarProtocolo();if(qs('f')=='anamnese')return iniciarAnamnese();if(qs('f')=='checkin')return iniciarCheckin();var c=qs('a');
   if(!/^[A-Za-z0-9_-]{4,60}$/.test(c))return telaMsg('Abra pelo app','A atualização do físico abre pelo botão "Fazer minha atualização", no seu app TEAM GO!.');
   document.getElementById('fxsh').innerHTML='<div class="fx-msg"><div class="fx-spin"></div><p class="mut">Abrindo sua ficha…</p></div>';
   google.script.run.withSuccessHandler(function(r){
@@ -747,7 +768,7 @@ function anNovo(){return {v:1,t:Date.now(),t0:Date.now(),p:0,ref:'an'+Date.now()
   sono:null,horas:7,estresse:null,energia:'',dias:null,tempo:'',nutri:'',refeicoes:'',frutas:'',proteina:'',ultra:'',agua:'',supl:[],
   objetivo:'',prio:[],naoGosta:'',modo:'',rosto:true,fotos:{},th:{},st:{},q:{},ant:{},fotosDepois:false,aut:null,chk:{},regras:'',priv:''};}
 // Política de Privacidade (…/teamgo/privacidade/): a versão aceita vai junto com a anamnese
-var ANPRIV='Versão 1.0 de 26/10/2026';
+var ANPRIV='Versão 1.1 de 31/10/2026';
 function anSalvar(){try{localStorage.setItem(ANKEY,fxRascunho(AN,['th','ant']));}catch(x){}} // v25: a imagem das fotos nunca fica no celular
 function anA(){return AN.versao=='f'?'a':AN.versao=='m'?'o':'o(a)';}
 function anPrimeiro(){var n=String(AN.nome||'').trim().split(/\s+/)[0]||'';return n?n.charAt(0).toUpperCase()+n.slice(1).toLowerCase():'';}
@@ -1040,6 +1061,107 @@ function prTela(){var b=document.getElementById('fxsh');if(!b)return;var cb=b.qu
 function iniciarProtocolo(){PR.f=qs('v')!='m';PR.m=qs('r')=='treino'?'treino':'banho';try{document.title='Protocolo das fotos · TEAM GO!';}catch(x){}
   var b=document.getElementById('fxsh');b.onclick=function(ev){var x=ev.target.closest&&ev.target.closest('button');if(!x)return;var d=x.dataset;
     if(d.prk){PR[d.prk]=d.prk=='f'?d.prv=='true':d.prv;fxVibra(6);prTela();return;}if(d.fxchk){PR.chk[d.fxchk]=!PR.chk[d.fxchk];fxVibra(6);prTela();}};prTela();}
+// v28: check-in semanal (?f=checkin&a=código), fora do jogo, no mesmo estilo laudo da atualização do físico.
+// Uma pergunta por tela, respostas por toque, rascunho no celular (tg_ck_<código>, sem nada sensível além das respostas, some em 30 dias).
+// Envia por alunoCheckinEnviar: grava na aba do check-in do Google Forms e segue o mesmo caminho (devolutiva, avisos, moedas).
+var CK=null,CKI=null,CKU=-1,CKDIR=0,CKPCT=0,CKNUM='';
+var CKP=['treinos','energia','sono','dor','gosto','extra','revisar'];
+var CKE=[['Semana',['treinos','energia','sono']],['Corpo',['dor','gosto']],['Enviar',['extra','revisar']]];
+var CKDORES=[['Nenhum','Nenhuma','Treinei sem dor nem desconforto'],['Leve (incomoda, mas não atrapalha)','Leve','Incomoda, mas não atrapalha'],['Moderado (atrapalhou algum exercício)','Moderada','Atrapalhou algum exercício'],['Forte (precisei parar ou evitar)','Forte','Precisei parar ou evitar']];
+var CKESC={energia:[['Muito baixa','Sem disposição nenhuma'],['Baixa','Treinei no esforço'],['Média','Dia sim, dia não'],['Boa','Com vontade'],['Ótima','Com tudo']],
+  sono:[['Muito ruim','Quase não descansei'],['Ruim','Acordei cansad@'],['Regular','Dá pra melhorar'],['Bom','Descansei bem'],['Ótimo','Acordei nov@ em folha']],
+  gosto:[['Nada','Não está funcionando pra mim'],['Pouco','Tem coisa pra ajustar'],['Mais ou menos','Algumas coisas sim, outras não'],['Bastante','Estou curtindo'],['Muito','Amando o treino']]};
+function ckKey(){return 'tg_ck_'+D.codigo;}
+function ckSalvar(){try{CK.t=Date.now();localStorage.setItem(ckKey(),JSON.stringify(CK));}catch(x){}}
+function ckNovo(){return {v:1,ps:'',pd:'',fc:'',t:Date.now(),p:0,ref:Date.now().toString(36)+Math.random().toString(36).slice(2,8),sem:CKI.semana,treinos:null,energia:null,sono:null,dor:'',onde:'',gosto:null,facil:'',peso:'',recado:''};}
+function ckA(s){return String(s).replace(/@/g,CKI&&CKI.f?'a':'o');}
+function ckEtapa(p){for(var i=0;i<CKE.length;i++){var j=CKE[i][1].indexOf(p);if(j>=0)return {i:i,j:j,n:CKE[i][1].length};}return {i:0,j:0,n:1};}
+// v28: pressão e batimentos (só pra quem o Gui ligou no painel); tudo opcional, mas o que vier tem que fazer sentido
+function ckNumT(x){return String(x==null?'':x).trim();}
+function ckSaudeOk(){var s=ckNumT(CK.ps),d=ckNumT(CK.pd),f=ckNumT(CK.fc),n=function(x){return Number(x.replace(',','.'));};if(!!s!==!!d)return false;if(s&&!(n(s)>=70&&n(s)<=260&&n(d)>=40&&n(d)<=160&&n(s)>n(d)))return false;if(f&&!(n(f)>=30&&n(f)<=220))return false;return true;}
+function ckPesoOk(){var t=String(CK.peso||'').trim();if(!t)return true;var n=Number(t.replace(',','.'));return n>=30&&n<=300;}
+function ckPode(p){if(p=='treinos')return CK.treinos!=null;if(p=='energia'||p=='sono'||p=='gosto')return CK[p]!=null;if(p=='dor')return !!CK.dor;if(p=='extra')return ckPesoOk();if(p=='saude')return ckSaudeOk();return true;}
+function ckFalta(p){if(p=='treinos')return 'Toque em quantos treinos você fez.';if(p=='dor')return 'Escolha uma opção.';if(p=='extra')return 'Confere o peso: só o número, em quilos (ex.: 68,5).';if(p=='saude')return 'Confere: a máxima e a mínima juntas, como aparecem no aparelho (ex.: 120 e 80).';return 'Toque numa nota de 0 a 10.';}
+function ckEsc(k,v){var a=CKESC[k];if(v==null)return null;return a[v<=1?0:v<=4?1:v<=6?2:v<=8?3:4];}
+function ckH(t){return '<h1>'+(CKNUM?'<span class="fx-n">'+CKNUM+'</span>':'')+t+'</h1>';}
+function ckRegua(k,esq,dir){var a=CK[k],w=ckEsc(k,a);
+  var h='<div class="fx-nt">'+(a==null?'<b class="fx-ntv vz">?</b><span>Toque numa nota</span>':'<b class="fx-ntv" style="color:'+fxCorNota(a)+'">'+a+'</b><span>'+e(ckA(w[0]))+'<small class="ck-sub">'+e(ckA(w[1]))+'</small></span>')+'</div>';
+  h+='<div class="fx-eq" role="group" aria-label="Nota de 0 a 10" style="--w:'+(a==null?'0%':((a+.5)*100/11).toFixed(2)+'%')+';--cv:'+(a==null?'var(--red)':fxCorNota(a))+'">';
+  for(var i=0;i<=10;i++)h+='<button type="button" class="'+(a===i?'on':a!=null&&i<a?'ate':'')+'" data-ckn="'+k+'" data-ckv="'+i+'" aria-pressed="'+(a===i)+'" aria-label="'+i+'" style="--c:'+fxCorNota(i)+'">'+i+'</button>';
+  return h+'</div><div class="fx-eql"><span>'+e(esq)+'</span><span>'+e(dir)+'</span></div>';}
+function ckCorpo(p){var o=CKI.f?'a':'o',h='';
+  if(CK.fim)return ckFim();
+  if(p=='treinos'){var m=CKI.meta||3,t=CK.treinos;
+    h=ckH('Quantos treinos você fez?')+'<p class="fx-q">Na semana de '+e(CK.sem)+'.</p><p class="small mut">Conta os treinos de musculação e os outros que estavam no seu plano.</p>';
+    h+='<div class="ck-tr" role="group" aria-label="Treinos na semana">';for(var i=0;i<=7;i++)h+='<button type="button" class="'+(t===i?'on':'')+(i>=m?' meta':'')+'" data-ckn="treinos" data-ckv="'+i+'" aria-pressed="'+(t===i)+'"><b>'+i+'</b>'+(i==m?'<small>meta</small>':'')+'</button>';h+='</div>';
+    if(t!=null)h+='<p class="ck-fala'+(t>=m?' ok':'')+'">'+(t>=m?ico('ok',18)+' Meta da semana batida. É assim que o resultado aparece.':t>0?'Cada treino conta. Semana que vem a gente busca '+m+'.':'Semana difícil acontece. Me conta no fim o que pegou, que eu ajusto o plano.')+'</p>';
+    return h;}
+  if(p=='energia')return ckH('Sua energia pra treinar')+'<p class="fx-q">De 0 a 10, como esteve sua disposição nesta semana?</p>'+ckRegua('energia','Muito baixa','Excelente');
+  if(p=='sono')return ckH('Seu sono')+'<p class="fx-q">De 0 a 10, como você dormiu nesta semana?</p><p class="small mut">Sono é quando o músculo se recupera: conta tanto quanto o treino.</p>'+ckRegua('sono','Muito ruim','Ótimo');
+  if(p=='dor'){h=ckH('Sentiu alguma dor?')+'<p class="fx-q">Durante ou depois dos treinos.</p>'+fxOps(CKDORES.map(function(x,i){var on=CK.dor===x[0];return '<button type="button" class="fx-op'+(on?' on':'')+'" data-ckd="'+i+'" aria-pressed="'+on+'"><span class="fx-opr" aria-hidden="true"></span><span class="fx-opt"><b>'+e(x[1])+'</b><small>'+e(x[2])+'</small></span>'+fxMed(i,3)+'</button>';}));
+    if(CK.dor&&CK.dor!==CKDORES[0][0])h+='<label class="fx-l">Onde foi e em qual exercício? <span class="mut">(me ajuda a ajustar)</span><textarea class="fx-in" data-cki="onde" rows="2" maxlength="200" placeholder="Ex.: joelho direito no agachamento">'+e(CK.onde)+'</textarea></label>'+(/Forte/.test(CK.dor)?'<p class="fx-box"><b>Dor forte não é pra aguentar calad'+o+'.</b> Evite o exercício que doeu até a gente conversar. Se a dor for no peito, falta de ar ou tontura, procure um médico.</p>':'');
+    return h;}
+  if(p=='saude')return ckH('Pressão e batimentos')+'<p class="fx-q">Meça uma vez nesta semana e anote aqui. Pode pular se não mediu.</p>'+
+    '<div class="fx-box ck-como"><b>Como medir certo</b><ul><li>Sentad'+o+', costas encostadas, pés no chão.</li><li>Fique 5 minutos parad'+o+' antes, sem falar.</li><li>Braço apoiado na mesa, na altura do coração.</li><li>Não meça logo depois do treino, do café ou do cigarro.</li></ul></div>'+
+    '<div class="ck-pa"><label class="fx-l">Máxima<small class="mut">o número de cima</small><input class="fx-in" data-cki="ps" inputmode="numeric" maxlength="3" placeholder="120" value="'+e(CK.ps)+'"></label><span class="ck-x">por</span><label class="fx-l">Mínima<small class="mut">o número de baixo</small><input class="fx-in" data-cki="pd" inputmode="numeric" maxlength="3" placeholder="80" value="'+e(CK.pd)+'"></label></div>'+
+    '<label class="fx-l">Batimentos por minuto <small class="mut">(aparece no aparelho como pulso ou um coração)</small><input class="fx-in ck-peso" data-cki="fc" inputmode="numeric" maxlength="3" placeholder="70" value="'+e(CK.fc)+'"></label>'+
+    '<p class="small mut">Isso é um registro pro seu treino, não um diagnóstico. Quem avalia a pressão é o seu médico.</p>';
+  if(p=='gosto')return ckH('Você está gostando do treino?')+'<p class="fx-q">De 0 a 10. Sinceridade ajuda: treino que você gosta é treino que você faz.</p>'+ckRegua('gosto','Nada','Muito');
+  if(p=='extra')return ckH('Mais alguma coisa?')+'<p class="fx-q">Tudo aqui é opcional.</p>'+
+    '<label class="fx-l">Algum exercício ficou fácil ou difícil demais? Qual?<textarea class="fx-in" data-cki="facil" rows="2" maxlength="300">'+e(CK.facil)+'</textarea></label>'+
+    '<label class="fx-l">Seu peso de manhã, em jejum (kg)<input class="fx-in ck-peso" data-cki="peso" inputmode="decimal" maxlength="6" placeholder="'+(CKI.peso?String(CKI.peso).replace('.',','):'Ex.: 68,5')+'" value="'+e(CK.peso)+'"></label>'+
+    (CKI.saude?'':'<button type="button" class="bt sec ck-quero" data-ckquero="1">+ Também quero anotar pressão e batimentos</button>')+
+    '<label class="fx-l">Quer me contar mais alguma coisa? <span class="mut">(rotina, viagem, conquista, dúvida)</span><textarea class="fx-in" data-cki="recado" rows="3" maxlength="800">'+e(CK.recado)+'</textarea></label>';
+  if(p=='revisar'){var lin=[['Treinos',CK.treinos+' de '+(CKI.meta||3)],['Energia',CK.energia+' de 10'],['Sono',CK.sono+' de 10'],['Dor',(CKDORES.filter(function(x){return x[0]==CK.dor;})[0]||['',''])[1]+(CK.onde?' · '+CK.onde:'')],['Gosta do treino',CK.gosto+' de 10']];
+    if(CK.ps&&CK.pd)lin.push(['Pressão',ckNumT(CK.ps)+' por '+ckNumT(CK.pd)]);if(ckNumT(CK.fc))lin.push(['Batimentos',ckNumT(CK.fc)+' por minuto']);if(CK.peso)lin.push(['Peso',String(CK.peso).replace('.',',')+' kg']);if(CK.facil)lin.push(['Fácil ou difícil',CK.facil]);if(CK.recado)lin.push(['Recado',CK.recado]);
+    return ckH('Confere e envia')+'<p class="fx-q">Semana de '+e(CK.sem)+'.</p><div class="fx-rc">'+lin.map(function(r){return '<div class="row"><span class="mut">'+e(r[0])+'</span><b>'+e(r[1])+'</b></div>';}).join('')+'</div>'+
+      '<p class="small mut" style="margin-top:14px">Sua devolutiva chega em até '+(CKI.prazoH||48)+' horas.</p>';}
+  return '';}
+function ckFim(){var o=CKI.f?'a':'o',r=CK.res||{};
+  return '<div class="fx-msg ck-fim"><svg class="fx-okc" viewBox="0 0 52 52" width="76" height="76" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M15 27l7.5 7.5L37.5 19" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
+    '<h1>Check-in enviado</h1><p>Valeu, '+e(CKI.primeiro)+'! Já recebi a sua semana.</p><p class="mut">Sua devolutiva chega até <b>'+e(r.prazo||'')+'</b>.</p>'+
+    (r.pressao=='urgente'?'<div class="fx-box ck-alerta"><b>Sua pressão ficou bem acima do esperado.</b> Descanse 10 minutos e meça de novo. Se continuar alta, ou se tiver dor no peito, falta de ar, dor de cabeça forte ou visão turva, procure atendimento hoje. Não treine até falar com o Gui.</div>':r.pressao=='alta'?'<div class="fx-box ck-alerta"><b>Sua pressão ficou um pouco acima do esperado.</b> Meça de novo outro dia, em repouso. O Gui vai olhar com cuidado e, se continuar assim, vale mostrar pro seu médico.</div>':'')+
+    ((r.vitorias||[]).length?'<div class="ck-vit"><span class="ck-vit-t">Suas vitórias da semana</span>'+(r.vitorias||[]).map(function(t){return '<p>'+ico('ok',18)+'<span>'+e(t)+'</span></p>';}).join('')+'<small class="mut">Não aparece na balança, mas é resultado do treino.</small></div>':'')+
+    (CKI.modo!=='direto'&&!r.repetido?'<p class="ck-moeda">+'+(r.moedas||20)+' moedas no seu app</p>':'')+
+    '<button type="button" class="bt" data-ckapp="1" style="margin-top:22px">Voltar pro app</button></div>';}
+function ckTela(){var b=document.getElementById('fxsh');if(!b||!CK)return;var p=CKP[CK.p],fim=CK.fim||CK.env,et=fim?{i:CKE.length,j:0,n:1}:ckEtapa(p);
+  var corpo=b.querySelector('.fx2-body'),mesmo=CKU===CK.p&&!fim,sc=mesmo&&corpo?corpo.scrollTop:0;
+  CKNUM=fim||p=='revisar'?'':(et.i+1)+'.'+(et.j+1);
+  var pct=fim?100:Math.round((et.i+(et.j+1)/et.n)/CKE.length*1000)/10,p0=CKPCT;CKPCT=pct;
+  var h='<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><button type="button" class="fx2-ic" data-ckv="voltar" aria-label="Voltar"'+(CK.p&&!fim?'':' hidden')+'>'+FXI.volta+'</button><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>Check-in da semana</b></div><button type="button" class="fx2-sair" data-x="1" aria-label="Sair (fica salvo)">Sair</button></div>';
+  h+='<div class="fita" style="--p:'+p0+'%;--n:'+CKE.length+'" aria-hidden="true"><i class="fita-reg"></i><i class="fita-cheia"></i><i class="fita-mk"></i><div class="fita-et" style="grid-template-columns:repeat('+CKE.length+',minmax(0,1fr))">'+CKE.map(function(x,i){return '<span class="'+(i<et.i?'ok':i==et.i?'cur':'')+'">'+x[0]+'</span>';}).join('')+'</div></div></div></div>';
+  h+='<div class="fx2-body"><div class="fx-pg'+(mesmo?'':' an'+(CKDIR<0?' vt':''))+'" data-pg="'+p+'">'+ckCorpo(p)+'</div></div>';
+  if(!fim){var r=p=='revisar',pd=ckPode(p);h+='<div class="fx2-foot"><div class="fx2-in"><p class="fx2-hint" id="fxhint" aria-live="polite">'+(r||pd?'':ckFalta(p))+'</p>'+(r?'<button type="button" class="bt" data-cke="1">Enviar check-in</button>':'<button type="button" class="bt" data-ckp="1"'+(pd?'':' disabled')+'>'+(p=='extra'&&!CK.facil&&!CK.peso&&!CK.recado?'Pular':'Continuar')+'</button>')+'</div></div>';}
+  b.innerHTML=h;CKU=CK.p;CKDIR=0;var nb=b.querySelector('.fx2-body');if(nb&&sc)nb.scrollTop=sc;
+  var fi=b.querySelector('.fita');if(fi){if(p0===pct)fi.style.setProperty('--p',pct+'%');else requestAnimationFrame(function(){requestAnimationFrame(function(){fi.style.setProperty('--p',pct+'%');});});}}
+function ckProx(){var p=CKP[CK.p],b=document.querySelector('#fxsh [data-ckp]'),hi=document.getElementById('fxhint'),ok=ckPode(p);if(b){b.disabled=!ok;b.textContent=p=='extra'&&!CK.facil&&!CK.peso&&!CK.recado?'Pular':'Continuar';}if(hi)hi.textContent=ok?'':ckFalta(p);}
+function ckIr(i,dir){CK.p=Math.max(0,Math.min(CKP.length-1,i));CKDIR=dir;ckSalvar();ckTela();var b=document.querySelector('#fxsh .fx2-body');if(b)b.scrollTop=0;}
+function ckVoltar(){if(!CK||CK.fim)return false;if(CK.p>0){ckIr(CK.p-1,-1);fxHist();return true;}return false;}
+function ckEnviar(btn){if(CK.env)return;CK.env=1;btn.disabled=true;btn.textContent='Enviando…';
+  var d={ref:CK.ref,ps:ckNumT(CK.ps),pd:ckNumT(CK.pd),fc:ckNumT(CK.fc),treinos:CK.treinos,energia:CK.energia,sono:CK.sono,dor:CK.dor,onde:CK.onde,gosto:CK.gosto,facil:CK.facil,peso:String(CK.peso||'').replace(',','.'),recado:CK.recado};
+  call('alunoCheckinEnviar',[d],function(r){CK.env=0;CK.fim=1;CK.res=r||{};try{localStorage.removeItem(ckKey());}catch(x){}fxVibra(20);ckTela();},function(){CK.env=0;btn.disabled=false;btn.textContent='Enviar check-in';});}
+function ckClique(ev){var x=ev.target.closest('button');if(!x||x.disabled)return;var d=x.dataset;
+  if(d.x){sair();return;}if(d.ckapp){sair(true);return;}if(d.ckv=='voltar'){ckVoltar();return;}
+  if(d.ckn){CK[d.ckn]=Number(d.ckv);fxVibra();ckSalvar();ckTela();return;}
+  if(d.ckd!==undefined){CK.dor=CKDORES[Number(d.ckd)][0];if(CK.dor===CKDORES[0][0])CK.onde='';fxVibra();ckSalvar();ckTela();return;}
+  if(d.ckp){if(ckPode(CKP[CK.p])){ckIr(CK.p+1,1);fxHist();}return;}
+  if(d.cke){ckEnviar(x);return;}
+  if(d.cknovo){CK=ckNovo();ckSalvar();ckTela();return;}
+  if(d.ckquero){ckLigaSaude();CK.qs=1;var i=CKP.indexOf('saude');ckIr(i,1);fxHist();return;}}
+// v28: quem não tinha o passo da pressão pode pedir na hora (o servidor passa a mostrar nas próximas semanas)
+function ckLigaSaude(){CKI.saude=true;CKP=['treinos','energia','sono','dor','saude','gosto','extra','revisar'];CKE=[['Semana',['treinos','energia','sono']],['Corpo',['dor','saude','gosto']],['Enviar',['extra','revisar']]];}
+function ckDigitou(ev){var t=ev.target;if(!CK||!t.dataset||!t.dataset.cki)return;CK[t.dataset.cki]=t.value;ckSalvar();ckProx();}
+function iniciarCheckin(){MODO='ck';document.title='Check-in da semana · TEAM GO!';var c=qs('a');
+  if(!/^[A-Za-z0-9_-]{4,60}$/.test(c))return telaMsg('Abra pelo app','O check-in abre pelo botão "Fazer meu check-in", no seu app TEAM GO!.');
+  document.getElementById('fxsh').innerHTML='<div class="fx-msg"><div class="fx-spin"></div><p class="mut">Abrindo seu check-in…</p></div>';
+  google.script.run.withSuccessHandler(function(r){
+    if(!r||r.erro)return telaMsg('Link não encontrado','Abra o check-in pelo botão "Fazer meu check-in", no seu app TEAM GO!.');
+    D={codigo:c};CKI=r;if(r.saude)ckLigaSaude();var g=null;try{g=JSON.parse(localStorage.getItem(ckKey())||'null');}catch(x){}
+    CK=g&&g.v===1&&g.sem===r.semana&&!g.fim&&Date.now()-(g.t||0)<7*864e5?g:ckNovo();CK.env=0;if(CK.qs&&!CKI.saude)ckLigaSaude();
+    var sh=document.getElementById('fxsh');sh.onclick=ckClique;sh.oninput=ckDigitou;
+    if(r.ja&&!g){sh.innerHTML='<div class="fx2-body"><div class="fx-msg"><h1>Check-in da semana já feito</h1><p>A semana de '+e(r.semana)+' já está com o Gui. Se esqueceu algo, pode mandar de novo: a devolutiva considera as duas respostas.</p><button type="button" class="bt" data-cknovo="1" style="margin-top:18px">Mandar outra resposta</button><button type="button" class="bt sec" style="margin-top:10px" data-ckapp="1">Voltar pro app</button></div></div>';return;}
+    CKU=-1;ckSalvar();ckTela();fxHist();
+  }).withFailureHandler(function(){telaMsg('Não consegui conectar','Confere a internet e tenta de novo. O que você já respondeu continua salvo neste celular.',true);}).alunoCheckinInicio(c);}
 iniciar();
 </script>
 </body>
