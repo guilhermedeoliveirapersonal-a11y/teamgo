@@ -109,6 +109,7 @@ html.tgs-folhaon .tabs{visibility:hidden}
 @media (prefers-reduced-motion:reduce){.tgs-ic,.tgs-pulso,.tgs-seta{animation:none}#tgs-folha .tgs-cx,#tgs-folha .tgs-fundo{transition:none}}
 </style>
 <script src="../ponte.js"></script>
+<script src="../instalar.js"></script>
 </head>
 <body>
 <div id="tgs-abre"><div class="tgs-marca tgs-pulsa"><small>Team</small><b>GO!</b></div></div>
@@ -287,148 +288,11 @@ html.tgs-folhaon .tabs{visibility:hidden}
   // 3) v45: convite pra instalar logo ao abrir — folha grande com o caminho certo pra cada celular
   //    (Android: botão que instala direto; iPhone: passo a passo; Instagram/Facebook: abrir no navegador)
   function convite() {
-    if (instalado()) return;
-    var ua = navigator.userAgent || '', raiz = document.documentElement;
-    var ios = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    var dentro = /Instagram|FBAN|FBAV|FB_IAB|FBIOS|Line\/|TikTok|musical_ly|Snapchat|LinkedInApp|GSA\//i.test(ua);
-    var outroIOS = ios && /CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
-    var samsung = /SamsungBrowser/i.test(ua);
-    var android = /Android/i.test(ua);
-    var webview = android && /; wv\)/.test(ua);               // navegador embutido (WhatsApp, Gmail etc.) não instala
-    if (webview) dentro = true;
-    var safariV = +((/Version\/(\d+)/.exec(ua) || [])[1] || 0), ipad = /iPad/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    // 1 toque pra sair do Instagram/Facebook direto pro navegador certo
-    var linkFora = android ? 'intent://' + location.href.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(location.href) + ';end'
-      : ios ? 'x-safari-' + location.href : '';
-    var celular = ios || /Android/i.test(ua) || !!(window.matchMedia && matchMedia('(pointer:coarse)').matches);
-    var agora = Date.now(), dia = 864e5;
-    var adiou = agora - (+(guarda.ler(ADIA) || 0)) < dia;                       // "Agora não": volta amanhã
-    var disseJa = agora - (+(guarda.ler('tg_instala_ja') || 0)) < 30 * dia;     // "Já instalei" (o iPhone não avisa)
-    var barraFechada = agora - (+(guarda.ler('tg_instala_barra') || 0)) < 7 * dia;
-    var barra = $('tgs-instala'), btn = $('tgs-instalaBtn'), pedido = null, modoAtual = '';
-    var mostraBarra = function () { if (barraFechada || disseJa) return; barra.classList.add('on'); raiz.classList.add('tgs-convite'); raiz.style.setProperty('--tgs-barra', barra.offsetHeight + 'px'); };
-    var escondeBarra = function () { barra.classList.remove('on'); raiz.classList.remove('tgs-convite'); raiz.style.setProperty('--tgs-barra', '0px'); };
-    $('tgs-instalaX').addEventListener('click', function () { escondeBarra(); guarda.por('tg_instala_barra', String(Date.now())); });
-    $('tgs-instalaTx').innerHTML = '<b>Instale o app TEAM GO!</b>Fica na tela do celular e abre com um toque.';
-    btn.textContent = 'Instalar';
-
-    // ícones desenhados (iguais aos do celular)
-    var IC = {
-      comp: '<svg viewBox="0 0 24 24" aria-label="Compartilhar"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 11v9h14v-9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-      mais: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="#fff" stroke-width="2"/><path d="M12 8v8M8 12h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>',
-      pts: '<svg viewBox="0 0 24 24" aria-label="três pontinhos"><circle cx="12" cy="5" r="2" fill="#fff"/><circle cx="12" cy="12" r="2" fill="#fff"/><circle cx="12" cy="19" r="2" fill="#fff"/></svg>',
-      ptsH: '<svg viewBox="0 0 24 24" aria-label="três pontinhos"><circle cx="5" cy="12" r="2" fill="#fff"/><circle cx="12" cy="12" r="2" fill="#fff"/><circle cx="19" cy="12" r="2" fill="#fff"/></svg>',
-      menu: '<svg viewBox="0 0 24 24" aria-label="menu"><path d="M4 7h16M4 12h16M4 17h16" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>'
-    };
-    var SETA = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 44V8M10 22 24 8l14 14" fill="none" stroke="#FF3B4A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-
-    var folha = document.createElement('div');
-    folha.id = 'tgs-folha'; folha.setAttribute('role', 'dialog'); folha.setAttribute('aria-modal', 'true'); folha.setAttribute('aria-labelledby', 'tgs-fT');
-    folha.innerHTML = '<div class="tgs-fundo"></div><div class="tgs-cx"><div class="tgs-pega"></div><img class="tgs-ic" src="icones/icone-192.png" alt=""><div id="tgs-fC"></div></div>';
-    document.body.appendChild(folha);
-    var seta = document.createElement('div'); seta.className = 'tgs-seta'; seta.innerHTML = SETA; document.body.appendChild(seta);
-    var corpo = $('tgs-fC');
-    var dica = document.createElement('div'); dica.className = 'tgs-dica'; dica.innerHTML = '<span>Toque aqui 👇 e depois em <b>“Adicionar à Tela de Início”</b></span><button type="button" aria-label="Fechar">×</button>';
-    document.body.appendChild(dica);
-    dica.querySelector('button').addEventListener('click', function () { dica.classList.remove('on'); setaEm(''); mostraBarra(); });
-
-    function passos(l) { return '<ol class="tgs-passos">' + l.map(function (t) { return '<li><span>' + t + '</span></li>'; }).join('') + '</ol>'; }
-    function setaEm(onde) {
-      seta.className = 'tgs-seta'; seta.style.cssText = '';
-      if (!onde) return;
-      if (onde === 'cimaDir') { seta.style.cssText = 'top:6px;right:10px'; seta.classList.add('on', 'cima'); }
-      if (onde === 'baixoMeio') { seta.style.cssText = 'bottom:calc(8px + env(safe-area-inset-bottom));left:50%;margin-left:-23px;rotate:180deg'; seta.classList.add('on'); }
-      if (onde === 'baixoDir') { seta.style.cssText = 'bottom:calc(10px + env(safe-area-inset-bottom));right:12px;rotate:180deg'; seta.classList.add('on'); }
-    }
-    function conteudo(modo) {
-      modoAtual = modo;
-      var t = 'Deixe o app na tela do seu celular', sub = 'Assim ele abre com um toque, em tela cheia, sem precisar procurar o link.', h = '', ja = true, pos = '';
-      if (modo === 'android') {
-        h = '<button class="tgs-btn tgs-pulso" type="button" data-a="instalar">Instalar o app agora</button><p class="tgs-aviso">Leva 2 segundos. O ícone do TEAM GO! aparece junto dos seus outros apps.</p>';
-        ja = false;
-      } else if (modo === 'androidManual') {
-        h = passos(['Toque nos três pontinhos ' + IC.pts + ' no canto de cima da tela', 'Toque em <b>“Instalar app”</b> ou <b>“Adicionar à tela inicial”</b>', 'Confirme em <b>“Instalar”</b>. Pronto!']);
-        pos = 'cimaDir';
-      } else if (modo === 'samsung') {
-        h = passos(['Toque no menu ' + IC.menu + ' no canto de baixo', 'Toque em <b>“Adicionar página a”</b>', 'Escolha <b>“Tela inicial”</b>. Pronto!']);
-        pos = 'baixoDir';
-      } else if (modo === 'iphone') {
-        t = 'Só 3 toques e pronto';
-        sub = 'O iPhone não deixa nenhum site instalar sozinho, mas é rapidinho. Siga a seta vermelha:';
-        if (ipad) { h = passos(['Toque em Compartilhar ' + IC.comp + ' lá em cima, no canto direito', 'Toque em <b>“Adicionar à Tela de Início”</b> ' + IC.mais, 'Toque em <b>“Adicionar”</b>. Pronto!']); pos = 'cimaDir'; }
-        else if (safariV >= 26) { folha.dataset.dica = 'Toque nos três pontinhos aqui 👇, depois em <b>Compartilhar</b> e em <b>“Adicionar à Tela de Início”</b>'; h = passos(['Toque nos três pontinhos ' + IC.ptsH + ' aqui embaixo, no canto direito', 'Toque em <b>Compartilhar</b> ' + IC.comp + ' e depois em <b>“Adicionar à Tela de Início”</b> ' + IC.mais, 'Toque em <b>“Adicionar”</b>. Pronto!']); pos = 'baixoDir'; }
-        else { h = passos(['Toque em Compartilhar ' + IC.comp + ' aqui embaixo, no meio da barra', 'Role e toque em <b>“Adicionar à Tela de Início”</b> ' + IC.mais, 'Toque em <b>“Adicionar”</b>, no canto de cima. Pronto!']); pos = 'baixoMeio'; }
-        h = '<button class="tgs-btn tgs-pulso" type="button" data-a="mostrar">Mostrar onde tocar</button>' + h;
-      } else if (modo === 'iphoneOutro') {
-        h = passos(['Toque em Compartilhar ' + IC.comp + ', no canto de cima, ao lado do endereço', 'Toque em <b>“Adicionar à Tela de Início”</b> ' + IC.mais, 'Toque em <b>“Adicionar”</b>. Pronto!']) +
-          '<p class="tgs-aviso">Não achou? Copie seu link e abra no Safari.</p><button class="tgs-btn gh" type="button" data-a="copiar">Copiar meu link</button>';
-      } else if (modo === 'dentro') {
-        t = 'Abra no navegador pra instalar';
-        sub = 'Dentro do Instagram ou do Facebook o celular não deixa instalar. É rapidinho:';
-        t = 'Abra no ' + (ios ? 'Safari' : 'Chrome') + ' pra instalar';
-        sub = (webview ? 'Aqui dentro deste app' : 'Dentro do Instagram ou do Facebook') + ' o celular não deixa instalar. Toque no botão:';
-        h = (linkFora ? '<a class="tgs-btn tgs-pulso" href="' + linkFora + '" data-a="fora">Abrir no ' + (ios ? 'Safari' : 'Chrome') + '</a>' : '') +
-          '<p class="tgs-aviso">Não abriu? Toque nos três pontinhos ' + (ios ? IC.ptsH : IC.pts) + ' lá em cima e escolha <b>“Abrir no navegador”</b>.</p>' +
-          '<button class="tgs-btn gh" type="button" data-a="copiar">Copiar meu link</button>';
-        pos = 'cimaDir';
-      } else if (modo === 'pronto') {
-        t = 'Pronto!'; sub = 'O TEAM GO! já está na tela do seu celular. Da próxima vez, é só tocar no ícone.'; h = ''; ja = false;
-      }
-      corpo.innerHTML = '<h2 id="tgs-fT">' + t + '</h2><p class="tgs-sub">' + sub + '</p>' + h +
-        (modo === 'pronto' ? '' : '<div class="tgs-linha"><button type="button" data-a="depois">Agora não</button>' + (ja ? '<button type="button" data-a="ja">Já instalei</button>' : '') + '</div>');
-      folha.dataset.pos = pos;
-      if (!(modo === 'iphone' && !ipad && safariV >= 26)) folha.dataset.dica = '';
-      if (folha.classList.contains('vis')) setaEm(pos); else folha.dataset.seta = pos;
-    }
-    function abre(modo) {
-      conteudo(modo); escondeBarra(); dica.classList.remove('on');
-      folha.classList.add('on'); raiz.classList.add('tgs-folhaon');
-      requestAnimationFrame(function () { requestAnimationFrame(function () { folha.classList.add('vis'); setaEm(folha.dataset.seta || ''); folha.dataset.seta = ''; var cx = folha.querySelector('.tgs-cx'); cx.setAttribute('tabindex', '-1'); cx.style.outline = 'none'; cx.focus({ preventScroll: true }); }); });
-    }
-    function fecha(dep) {
-      folha.classList.remove('vis'); setaEm('');
-      setTimeout(function () { folha.classList.remove('on'); raiz.classList.remove('tgs-folhaon'); }, 380);
-      if (dep) mostraBarra();
-    }
-    function instalarAndroid() {
-      if (!pedido) { abre(samsung ? 'samsung' : 'androidManual'); return; }
-      var p = pedido; pedido = null; p.prompt();
-      p.userChoice.then(function (r) { if (r && r.outcome === 'accepted') { conteudo('pronto'); setaEm(''); setTimeout(function () { fecha(false); }, 2200); } else { abre(samsung ? 'samsung' : 'androidManual'); } });
-    }
-    function modoCerto() { return dentro ? 'dentro' : ios ? (outroIOS ? 'iphoneOutro' : 'iphone') : pedido ? 'android' : samsung ? 'samsung' : 'androidManual'; }
-
-    folha.addEventListener('click', function (e) {
-      if (e.target.classList.contains('tgs-fundo')) { guarda.por(ADIA, String(Date.now())); return fecha(true); }
-      var b = e.target.closest('[data-a]'); if (!b) return;
-      if (b.getAttribute('data-a') === 'fora') return;
-      var a = b.getAttribute('data-a');
-      if (a === 'instalar') instalarAndroid();
-      else if (a === 'mostrar') { var ps = folha.dataset.pos || ''; folha.classList.remove('vis'); setTimeout(function () { folha.classList.remove('on'); raiz.classList.remove('tgs-folhaon'); }, 380); setaEm(ps); var cima = ps.indexOf('cima') === 0; dica.classList.toggle('topo', cima); dica.querySelector('span').innerHTML = folha.dataset.dica || ('Toque aqui ' + (cima ? '👆' : '👇') + ' e depois em <b>“Adicionar à Tela de Início”</b>'); dica.classList.add('on'); }
-      else if (a === 'depois') { guarda.por(ADIA, String(Date.now())); fecha(true); }
-      else if (a === 'ja') { guarda.por('tg_instala_ja', String(Date.now())); fecha(false); }
-      else if (a === 'copiar') {
-        var lk = location.href, ok = function () { b.textContent = 'Link copiado! Cole no navegador'; };
-        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(lk).then(ok, function () { prompt('Copie seu link:', lk); });
-        else prompt('Copie seu link:', lk);
-      }
-    });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && folha.classList.contains('on')) { guarda.por(ADIA, String(Date.now())); fecha(true); } });
-    btn.addEventListener('click', function () { if (pedido && !ios && !dentro) instalarAndroid(); else abre(modoCerto()); });
-
-    // o guia do app (Luma/Lume) e o botão "Instalar" de dentro do app chamam isto
-    window.TG_INSTALAR = function () { if (pedido && !dentro) instalarAndroid(); else abre(modoCerto()); return true; };
-
-    window.addEventListener('beforeinstallprompt', function (ev) {
-      ev.preventDefault(); pedido = ev;
-      if (folha.classList.contains('on') && (modoAtual === 'androidManual' || modoAtual === 'samsung')) conteudo('android');
-      else if (!celular) mostraBarra();
-    });
-    window.addEventListener('appinstalled', function () { escondeBarra(); if (folha.classList.contains('on')) { conteudo('pronto'); setTimeout(function () { fecha(false); }, 2200); } });
-
-    if (!celular) return;                     // no computador fica só a barrinha (quando o navegador deixa instalar)
-    if (adiou || disseJa) { mostraBarra(); return; }
-    // abre logo depois que o app aparece; no Android espera um instante o "pode instalar" do navegador
-    setTimeout(function () { if (!instalado()) abre(modoCerto()); }, ios || dentro ? 1200 : 1800);
+    // v47: o convite mora em ../instalar.js (o mesmo do painel), com a demonstração animada do iPhone
+    if (!window.TGInstalar) return;
+    window.TGInstalar({ guarda: guarda, nome: 'TEAM GO!', oQue: 'o app', icone: 'icones/icone-192.png',
+      chaves: { adia: ADIA, ja: 'tg_instala_ja', barra: 'tg_instala_barra' },
+      ajuda: 'https://wa.me/5565993497692?text=' + encodeURIComponent('Oi Gui! Não consegui instalar o app TEAM GO! no meu celular.') });
   }
 })();
 </script>

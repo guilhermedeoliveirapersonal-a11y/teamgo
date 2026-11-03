@@ -1,6 +1,6 @@
 // Painel: guarda só a página (página, ponte, ícones e manifesto). O painel e os dados vêm sempre frescos do Google.
-var VERSAO = 'tg-painel-3';
-var ARQUIVOS = ['./', 'index.html', '../ponte.js', 'manifest.webmanifest', 'icones/icone-192.png', 'icones/icone-512.png', 'icones/apple-180.png', 'icones/favicon-32.png'];
+var VERSAO = 'tg-painel-4';
+var ARQUIVOS = ['./', 'index.html', '../ponte.js', '../instalar.js', 'manifest.webmanifest', 'icones/icone-192.png', 'icones/icone-512.png', 'icones/apple-180.png', 'icones/favicon-32.png'];
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(VERSAO).then(function (c) { return c.addAll(ARQUIVOS); }).then(function () { return self.skipWaiting(); }));
 });

@@ -48,6 +48,7 @@ html{background:#111111}
 .tgs-ok{color:#9be3a8;font-size:14px}
 </style>
 <script src="../ponte.js"></script>
+<script src="../instalar.js"></script>
 </head>
 <body>
 <div id="tgs-abre"><div class="tgs-marca tgs-pulsa"><small>Team</small><b>GO!</b><i>Painel</i></div></div>
@@ -77,6 +78,8 @@ html{background:#111111}
   if (!/^[a-f0-9]{32}$/.test(t)) t = '';
   P.porta('cascaPainel', [t ? k + '.' + t : k]).then(function (r) {
     P.montar(r.html, $('tgs-abre')); sai(); window.TG_MODO = 'direto';
+    // v47: convite pra instalar o painel na tela do celular (o mesmo do app)
+    if (window.TGInstalar) window.TGInstalar({ guarda: guarda, nome: 'Painel GO!', oQue: 'o painel', icone: 'icones/icone-192.png', chaves: { adia: 'tg_painel_instala_depois', ja: 'tg_painel_instala_ja', barra: 'tg_painel_instala_barra' } });
   }, function (e) {
     if (e && e.servidor && /Aparelho não liberado/.test(e.message)) { guarda.tira(APAR); return liberar(); }
     if (e && e.servidor) { guarda.tira(CHAVE); return pedirLink('Essa chave não abre o painel. Cole o link do painel mais recente.'); }
