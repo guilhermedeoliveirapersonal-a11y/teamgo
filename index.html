@@ -772,6 +772,37 @@ html.lb-aberto{overflow:hidden}
 .faq-item.aberto{background:linear-gradient(180deg,rgba(244,0,26,.07),rgba(244,0,26,0)) ,var(--bg-elevated)}
 .let-trilho.js{animation:none}
 @media (prefers-reduced-motion:reduce){.lb,.faq-r,.faq-q i,.dep.vv{transition:none}.onda{display:none}}
+<style id="vida3">
+/* v45 (03/11): mais beleza — luz no topo que segue o mouse, aurora, textura, títulos que sobem, chamada final viva */
+.hero{background:radial-gradient(520px circle at var(--hx,72%) var(--hy,28%),rgba(224,0,24,.11),transparent 62%)}
+.hero::after{content:"";position:absolute;width:560px;height:560px;left:-180px;bottom:-260px;border-radius:50%;background:radial-gradient(closest-side,rgba(143,3,22,.38),transparent);filter:blur(10px);pointer-events:none;animation:tgAurora 19s ease-in-out infinite alternate;z-index:0}
+.hero>.wrap{position:relative;z-index:1}
+@keyframes tgAurora{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(140px,-60px,0) scale(1.15)}100%{transform:translate3d(60px,-140px,0) scale(.95)}}
+@keyframes tgSobe{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.hero-grid>div:first-child>*{animation:tgSobe .8s cubic-bezier(.2,.7,.2,1) both}
+.hero-grid>div:first-child>*:nth-child(2){animation-delay:.05s}.hero-grid>div:first-child>*:nth-child(3){animation-delay:.12s}.hero-grid>div:first-child>*:nth-child(4){animation-delay:.2s}.hero-grid>div:first-child>*:nth-child(5){animation-delay:.28s}.hero-grid>div:first-child>*:nth-child(6){animation-delay:.36s}.hero-grid>div:first-child>*:nth-child(n+7){animation-delay:.44s}
+.eco-lista li{animation:tgSobe .7s cubic-bezier(.2,.7,.2,1) both}
+.eco-lista li:nth-child(1){animation-delay:.35s}.eco-lista li:nth-child(2){animation-delay:.45s}.eco-lista li:nth-child(3){animation-delay:.55s}.eco-lista li:nth-child(4){animation-delay:.65s}.eco-lista li:nth-child(5){animation-delay:.75s}.eco-lista li:nth-child(6){animation-delay:.85s}
+.eco-lista li i{transition:transform .3s cubic-bezier(.2,.7,.2,1),background .3s}
+.eco-lista li:hover i{transform:scale(1.12) rotate(-6deg)}
+.sec-head.rv h2{clip-path:inset(-20% -5% 100% -5%);translate:0 .35em;transition:clip-path .9s cubic-bezier(.2,.7,.2,1) .12s,translate .9s cubic-bezier(.2,.7,.2,1) .12s}
+.sec-head.rv-on h2{clip-path:inset(-20% -5% -20% -5%);translate:0 0}
+.sec-head .sec-num{transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.sec-head.rv .sec-num{transform:scale(.6) rotate(-12deg)}.sec-head.rv-on .sec-num{transform:none}
+.sec-res{position:relative;overflow:hidden}
+.sec-res::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 300px at 50% 0,rgba(224,0,24,.12),transparent 70%);pointer-events:none}
+.sec-res>.wrap{position:relative}
+.tag-card{transition:translate .3s ease,box-shadow .3s ease,border-color .3s ease}
+.tag-card .tag-visual img{transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+@media (hover:hover){.tag-card:hover{translate:0 -6px;box-shadow:0 26px 50px -24px rgba(244,0,26,.55)}.tag-card:hover .tag-visual img{transform:scale(1.06)}}
+.cta-final{position:relative;overflow:hidden;isolation:isolate}
+.cta-final::before{content:"";position:absolute;width:140vmax;height:140vmax;left:50%;top:50%;margin:-70vmax 0 0 -70vmax;background:conic-gradient(from 0deg,transparent 0 62%,rgba(224,0,24,.22) 72%,transparent 82%);animation:tgGira 22s linear infinite;z-index:-1;pointer-events:none}
+.cta-final::after{content:"GO!";position:absolute;right:-2%;bottom:-18%;font:900 clamp(10rem,30vw,26rem)/1 "Big Shoulders Display","Arial Narrow",sans-serif;color:transparent;-webkit-text-stroke:2px rgba(244,0,26,.18);z-index:-1;pointer-events:none;letter-spacing:-.02em}
+@keyframes tgGira{to{transform:rotate(1turn)}}
+@media (hover:hover) and (pointer:fine){
+ body::after{content:"";position:fixed;inset:0;z-index:400;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+ .btn-primary{transition:transform .15s ease,box-shadow .2s ease,background-color .2s ease,translate .25s cubic-bezier(.2,.7,.2,1)}}
+@media (prefers-reduced-motion:reduce){.hero::after,.cta-final::before{animation:none}.hero-grid>div:first-child>*,.eco-lista li{animation:none}.sec-head.rv h2{clip-path:none;translate:none}.sec-head.rv .sec-num{transform:none}}
 </style>
 </head>
 <body>
@@ -781,9 +812,9 @@ html.lb-aberto{overflow:hidden}
   <div class="nav-inner">
     <a class="wordmark brand-chip" href="#top"><img class="brand-logo" src="site/img/logo-h.svg" alt="TEAM GO!" width="191" height="30"></a>
     <nav class="links">
+      <a href="#depoimentos">Resultados</a>
       <a href="#consultoria">Consultoria</a>
       <a href="#personal">Personal</a>
-      <a href="#depoimentos">Resultados</a>
       <a href="#loja">Loja</a>
       <a href="#sobre">Sobre</a>
       <a href="#faq">FAQ</a>
@@ -796,9 +827,9 @@ html.lb-aberto{overflow:hidden}
   </div>
   <nav id="mobile-menu" class="mobile-menu">
     <a href="aluno/" class="mm-aluno" data-so-site>Área do aluno →</a>
+    <a href="#depoimentos" onclick="document.getElementById('mobile-menu').classList.remove('open')">Resultados</a>
     <a href="#consultoria" onclick="document.getElementById('mobile-menu').classList.remove('open')">Consultoria</a>
     <a href="#personal" onclick="document.getElementById('mobile-menu').classList.remove('open')">Personal</a>
-    <a href="#depoimentos" onclick="document.getElementById('mobile-menu').classList.remove('open')">Resultados</a>
     <a href="#loja" onclick="document.getElementById('mobile-menu').classList.remove('open')">Loja</a>
     <a href="#sobre" onclick="document.getElementById('mobile-menu').classList.remove('open')">Sobre</a>
     <a href="#faq" onclick="document.getElementById('mobile-menu').classList.remove('open')">FAQ</a>
@@ -853,6 +884,29 @@ html.lb-aberto{overflow:hidden}
   </div>
 </section>
 
+<section class="sec sec-res" id="depoimentos">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num mono depth">01</span>
+      <div>
+        <h2>Resultados reais do time</h2>
+        <p class="lede"><span id="dep-lede">Tô juntando os depoimentos dos meus alunos pra colocar aqui.</span> Já treina comigo? <a href="https://g.page/r/CfFOte7ViC70EBM/review" target="_blank" rel="noopener" style="color:var(--accent-text,var(--accent));font-weight:600">Deixe sua avaliação no Google</a>: leva 1 minuto e ajuda quem procura personal em Cuiabá.</p>
+      </div>
+    </div>
+    <div class="dep-lista" id="dep-lista" hidden></div>
+    <div class="dep-pontos" id="dep-pontos" role="group" aria-label="Escolher o resultado"></div>
+    <div class="dep-fim" id="dep-fim" hidden><p>O próximo antes e depois<br>pode ser <em>o seu.</em></p><a class="btn btn-primary" href="https://wa.me/5565993497692?text=Oi%21%20Vi%20os%20resultados%20no%20site%20e%20quero%20come%C3%A7ar%20o%20meu%20antes%20e%20depois%21" target="_blank" rel="noopener">Quero começar o meu</a></div>
+    <div class="placar" id="placar" hidden>
+      <div class="placar-top"><p class="eyebrow">Ao vivo do app · <span id="pl-mes"></span></p><h3>O time em números</h3></div>
+      <div class="placar-nums" id="pl-nums"></div>
+      <div class="placar-cols">
+        <div class="placar-box"><h4>Liga dos times</h4><div id="pl-times"></div><p class="placar-nota">Pontos do time = média por aluno. O time campeão do mês ganha moedas no app.</p></div>
+        <div class="placar-box"><h4>Pódio do mês</h4><ol class="podio" id="pl-podio"></ol><p class="placar-nota">Só aparece o nome de quem autorizou no app.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="quiz-sec" id="plano">
   <div class="wrap">
     <div class="quiz" id="quiz">
@@ -894,7 +948,7 @@ html.lb-aberto{overflow:hidden}
 <section class="sec" id="consultoria">
   <div class="wrap">
     <div class="sec-head">
-      <span class="sec-num mono depth">01</span>
+      <span class="sec-num mono depth">02</span>
       <div>
         <h2>Consultoria TEAM <span class="depth">GO!</span></h2>
         <p class="lede">Planilha pronta qualquer um te manda. O que faz diferença é ter alguém olhando sua semana, corrigindo a rota e te cobrando com carinho. É isso que eu faço, mesmo à distância: encaixo o treino na sua rotina, e não o contrário.</p>
@@ -1030,7 +1084,7 @@ html.lb-aberto{overflow:hidden}
 <section class="sec" id="personal" style="background:var(--bg-elevated)">
   <div class="wrap">
     <div class="sec-head">
-      <span class="sec-num mono depth">02</span>
+      <span class="sec-num mono depth">03</span>
       <div>
         <h2>Personal Training</h2>
         <p class="lede">Aqui eu fico do seu lado na academia, corrigindo cada movimento na hora. É pra quem quer treinar com segurança, aprender a técnica certa e ter alguém cobrando de perto.</p>
@@ -1060,7 +1114,7 @@ html.lb-aberto{overflow:hidden}
 <section class="sec" id="loja">
   <div class="wrap">
     <div class="sec-head">
-      <span class="sec-num mono depth">03</span>
+      <span class="sec-num mono depth">04</span>
       <div>
         <h2>Linha TEAM <span class="depth">GO!</span></h2>
         <p class="lede">Criei essas camisetas pra quem faz parte do time, seja meu aluno ou não. Cada estampa tem uma ideia por trás, não é só logo estampado.</p>
@@ -1130,28 +1184,7 @@ html.lb-aberto{overflow:hidden}
   </div>
 </section>
 
-<section class="sec" id="depoimentos">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-num mono depth">04</span>
-      <div>
-        <h2>Resultados reais do time</h2>
-        <p class="lede"><span id="dep-lede">Tô juntando os depoimentos dos meus alunos pra colocar aqui.</span> Já treina comigo? <a href="https://g.page/r/CfFOte7ViC70EBM/review" target="_blank" rel="noopener" style="color:var(--accent-text,var(--accent));font-weight:600">Deixe sua avaliação no Google</a>: leva 1 minuto e ajuda quem procura personal em Cuiabá.</p>
-      </div>
-    </div>
-    <div class="dep-lista" id="dep-lista" hidden></div>
-    <div class="dep-pontos" id="dep-pontos" role="group" aria-label="Escolher o resultado"></div>
-    <div class="dep-fim" id="dep-fim" hidden><p>O próximo antes e depois<br>pode ser <em>o seu.</em></p><a class="btn btn-primary" href="https://wa.me/5565993497692?text=Oi%21%20Vi%20os%20resultados%20no%20site%20e%20quero%20come%C3%A7ar%20o%20meu%20antes%20e%20depois%21" target="_blank" rel="noopener">Quero começar o meu</a></div>
-    <div class="placar" id="placar" hidden>
-      <div class="placar-top"><p class="eyebrow">Ao vivo do app · <span id="pl-mes"></span></p><h3>O time em números</h3></div>
-      <div class="placar-nums" id="pl-nums"></div>
-      <div class="placar-cols">
-        <div class="placar-box"><h4>Liga dos times</h4><div id="pl-times"></div><p class="placar-nota">Pontos do time = média por aluno. O time campeão do mês ganha moedas no app.</p></div>
-        <div class="placar-box"><h4>Pódio do mês</h4><ol class="podio" id="pl-podio"></ol><p class="placar-nota">Só aparece o nome de quem autorizou no app.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <div class="lane thin"></div>
 
@@ -1437,6 +1470,12 @@ palco.addEventListener('pointermove',function(e){if(x0==null||e.pointerId!==pid)
 function solta(){if(x0==null)return;palco.classList.remove('arrastando');var d=dx;x0=null;dx=0;if(Math.abs(d)>50){troca(d<0?ai+1:ai-1,d<0?1:-1);}else{trl.style.transition='transform .25s ease,opacity .25s ease';trl.style.transform='';trl.style.opacity='';}}
 palco.addEventListener('pointerup',solta);palco.addEventListener('pointercancel',solta);
 })();
+</script>
+<script>
+// v45: luz do topo segue o mouse; botões vermelhos "puxam" de leve na direção do mouse (só computador)
+(function(){if(!(window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+var h=document.querySelector('.hero');if(h){var t=0;h.addEventListener('pointermove',function(e){cancelAnimationFrame(t);t=requestAnimationFrame(function(){var r=h.getBoundingClientRect();h.style.setProperty('--hx',(e.clientX-r.left)+'px');h.style.setProperty('--hy',(e.clientY-r.top)+'px');});});}
+[].forEach.call(document.querySelectorAll('.hero-ctas .btn-primary,.cta-final .btn-primary,.dep-fim .btn'),function(b){b.addEventListener('pointermove',function(e){var r=b.getBoundingClientRect();b.style.translate=((e.clientX-r.left-r.width/2)*.18).toFixed(1)+'px '+((e.clientY-r.top-r.height/2)*.3).toFixed(1)+'px';});b.addEventListener('pointerleave',function(){b.style.translate='';});});})();
 </script>
 </body>
 </html>
