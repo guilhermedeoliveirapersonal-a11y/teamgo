@@ -717,6 +717,61 @@ body .btn-ghost:hover{background:rgba(244,0,26,.09);border-color:var(--accent-te
  .dep-pontos button::after{content:"";width:8px;height:8px;border-radius:99px;background:rgba(247,243,239,.28);transition:width .25s,background .25s}
  .dep-pontos button[aria-current=true]::after{width:22px;background:var(--accent-btn)}}
 @media (prefers-reduced-motion:reduce){.let-trilho,.res-chip i{animation:none}.dep-pre .dep-dep img{clip-path:inset(0)}.dep-pre .dep-dep span{opacity:1;translate:none}.vv,.dep-fotos img{transition:none}}
+<style id="vida2">
+/* v44 (03/11): toque com resposta, tela cheia dos resultados, FAQ que abre, menu que acompanha */
+.btn:active,.btn-primary:active,.btn-primary:hover:active{transform:translateY(0) scale(.97);transition-duration:.08s}
+.dep-ang button,.res-chip,.faq-q,.lb-ang button{position:relative;overflow:hidden}
+.dep-ang button,.lb-ang button{transition:transform .12s ease,background .2s,border-color .2s,color .2s}
+.dep-ang button:active,.lb-ang button:active,.res-chip:active,.qz-op button:active{transform:scale(.94)}
+.onda{position:absolute;border-radius:50%;pointer-events:none;background:currentColor;opacity:.3;transform:scale(0);animation:tgOnda .6s ease-out forwards}
+@keyframes tgOnda{to{transform:scale(1);opacity:0}}
+nav.links a{position:relative}
+nav.links a::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;border-radius:2px;background:var(--accent-btn);transform:scaleX(0);transform-origin:0 50%;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+nav.links a:hover::after,nav.links a.ativo::after{transform:scaleX(1)}
+nav.links a.ativo{color:var(--text)}
+.dep.vv{transition:transform .25s ease,translate .25s ease,box-shadow .3s ease,border-color .3s ease;transform-style:preserve-3d}
+.dep-fotos{cursor:zoom-in}
+.dep-zoom{position:absolute;z-index:2;right:8px;top:8px;width:34px;height:34px;border-radius:50%;border:0;display:grid;place-items:center;background:rgba(0,0,0,.6);color:#fff;cursor:pointer;backdrop-filter:blur(4px);transition:transform .2s,background .2s}
+.dep-zoom svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.dep-fotos:hover .dep-zoom{background:var(--accent-btn);transform:scale(1.08)}
+.lb{position:fixed;inset:0;z-index:500;display:flex;flex-direction:column;gap:12px;padding:14px 16px calc(16px + env(safe-area-inset-bottom));background:rgba(10,10,10,.95);backdrop-filter:blur(10px);opacity:0;transition:opacity .25s ease}
+.lb[hidden]{display:none}.lb.on{opacity:1}
+.lb-top{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:980px;width:100%;margin:0 auto}
+.lb-top b{display:block;font:900 1.5rem/1 "Big Shoulders Display","Arial Narrow",sans-serif;text-transform:uppercase;color:#fff}
+.lb-top span{font-size:.85rem;color:var(--text-muted)}
+.lb-x{width:44px;height:44px;flex:none;border-radius:50%;border:1px solid rgba(247,243,239,.2);background:rgba(255,255,255,.06);color:#fff;font-size:1.1rem;cursor:pointer;transition:background .2s,transform .2s}
+.lb-x:hover{background:var(--accent-btn);transform:rotate(90deg)}
+.lb-palco{flex:1;min-height:0;position:relative;display:flex;align-items:center;justify-content:center;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
+.lb-palco.arrastando{cursor:grabbing}
+.lb-trilho{display:grid;grid-template-columns:1fr 1fr;gap:10px;height:100%;width:100%;max-width:980px;will-change:transform,opacity}
+.lb-trilho figure{margin:0;position:relative;min-height:0;display:flex;align-items:center;justify-content:center}
+.lb-f{position:relative;width:100%;aspect-ratio:1/2;max-height:100%}.lb-trilho img{width:100%;height:100%;border-radius:14px;object-fit:contain;display:block;-webkit-user-drag:none;pointer-events:none}
+.lb-trilho figure span{position:absolute;left:50%;bottom:10px;translate:-50% 0;padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.7);font:700 11px "Space Mono",monospace;text-transform:uppercase;letter-spacing:.06em;color:#fff;white-space:nowrap}
+.lb-trilho figure+figure span{background:var(--accent-btn)}
+.lb-seta{position:absolute;top:50%;translate:0 -50%;width:46px;height:46px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:1.6rem;line-height:1;cursor:pointer;z-index:2;transition:background .2s,transform .15s}
+.lb-seta:hover{background:var(--accent-btn)}.lb-seta:active{transform:scale(.9)}
+.lb-ant{left:0}.lb-prox{right:0}
+.lb-ang{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.lb-ang button{font:700 12px "Space Mono",monospace;padding:8px 14px;border-radius:999px;border:1px solid rgba(247,243,239,.2);background:transparent;color:var(--text-muted);cursor:pointer;min-height:36px}
+.lb-ang button[aria-pressed=true]{background:var(--accent-btn);border-color:var(--accent-btn);color:#fff}
+.lb-dica{margin:0;text-align:center;font:400 .75rem "Space Mono",monospace;color:var(--text-muted)}
+html.lb-aberto{overflow:hidden}
+.faq-item h3{margin:0}
+.faq-q{display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;background:none;border:0;padding:4px 0;margin:0;font:inherit;font-family:"Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;color:inherit;text-align:left;cursor:pointer;border-radius:8px}
+.faq-q i{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid rgba(247,243,239,.2);position:relative;transition:background .25s,border-color .25s,transform .35s cubic-bezier(.2,.7,.2,1)}
+.faq-q i::before,.faq-q i::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:2px;margin:-1px 0 0 -6px;background:currentColor;border-radius:2px;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.faq-q i::after{transform:rotate(90deg)}
+.aberto .faq-q i{background:var(--accent-btn);border-color:var(--accent-btn);transform:rotate(180deg)}
+.aberto .faq-q i::after{transform:rotate(0)}
+.faq-q:hover i{border-color:var(--accent-btn)}
+.faq-r{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.2,.7,.2,1)}
+.faq-r>div{overflow:hidden}
+.faq-r>div>:first-child{padding-top:10px}
+.aberto .faq-r{grid-template-rows:1fr}
+.faq-item{transition:background .25s}
+.faq-item.aberto{background:linear-gradient(180deg,rgba(244,0,26,.07),rgba(244,0,26,0)) ,var(--bg-elevated)}
+.let-trilho.js{animation:none}
+@media (prefers-reduced-motion:reduce){.lb,.faq-r,.faq-q i,.dep.vv{transition:none}.onda{display:none}}
 </style>
 </head>
 <body>
@@ -1270,7 +1325,7 @@ window.tgDepMostrar=function(lista){var el=document.getElementById('dep-lista');
   var cards=el.querySelectorAll('.dep'),bs=pt.querySelectorAll('button');
   [].forEach.call(bs,function(b,i){b.addEventListener('click',function(){el.scrollTo({left:cards[i].offsetLeft-el.offsetLeft-(el.clientWidth-cards[i].offsetWidth)/2,behavior:mov?'smooth':'auto'});});});
   var t=0;el.addEventListener('scroll',function(){cancelAnimationFrame(t);t=requestAnimationFrame(function(){var c=el.scrollLeft+el.clientWidth/2,m=0,best=1e9;[].forEach.call(cards,function(f,i){var x=Math.abs(f.offsetLeft-el.offsetLeft+f.offsetWidth/2-c);if(x<best){best=x;m=i;}});[].forEach.call(bs,function(b,i){if(i===m)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');});});},{passive:true});}
- el.hidden=false;var fimEl=document.getElementById('dep-fim');if(fimEl)fimEl.hidden=false;
+ window.tgDepDados=ok;el.hidden=false;var fimEl=document.getElementById('dep-fim');if(fimEl)fimEl.hidden=false;
  var l=document.getElementById('dep-lede');if(l)l.textContent='Antes e depois de quem treina comigo, com a autorização de cada um. Toque nos botões pra ver de frente, de lado e de costas.';};
 tgDepMostrar(DEPOIMENTOS);
 </script>
@@ -1319,6 +1374,69 @@ var els=[].slice.call(document.querySelectorAll('.sec-head,.trust-item,.eco-step
 var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add('rv-on');io.unobserve(x.target);}});},{rootMargin:'0px 0px -8% 0px'});
 els.forEach(function(e){if(e.getBoundingClientRect().top<innerHeight)return;var irm=[].slice.call(e.parentNode.children).filter(function(s){return s.className===e.className;}).indexOf(e);
  e.style.transitionDelay=Math.min(Math.max(irm,0),3)*90+'ms';e.classList.add('rv');io.observe(e);});})();
+</script>
+<script>
+// v44: toque com resposta (onda + vibração leve), tela cheia dos resultados com arrastar, cards que inclinam, letreiro que acompanha a rolagem, FAQ que abre e menu que mostra onde você está
+(function(){
+var mov=!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches),mouse=window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches;
+var $=function(q,c){return (c||document).querySelector(q);},$$=function(q,c){return [].slice.call((c||document).querySelectorAll(q));};
+// 1) onda no clique
+var ALVO='.btn,.dep-ang button,.res-chip,.faq-q,.lb-ang button,.qz-op button';
+document.addEventListener('pointerdown',function(e){var b=e.target.closest&&e.target.closest(ALVO);if(!b)return;
+ if(e.pointerType==='touch'&&navigator.vibrate&&b.matches('.btn-primary,.dep-ang button,.lb-ang button,.qz-op button')){try{navigator.vibrate(8);}catch(x){}}
+ if(!mov||b.matches('.qz-op button'))return;var r=b.getBoundingClientRect(),t=Math.max(r.width,r.height)*2.2,o=document.createElement('span');o.className='onda';
+ o.style.cssText='width:'+t+'px;height:'+t+'px;left:'+(e.clientX-r.left-t/2)+'px;top:'+(e.clientY-r.top-t/2)+'px';b.appendChild(o);setTimeout(function(){o.remove();},650);},{passive:true});
+// 2) FAQ que abre e fecha
+$$('.faq-item').forEach(function(it,i){var h=$('h3',it);if(!h||$('.faq-q',it))return;var r=document.createElement('div'),inn=document.createElement('div');r.className='faq-r';r.id='faq-r'+i;
+ $$(':scope>*',it).forEach(function(c){if(c!==h)inn.appendChild(c);});r.appendChild(inn);it.appendChild(r);
+ var b=document.createElement('button');b.type='button';b.className='faq-q';b.setAttribute('aria-controls',r.id);b.innerHTML='<span>'+h.innerHTML+'</span><i aria-hidden="true"></i>';h.innerHTML='';h.appendChild(b);
+ var abre=function(on){it.classList.toggle('aberto',on);b.setAttribute('aria-expanded',on?'true':'false');};abre(i===0);
+ b.addEventListener('click',function(){abre(!it.classList.contains('aberto'));});});
+// 3) menu mostra a seção atual
+var lk={};$$('nav.links a[href^="#"]').forEach(function(a){lk[a.getAttribute('href').slice(1)]=a;});
+if('IntersectionObserver' in window){var vis={};var io=new IntersectionObserver(function(es){es.forEach(function(x){vis[x.target.id]=x.isIntersecting?x.intersectionRatio:0;});var m=null,v=0;for(var k in vis)if(vis[k]>v){v=vis[k];m=k;}for(var id in lk)lk[id].classList.toggle('ativo',id===m);},{rootMargin:'-30% 0px -55% 0px',threshold:[0,.01,.2,.5]});
+ Object.keys(lk).forEach(function(id){var s=document.getElementById(id);if(s)io.observe(s);});}
+// 4) letreiro que acelera com a rolagem (e inverte quando sobe)
+var tr=$('.let-trilho');if(tr&&mov){tr.classList.add('js');var x=0,dir=1,vel=0,ly=scrollY,ativo=true,parado=false,last=performance.now();
+ addEventListener('scroll',function(){var d=scrollY-ly;ly=scrollY;if(d)dir=d>0?1:-1;vel=Math.min(vel+Math.abs(d)*.35,26);},{passive:true});
+ var lw=$('.letreiro');if(lw){lw.addEventListener('mouseenter',function(){parado=true;});lw.addEventListener('mouseleave',function(){parado=false;});}
+ if('IntersectionObserver' in window)new IntersectionObserver(function(e){ativo=e[0].isIntersecting;if(ativo){last=performance.now();requestAnimationFrame(passo);}}).observe(tr);
+ function passo(t){if(!ativo)return;var dt=Math.min(64,t-last)/16.67;last=t;var meio=tr.scrollWidth/2||1;if(!parado)x-=(1+vel)*dir*dt*.9;vel*=Math.pow(.92,dt);if(x<=-meio)x+=meio;if(x>0)x-=meio;tr.style.transform='translate3d('+x+'px,0,0)';requestAnimationFrame(passo);}
+ requestAnimationFrame(passo);}
+// 5) cards de resultado inclinam com o mouse
+if(mouse&&mov)$$('.dep').forEach(function(c){c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;c.style.transform='perspective(1100px) rotateX('+(-py*4).toFixed(2)+'deg) rotateY('+(px*5).toFixed(2)+'deg)';});c.addEventListener('pointerleave',function(){c.style.transform='';});});
+// 6) tela cheia dos resultados: toque na foto, arraste pro lado ou use as setas
+var dados=window.tgDepDados||[],lista=$('#dep-lista');if(!lista||!dados.length)return;
+$$('.dep-fotos',lista).forEach(function(f){var z=document.createElement('button');z.type='button';z.className='dep-zoom';z.setAttribute('aria-label','Ver em tela cheia');z.innerHTML='<svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>';f.appendChild(z);});
+var lb=document.createElement('div');lb.className='lb';lb.id='lb';lb.hidden=true;lb.setAttribute('role','dialog');lb.setAttribute('aria-modal','true');lb.setAttribute('aria-labelledby','lb-t');
+lb.innerHTML='<div class="lb-top"><div><b id="lb-t"></b><span id="lb-s"></span></div><button type="button" class="lb-x" aria-label="Fechar">✕</button></div><div class="lb-palco"><div class="lb-trilho"><figure><div class="lb-f"><img alt=""><span>Antes</span></div></figure><figure><div class="lb-f"><img alt=""><span class="lb-dl">Depois</span></div></figure></div><button type="button" class="lb-seta lb-ant" aria-label="Ângulo anterior">‹</button><button type="button" class="lb-seta lb-prox" aria-label="Próximo ângulo">›</button></div><div class="lb-ang" role="group" aria-label="Escolher o ângulo"></div><p class="lb-dica">Arraste pro lado ou use as setas pra trocar o ângulo</p>';
+document.body.appendChild(lb);
+var trl=$('.lb-trilho',lb),ims=$$('.lb-trilho img',lb),palco=$('.lb-palco',lb),angBox=$('.lb-ang',lb),cur=null,ai=0,volta=null,hist=false;
+function angs(d){return (d.angulos&&d.angulos.length)?d.angulos:[['Frente',d.antesImg,d.depoisImg]];}
+function pinta(){var a=angs(cur)[ai];ims[0].src=a[1];ims[1].src=a[2];ims[0].alt=cur.nome+', antes ('+a[0]+')';ims[1].alt=cur.nome+', '+(cur.tempoFoto||'depois').toLowerCase()+' ('+a[0]+')';
+ $$('button',angBox).forEach(function(b,i){b.setAttribute('aria-pressed',i===ai?'true':'false');});var um=angs(cur).length<2;$$('.lb-seta',lb).forEach(function(b){b.hidden=um;});$('.lb-dica',lb).hidden=um;}
+function troca(n,dirc){var tot=angs(cur).length;if(tot<2)return;ai=(n+tot)%tot;if(!mov){pinta();return;}
+ trl.style.transition='transform .18s ease,opacity .18s ease';trl.style.transform='translateX('+(-dirc*40)+'px)';trl.style.opacity='0';
+ setTimeout(function(){pinta();trl.style.transition='none';trl.style.transform='translateX('+(dirc*40)+'px)';requestAnimationFrame(function(){requestAnimationFrame(function(){trl.style.transition='transform .28s cubic-bezier(.2,.7,.2,1),opacity .28s ease';trl.style.transform='';trl.style.opacity='';});});},180);}
+function abre(k,i,de){cur=dados[k];if(!cur)return;ai=i||0;volta=de||document.activeElement;$('#lb-t').textContent=cur.nome;$('#lb-s').textContent=[cur.marca?'Evolução de '+cur.marca:'',cur.selo||''].filter(Boolean).join(' · ');$('.lb-dl',lb).textContent=cur.tempoFoto||'Depois';
+ angBox.innerHTML=angs(cur).length>1?angs(cur).map(function(a,j){return '<button type="button" data-i="'+j+'">'+String(a[0]).replace(/[&<>"]/g,'')+'</button>';}).join(''):'';pinta();
+ lb.hidden=false;document.documentElement.classList.add('lb-aberto');requestAnimationFrame(function(){lb.classList.add('on');});$('.lb-x',lb).focus();
+ try{history.pushState({tgLb:1},'');hist=true;}catch(x){hist=false;}}
+function fecha(viaHist){if(lb.hidden)return;lb.classList.remove('on');document.documentElement.classList.remove('lb-aberto');setTimeout(function(){lb.hidden=true;},mov?250:0);if(volta&&volta.focus)volta.focus();if(hist&&!viaHist){hist=false;try{history.back();}catch(x){}}hist=false;}
+addEventListener('popstate',function(){if(!lb.hidden)fecha(true);});
+lista.addEventListener('click',function(e){var f=e.target.closest('.dep-fotos');if(!f)return;var c=f.closest('.dep'),k=+c.getAttribute('data-k'),p=$$('.dep-ang button',c).filter(function(b){return b.getAttribute('aria-pressed')==='true';})[0];abre(k,p?+p.getAttribute('data-i'):0,f.querySelector('.dep-zoom'));});
+$('.lb-x',lb).addEventListener('click',function(){fecha();});
+$('.lb-ant',lb).addEventListener('click',function(){troca(ai-1,-1);});$('.lb-prox',lb).addEventListener('click',function(){troca(ai+1,1);});
+angBox.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var n=+b.getAttribute('data-i');if(n!==ai)troca(n,n>ai?1:-1);});
+document.addEventListener('keydown',function(e){if(lb.hidden)return;if(e.key==='Escape'){fecha();}else if(e.key==='ArrowRight'){troca(ai+1,1);}else if(e.key==='ArrowLeft'){troca(ai-1,-1);}
+ else if(e.key==='Tab'){var fs=$$('button:not([hidden])',lb);if(!fs.length)return;var i=fs.indexOf(document.activeElement);if(e.shiftKey&&i<=0){e.preventDefault();fs[fs.length-1].focus();}else if(!e.shiftKey&&i===fs.length-1){e.preventDefault();fs[0].focus();}}});
+lb.addEventListener('click',function(e){if(e.target===lb)fecha();});
+var x0=null,dx=0,pid=null;
+palco.addEventListener('pointerdown',function(e){if(e.target.closest('.lb-seta')||angs(cur).length<2)return;x0=e.clientX;dx=0;pid=e.pointerId;try{palco.setPointerCapture(pid);}catch(x){}palco.classList.add('arrastando');trl.style.transition='none';});
+palco.addEventListener('pointermove',function(e){if(x0==null||e.pointerId!==pid)return;dx=e.clientX-x0;trl.style.transform='translateX('+(dx*.6)+'px)';trl.style.opacity=String(Math.max(.4,1-Math.abs(dx)/500));});
+function solta(){if(x0==null)return;palco.classList.remove('arrastando');var d=dx;x0=null;dx=0;if(Math.abs(d)>50){troca(d<0?ai+1:ai-1,d<0?1:-1);}else{trl.style.transition='transform .25s ease,opacity .25s ease';trl.style.transform='';trl.style.opacity='';}}
+palco.addEventListener('pointerup',solta);palco.addEventListener('pointercancel',solta);
+})();
 </script>
 </body>
 </html>
