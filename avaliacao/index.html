@@ -303,6 +303,97 @@ h1 .fx-n{display:inline-block;margin-right:10px;color:var(--red);font-weight:600
 .ck-vit-t{display:block;font:700 12px/1.2 inherit;letter-spacing:.12em;text-transform:uppercase;color:var(--red,#C8102E);margin-bottom:8px}
 .ck-vit p{display:flex;gap:8px;align-items:flex-start;margin:6px 0;font-weight:600}.ck-vit p svg{flex:none;color:#1E9E5A;margin-top:2px}.ck-vit small{display:block;margin-top:8px}
 .ck-quero{display:flex;align-items:center;justify-content:center;gap:6px;margin:4px 0 14px;width:100%}
+
+/* ---- v33: anamnese mais viva e mais clara (pedido do Gui: a mãe dele, idosa, ficou na dúvida se tinha mais pergunta embaixo).
+   Sempre clara (mesmo com o celular no modo escuro), cores mais vivas, opções em cartões grandes, botão com mais vida,
+   número da tela no topo e aviso "tem mais aqui embaixo". Só na anamnese (html.an-vivo); a ficha e o check-in seguem no estilo laudo. */
+html.an-vivo{--bg:#FFFFFF;--sf:#FFFFFF;--sf2:#F4EFED;--ink:#151515;--ink2:#47423F;--ink3:#7A716E;--line:#F0E6E2;--line2:#E3D6D1;
+  --red:#E3122F;--red2:#B80C25;--redt:#FFEEF1;--ok:#13844A;--okt:#E3F5EA;--warn:#8A5A00;--warnt:#FFF3D6;--err:#C21F2B;--errt:#FDE8E9;--veu:rgba(255,45,85,.10);color-scheme:light}
+html.an-vivo body{background:#fff;color:var(--ink)}
+.an-vivo #fxsh{background:linear-gradient(180deg,#FFE3E9 0,#FFF6F7 220px,#FFFFFF 420px)}
+.an-vivo .fx2-top{background:rgba(255,255,255,.92)}
+.an-vivo .an-cont{display:block;margin-top:2px;font-size:13px;font-weight:700;color:var(--red)}
+.an-vivo .fita-et span{font-size:12.5px}.an-vivo .fita-et .cur{color:var(--red);font-weight:800}
+.an-vivo h1{color:#111}.an-vivo .fx-q{font-size:18.5px;margin-top:30px}
+.an-vivo .fx-ops{border-top:0;display:grid;gap:10px;margin-top:10px}
+.an-vivo .fx-op{min-height:62px;padding:14px 14px;border:2px solid var(--line2);border-radius:16px;background:#fff;box-shadow:0 1px 0 rgba(0,0,0,.03);transition:border-color .15s,background-color .15s,transform .12s}
+.an-vivo .fx-op:active{transform:scale(.985)}
+.an-vivo .fx-op.on{border-color:var(--red);background:var(--redt);box-shadow:0 8px 18px -12px rgba(227,18,47,.7)}
+.an-vivo .fx-opr{width:26px;height:26px;border:2px solid #B9AEAA;border-radius:8px;background:#fff}
+.an-vivo .fx-op.on .fx-opr::after{left:7.5px;top:3px;width:6px;height:12px;border-width:0 2.6px 2.6px 0}
+.an-vivo .an-seg{border:0;gap:10px}
+.an-vivo .an-seg button{min-height:58px;padding:8px 4px;border:2px solid var(--line2);border-radius:16px;background:#fff;color:var(--ink);font-size:14.5px;overflow-wrap:anywhere;hyphens:auto}
+.an-vivo .an-seg button.on{border-color:var(--red);background:var(--red);color:#fff;box-shadow:0 8px 18px -12px rgba(227,18,47,.8)}
+.an-vivo .fx-in{border-radius:12px;border-width:2px;background:#fff;font-size:17px}
+.an-vivo .fx2-foot{background:rgba(255,255,255,.96);border-top:1px solid var(--line2)}
+.an-vivo .fx2-hint{font-size:14.5px;color:var(--ink2);font-weight:600}
+.an-vivo .bt{min-height:60px;border-radius:16px;font-size:18px;font-weight:800;letter-spacing:.01em;background:linear-gradient(180deg,#FF3355 0%,#DE0F2E 100%);box-shadow:0 12px 24px -12px rgba(227,18,47,.9),inset 0 1px 0 rgba(255,255,255,.3)}
+.an-vivo .bt[data-ann2]:not([disabled])::after,.an-vivo .bt[data-ane]::after,.an-vivo .bt[data-ckp]:not([disabled])::after{content:"→";font-size:20px;margin-left:4px}
+.an-vivo .bt[disabled]{background:#fff;color:#B4828B;border:2px dashed #F2AFBA;box-shadow:none}
+.an-vivo .bt.sec{background:#fff;color:var(--ink);border:2px solid var(--ink);box-shadow:none}
+.an-vivo .bt.acende{animation:anAcende .7s cubic-bezier(.2,.9,.3,1.4)}
+@keyframes anAcende{0%{transform:scale(.96)}55%{transform:scale(1.04)}100%{transform:scale(1)}}
+.fx-mais{position:absolute;left:50%;transform:translateX(-50%);z-index:5;display:flex;align-items:center;gap:8px;padding:11px 18px;border:0;border-radius:999px;background:#151515;color:#fff;font-size:15px;font-weight:700;box-shadow:0 10px 24px -8px rgba(0,0,0,.55);white-space:nowrap}
+.fx-mais[hidden]{display:none}
+.fx-mais span{display:inline-block;animation:anDesce 1.3s ease-in-out infinite}
+@keyframes anDesce{0%,100%{transform:translateY(-2px)}50%{transform:translateY(4px)}}
+@media (prefers-reduced-motion:reduce){.fx-mais span,.an-vivo .bt.acende{animation:none}}
+.an-prox{margin:18px 0 0;padding:16px 16px 14px;border:2px solid var(--line2);border-radius:16px;background:#fff;text-align:left}
+.an-prox b{display:block;font-size:16.5px;margin-bottom:4px}.an-prox p{margin:0 0 12px;color:var(--ink2);font-size:15px;line-height:1.5}.an-prox p:last-child{margin-bottom:0}
+.an-vivo .fx-fim .bt.sec{margin-top:18px}
+
+.an-dir{display:flex;align-items:center;gap:2px}
+.an-letra{height:40px;min-width:44px;padding:0 10px;border:2px solid var(--line2);border-radius:12px;background:#fff;color:var(--ink);font-weight:800;font-size:15px}
+html.letra-g .an-letra{background:var(--ink);color:#fff;border-color:var(--ink)}
+html.letra-g #fxsh .fx-pg,html.letra-g #fxsh .fx2-foot{zoom:1.15}
+
+/* v37: check-in — nota da semana passada */
+.ck-ant{margin:10px 0 0;font-size:14px;color:var(--ink3)}.ck-ant b{color:var(--ink)}
+
+/* v38: check-in mais bonito (só com html.ck-vivo): pergunta num cartão branco, ícone desenhado, escala de notas em pílulas coloridas,
+   conferência em lista com respiro e tela final comemorando. Fontes da marca: Big Shoulders Display (títulos e números) + Libre Franklin. */
+.ck-vivo #fxsh{background:radial-gradient(120% 60% at 50% 0,#FFE1E7 0,#FFF4F5 45%,#FFFFFF 75%)}
+.ck-vivo .fx-pg{background:#fff;border:1px solid #F3E2DE;border-radius:26px;margin:16px 14px 28px;padding:22px 20px 26px;box-shadow:0 22px 44px -30px rgba(140,0,25,.45)}
+@media (min-width:640px){.ck-vivo .fx-pg{margin:22px auto 32px}}
+.ck-cab{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+.ck-ic{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:linear-gradient(160deg,#FF3355,#C8102E);color:#fff;box-shadow:0 10px 20px -12px rgba(200,16,46,.9);flex:none}
+.ck-et{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
+.ck-vivo h1{font-weight:800;font-size:44px;line-height:.95;letter-spacing:0;color:#121212;text-wrap:balance}
+.ck-vivo .fx-q{margin-top:14px;font-size:17px}
+.ck-vivo .ck-tr{gap:10px}
+.ck-vivo .ck-tr button{min-height:78px;border:2px solid #EFE2DE;border-radius:18px;background:#fff;font-family:var(--disp);transition:transform .15s,background-color .15s,border-color .15s}
+.ck-vivo .ck-tr button b{font-size:38px;font-weight:800}
+.ck-vivo .ck-tr button.meta{background:#FFF6F7;border-color:#F7C9D1}
+.ck-vivo .ck-tr button.on{background:linear-gradient(160deg,#FF3355,#C8102E);border-color:transparent;box-shadow:0 12px 22px -12px rgba(200,16,46,.9)}
+.ck-toque{display:inline-block;padding:8px 14px;border-radius:99px;background:#FFF1F3;color:var(--red);font-weight:700;font-size:15px}
+.ck-vivo .fx-nt{min-height:74px;align-items:center}
+.ck-vivo .fx-ntv{font-size:84px;font-weight:800}
+.ck-vivo .fx-eq{grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;border:0;margin-top:6px}
+.ck-vivo .fx-eq::after,.ck-vivo .fx-eq button::after,.ck-vivo .fx-eq button.on::before{display:none}
+.ck-vivo .fx-eq button{height:54px;padding:0;border:2px solid #EFE2DE;border-radius:16px;background:#fff;font-size:24px;font-weight:700;color:#3A3533;transition:transform .15s,background-color .15s}
+.ck-vivo .fx-eq button.ate{background:color-mix(in srgb,var(--c) 12%,#fff);border-color:color-mix(in srgb,var(--c) 30%,#fff)}
+.ck-vivo .fx-eq button.on{background:var(--c);border-color:var(--c);color:#fff;font-size:26px;transform:scale(1.06);box-shadow:0 10px 20px -12px var(--c)}
+.ck-vivo .fx-eq button:active{transform:scale(.95)}
+.ck-vivo .fx-eql{margin-top:12px;font-weight:600}
+.ck-vivo .ck-ant{display:inline-block;margin-top:14px;padding:7px 12px;border-radius:12px;background:#F6F1EF;font-size:14px}
+.ck-vivo .fx-rc{margin-top:18px;border:1px solid #F0E3DF;border-radius:18px;overflow:hidden}
+.ck-vivo .fx-rc .row{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:13px 16px;border-top:1px solid #F4EAE7;font-size:15.5px}
+.ck-vivo .fx-rc .row:first-child{border-top:0}.ck-vivo .fx-rc .row:nth-child(odd){background:#FFFAFA}
+.ck-vivo .fx-rc .row b{font-family:var(--disp);font-size:21px;font-weight:700;text-align:right}
+.ck-vivo .ck-fim{text-align:center;padding-top:40px}
+.ck-vivo .ck-fim .fx-okc{width:92px;height:92px;color:#1E8A4C;padding:10px;border-radius:50%;background:#E9F7EF}
+.ck-vivo .ck-fim h1{font-size:52px;margin-top:18px}
+.ck-vivo .ck-fim p{margin-left:auto;margin-right:auto}
+.ck-vivo .ck-vit{text-align:left;margin:18px auto;padding:16px 18px;border-radius:18px;background:#F1FAF4;border:1px solid #CFEBD9}
+.ck-vivo .ck-moeda{display:inline-block;padding:10px 18px;border-radius:99px;background:linear-gradient(180deg,#FFE58A,#FFC21A);color:#4A2C00;font-weight:800;box-shadow:0 10px 20px -14px #B88400}
+.ck-vivo .ck-fim .bt{margin-left:auto;margin-right:auto}
+@media (prefers-reduced-motion:reduce){.ck-vivo .fx-eq button,.ck-vivo .ck-tr button{transition:none}}
+.ck-vivo .ck-fim .fx-okc{display:block;margin:0 auto}
+/* v39: sequência no fim do check-in e saudação */
+.ck-vivo .ck-seq{display:flex;align-items:center;gap:14px;margin:18px auto;max-width:340px;padding:14px 18px;border-radius:18px;background:#FFF4E5;border:1px solid #FFD9A6;text-align:left}
+.ck-vivo .ck-seq b{font-family:var(--disp);font-size:52px;font-weight:800;line-height:.9;color:#D45A00}
+.ck-vivo .ck-seq span{font-weight:700;color:#5A3200;line-height:1.3}.ck-vivo .ck-seq small{display:block;font-weight:600;color:#8A5A20;margin-top:2px}
+.ck-oi{margin:0 0 14px;font-weight:700;color:var(--ink2);font-size:15px}
 </style>
 </head>
 <body>
@@ -316,6 +407,11 @@ h1 .fx-n{display:inline-block;margin-right:10px;color:var(--red);font-weight:600
 var D=null,APP_URL='../app/';
 TGPonte.instalarGoogle();
 function qs(k){try{return new URL(location.href).searchParams.get(k)||'';}catch(x){return '';}}
+// v34: sem ?a= no link (o link do grupo serve pra todos), usa o app salvo neste celular
+// v37: botão A+ (letra maior) na anamnese, no check-in e na ficha, lembrado no celular
+var LETRA_OK=0;function letraLigar(){if(LETRA_OK)return;LETRA_OK=1;try{if(localStorage.getItem('tg_letra')==='g')document.documentElement.classList.add('letra-g');}catch(x){}
+  document.addEventListener('click',function(ev){if(!ev.target.closest||!ev.target.closest('[data-anletra]'))return;var g=document.documentElement.classList.toggle('letra-g');try{localStorage.setItem('tg_letra',g?'g':'');}catch(x){}},true);}
+function codigoAqui(){var c=qs('a');if(!c){try{c=localStorage.getItem('tg_codigo')||'';}catch(x){}}return c;}
 function e(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var ICOP={alerta:'<path d="M12 3.5 21.5 20h-19z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 10v4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1.1" fill="currentColor"/>',
   ok:'<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 12.3l2.8 2.8L16.2 9.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'};
@@ -333,8 +429,8 @@ function telaMsg(t,txt,tentar){var b=document.getElementById('fxsh');b.onclick=f
   b.innerHTML='<div class="fx2-body"><div class="fx-msg"><h1>'+e(t)+'</h1><p>'+e(txt)+'</p>'+(tentar?'<button type="button" class="bt" data-tentar="1">Tentar de novo</button>':'')+'<button type="button" class="bt sec" style="margin-top:10px" data-app="1">Ir pro app TEAM GO!</button></div></div>';}
 // rascunhos (anamnese e atualização) com mais de 30 dias saem do celular, mesmo os de outro link
 function limparRascunhos(){try{var ag=Date.now();for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(!/^tg_(ficha_|ck_|anamnese$)/.test(k||''))continue;var x=null;try{x=JSON.parse(localStorage.getItem(k));}catch(e){}if(!x||!x.t||ag-x.t>30*864e5)localStorage.removeItem(k);}}catch(e){}}
-function iniciar(){limparRascunhos();if(qs('f')=='protocolo')return iniciarProtocolo();if(qs('f')=='anamnese')return iniciarAnamnese();if(qs('f')=='checkin')return iniciarCheckin();var c=qs('a');
-  if(!/^[A-Za-z0-9_-]{4,60}$/.test(c))return telaMsg('Abra pelo app','A atualização do físico abre pelo botão "Fazer minha atualização", no seu app TEAM GO!.');
+function iniciar(){limparRascunhos();if(qs('f')=='protocolo')return iniciarProtocolo();if(qs('f')=='anamnese')return iniciarAnamnese();if(qs('f')=='checkin')return iniciarCheckin();var c=codigoAqui();
+  if(!/^[A-Za-z0-9_-]{4,60}$/.test(c))return telaMsg('Abra pelo app','Abra o seu app TEAM GO! uma vez neste celular e toque em "Fazer minha atualização". Perdeu o link do app? Toque abaixo.');
   document.getElementById('fxsh').innerHTML='<div class="fx-msg"><div class="fx-spin"></div><p class="mut">Abrindo sua ficha…</p></div>';
   google.script.run.withSuccessHandler(function(r){
     if(!r||r.erro)return telaMsg('Link não encontrado','Abra a atualização pelo botão "Fazer minha atualização", no seu app TEAM GO!.');
@@ -390,7 +486,8 @@ function fxKey(){return 'tg_ficha_'+D.codigo;}
 function fxSalvar(){if(typeof MODO!='undefined'&&MODO=='an')return anSalvar();try{localStorage.setItem(fxKey(),fxRascunho(FX,['antPed','th','ant','antD']));}catch(x){}}
 function fxNovo(){return {v:3,t:Date.now(),p:0,ref:Date.now().toString(36)+Math.random().toString(36).slice(2,8),modo:D.fotos||'',rosto:D.rosto!==false,roupa:'',roupaQual:D.roupa||'',aut:null,fotos:{},th:{},st:{},q:{},peso:'',med:{},med2:{},adesao:null,just:'',fome:'',fomeTxt:'',cardio:'',cardioTxt:'',refl:'',reflTxt:'',perc:'',percTxt:'',recup:'',recupTxt:'',vol:'',volTxt:'',tempo:'',carga:'',cargaTxt:'',obs:'',frutas:'',ultra:'',agua:'',nutri:''};}
 function fxVibra(ms){try{if(navigator.vibrate)navigator.vibrate(ms||8);}catch(x){}}
-function iniciarFicha(){
+function iniciarFicha(){letraLigar();document.documentElement.classList.add('an-vivo','ck-vivo'); // v37: visual claro e vivo, igual à anamnese
+
   try{FX=JSON.parse(localStorage.getItem(fxKey())||'null');}catch(x){}
   // rascunho velho não serve: os passos mudaram de lugar (v3: fotos por último e o jeito de acompanhar)
   if(!FX||FX.v!==3||!FX.ref||FX.fim||Date.now()-(FX.t||0)>12*864e5){if(FX)try{localStorage.removeItem(fxKey());}catch(x){}FX=fxNovo();} // rascunho velho sai do celular
@@ -546,11 +643,11 @@ function fxTela(){var b=document.getElementById('fxsh');if(!b||!FX)return;if(FXC
   var p=FXP[FX.p],E=fxEtapas(),fim=FX.fim||FX.env,et=fim?{i:E.length,j:0,n:1}:fxEtapa(p),corpo=b.querySelector('.fx2-body'),mesmo=FXU===FX.p&&!fim,sc=mesmo&&corpo?corpo.scrollTop:0;
   FXNUM=fim||p=='intro'?'':(et.i+1)+'.'+(et.j+(et.i===0?0:1));
   var pct=fim?100:Math.round((et.i+(et.j+1)/et.n)/E.length*1000)/10,p0=FXPCT;FXPCT=pct;
-  var h='<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><button type="button" class="fx2-ic" data-fxv="1" aria-label="Voltar"'+(FX.p&&!fim?'':' hidden')+'>'+FXI.volta+'</button><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>Atualização do físico</b></div><button type="button" class="fx2-sair" data-x="1" aria-label="Sair e voltar pro app">Sair</button></div>';
+  var h='<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><button type="button" class="fx2-ic" data-fxv="1" aria-label="Voltar"'+(FX.p&&!fim?'':' hidden')+'>'+FXI.volta+'</button><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>Atualização do físico</b></div><span class="an-dir"><button type="button" class="an-letra" data-anletra="1" aria-label="Letra maior ou menor">A+</button><button type="button" class="fx2-sair" data-x="1" aria-label="Sair e voltar pro app">Sair</button></span></div>';
   h+='<div class="fita" style="--p:'+p0+'%" aria-hidden="true"><i class="fita-reg"></i><i class="fita-cheia"></i><i class="fita-mk"></i><div class="fita-et">'+E.map(function(x,i){return '<span class="'+(i<et.i?'ok':i==et.i?'cur':'')+'">'+x[0]+'</span>';}).join('')+'</div></div></div></div>';
   h+='<div class="fx2-body"><div class="fx-pg'+(mesmo?'':' an'+(FXDIR<0?' vt':''))+'" data-pg="'+p+'">'+fxCorpo(p)+'</div></div>';
   if(!fim){var r=p=='revisar',pd=fxPode(p);h+='<div class="fx2-foot"><div class="fx2-in"><p class="fx2-hint" id="fxhint" aria-live="polite">'+(r||pd?'':fxFalta(p))+'</p>'+(r?'<button type="button" class="bt" data-fxe="1">Enviar</button>':'<button type="button" class="bt" data-fxn="1"'+(pd?'':' disabled')+'>'+fxRotulo(p)+'</button>')+'</div></div>';}
-  b.innerHTML=h;FXU=FX.p;FXDIR=0;var fi=b.querySelector('.fita');if(fi){if(p0===pct)fi.style.setProperty('--p',pct+'%');else requestAnimationFrame(function(){requestAnimationFrame(function(){fi.style.setProperty('--p',pct+'%');});});}var nb=b.querySelector('.fx2-body');if(nb&&sc)nb.scrollTop=sc;}
+  b.innerHTML=h;FXU=FX.p;FXDIR=0;var fi=b.querySelector('.fita');if(fi){if(p0===pct)fi.style.setProperty('--p',pct+'%');else requestAnimationFrame(function(){requestAnimationFrame(function(){fi.style.setProperty('--p',pct+'%');});});}var nb=b.querySelector('.fx2-body');if(nb&&sc)nb.scrollTop=sc;if(nb&&!FX.fim&&typeof anDica=='function')anDica(b,nb);} // v33: aviso "tem mais aqui embaixo"
 function fxProx(){if(!FX)return;var p=FXP[FX.p],b=document.querySelector('#fxsh [data-fxn]'),hi=document.getElementById('fxhint'),ok=fxPode(p);if(b){b.disabled=!ok;b.textContent=fxRotulo(p);}if(hi)hi.textContent=ok?'':fxFalta(p);}
 // medidas e peso: atualiza só a média e os avisos enquanto digita (os campos ficam, o teclado não fecha)
 function fxRedesenhaPeso(t){var pw=document.getElementById('fxpw');if(pw){var a=fxAvisoPeso();pw.innerHTML=a;pw.hidden=!a;}var pd=document.getElementById('fxpd');if(pd)pd.innerHTML=fxDifPeso();
@@ -744,7 +841,7 @@ function fxRascunho(o,fora){var c={};for(var k in o)if(fora.indexOf(k)<0)c[k]=o[
 // Amigável de propósito: quase tudo por toque, perguntas que só aparecem quando fazem sentido, rascunho no celular,
 // mapa do corpo pras dores, triagem de saúde com "Nenhum destes" num toque e fotos que podem ficar pra depois.
 // Alimentação: só retrato de hábitos, não é dieta (prescrever dieta é só pra nutricionista).
-var AN=null,MODO='',ANU=-1,ANDIR=0,ANPCT=0,ANA={},ANNUM='';
+var AN=null,MODO='',ANU=-1,ANDIR=0,ANPCT=0,ANA={},ANNUM='',ANULT=null,ANPD=null;
 var ANE=[['Você',['boas','nome','contato','plano']],['Treino',['pratica','onde','treinoatual','nivel','aparelhos']],['Saúde',['corpo','parq','dores','horm','habitos']],
   ['Rotina',['sono','estresse','agenda','alim1','alim2']],['Objetivo',['objetivo','prioridade','preferencias']],['Enviar',['postura','protocolo','fotos','regras','revisar']]];
 var ANP=[].concat.apply([],ANE.map(function(x){return x[1];}));
@@ -766,9 +863,11 @@ function anNovo(){return {v:1,t:Date.now(),t0:Date.now(),p:0,ref:'an'+Date.now()
   sit:'',ativ:[],ativOutro:'',esporteTxt:'',onde:'',freq:null,divisao:'',treinoTxt:'',nivel:'',tecnica:'',aparelhos:[],naoSeiAp:false,faltaMaq:'',
   altura:'',peso:'',parq:[],parqNada:false,parqTxt:'',dores:[],doresNada:false,doresTxt:'',horm:'',hormTxt:'',fuma:'',alcool:'',
   sono:null,horas:7,estresse:null,energia:'',dias:null,tempo:'',nutri:'',refeicoes:'',frutas:'',proteina:'',ultra:'',agua:'',supl:[],
-  objetivo:'',prio:[],naoGosta:'',modo:'',rosto:true,fotos:{},th:{},st:{},q:{},ant:{},fotosDepois:false,aut:null,chk:{},regras:'',priv:''};}
+  objetivo:'',prio:[],naoGosta:'',modo:'',rosto:true,fotos:{},th:{},st:{},q:{},ant:{},fotosDepois:false,aut:null,chk:{},regras:'',priv:'',termos:''};}
 // Política de Privacidade (…/teamgo/privacidade/): a versão aceita vai junto com a anamnese
 var ANPRIV='Versão 1.1 de 31/10/2026';
+// v32: contrato e termo de consentimento (…/teamgo/termos/): igual a TERMOS_VERSAO no Código e à data da página
+var ANTERMOS='Versão 1.0 de 02/11/2026';
 function anSalvar(){try{localStorage.setItem(ANKEY,fxRascunho(AN,['th','ant']));}catch(x){}} // v25: a imagem das fotos nunca fica no celular
 function anA(){return AN.versao=='f'?'a':AN.versao=='m'?'o':'o(a)';}
 function anPrimeiro(){var n=String(AN.nome||'').trim().split(/\s+/)[0]||'';return n?n.charAt(0).toUpperCase()+n.slice(1).toLowerCase():'';}
@@ -808,7 +907,7 @@ function anPode(p){var A=AN;
   if(p=='postura')return FXMODOS.indexOf(A.modo)>=0&&(A.modo=='sem'||A.aut=='sim');
   if(p=='protocolo')return fxCheckOk(A,A.modo,A.versao=='f');
   if(p=='fotos')return A.aut=='sim'&&['frente','costas','lado'].every(function(k){return A.st[k]=='ok'&&!!A.fotos[k];});
-  if(p=='regras')return !!A.regras&&A.priv===ANPRIV;
+  if(p=='regras')return !!A.regras&&A.priv===ANPRIV&&A.termos===ANTERMOS;
   return true;}
 function anFalta(p){var A=AN;
   if(p=='regras')return !A.regras?'Responda sobre os combinados.':'Marque a autorização dos seus dados pra continuar.';
@@ -850,7 +949,9 @@ function anMapa(){var s='<svg class="an-mapa" viewBox="0 0 100 200" aria-hidden=
 function anCorpo(p){var A=AN,a=anA(),pn=anPrimeiro();
   if(A.fim)return '<div class="fx-fim"><div class="fx-okc">'+fxSvg('<path d="M8.5 16.5l5 5 10-11" stroke-width="2.6"/>',44)+'</div><h1>Recebi'+(A.fimNome?', '+e(A.fimNome):'')+'!</h1><p>Sua anamnese chegou certinha. Daqui pra frente é comigo:</p>'+
     '<ol class="an-lin"><li><b>Até amanhã</b><span>Te chamo no WhatsApp pra marcar a chamada de início (20 a 30 minutos).</span></li><li><b>Até o 3º dia</b><span>Seu treino fica pronto no app TEAM GO!. O link chega no seu e-mail.</span></li><li><b>Segunda-feira seguinte</b><span>Começo oficial. Bora!</span></li></ol>'+
-    '<a class="bt" href="https://wa.me/'+ANWA+'?text='+encodeURIComponent('Oi Gui! Acabei de mandar minha anamnese. Aqui é '+(A.fimNome||'')+'.')+'" target="_blank" rel="noopener">Falar com o Gui no WhatsApp</a></div>';
+    '<div class="an-prox"><b>📲 Já baixe o app do seu treino</b><p>Os seus exercícios, com os vídeos de cada um, ficam no PersonalGO. Baixe agora: quando o treino ficar pronto, eu te mando o convite pra entrar.</p><a class="bt" href="'+anPgoLoja()+'" target="_blank" rel="noopener">Baixar o PersonalGO</a></div>'+
+    '<div class="an-prox"><b>🎮 E o seu app TEAM GO!</b><p>O link chega no seu e-mail. Logo na primeira vez que abrir, já dá pra ganhar moedas: pôr sua foto, escolher a meta da semana, baixar o PersonalGO e fazer o primeiro check-in.</p></div>'+
+    '<a class="bt sec" href="https://wa.me/'+ANWA+'?text='+encodeURIComponent('Oi Gui! Acabei de mandar minha anamnese. Aqui é '+(A.fimNome||'')+'.')+'" target="_blank" rel="noopener">Falar com o Gui no WhatsApp</a></div>';
   if(A.env)return '<div class="fx-env"><div class="fx-spin"></div><b>Enviando sua anamnese…</b><p class="small mut">Leva uns segundos. Não feche esta página.</p></div>';
   if(p=='boas')return '<p class="an-oi">Oi! Eu sou o <b>Guilherme</b>, personal trainer, especialista em Fisiologia do Exercício.</p><h1>Vamos montar o seu treino</h1><p class="fx-lead">São perguntas rápidas, quase todas de tocar. Quanto mais sincero(a), mais o treino encaixa na sua vida.</p>'+
     '<dl class="fx-dl"><div><dt>Tempo</dt><dd>8 min</dd></div><div><dt>Etapas</dt><dd>6</dd></div><div><dt>Fotos</dt><dd>3</dd></div></dl><p class="small mut fx-dica">Pode parar e continuar depois: o que você preencher fica salvo neste celular. As fotos podem ficar pra depois.</p>'+
@@ -918,7 +1019,9 @@ function anCorpo(p){var A=AN,a=anA(),pn=anPrimeiro();
     '<li><b>Atualização do físico no fim de cada ciclo:</b> se for atrasar, me avisa. Sem aviso, depois de 15 dias sem a atualização, a consultoria é encerrada.</li></ol><p class="small mut">Não leve pro pessoal: é só pra nossa boa convivência.</p>'+
     '<div class="fx-ops" role="group">'+anOpc('regras','Sim, li e estou de acordo')+anOpc('regras','Ainda tenho dúvidas, gostaria de conversar antes de começar','Ainda tenho dúvidas','Quero conversar antes de começar')+'</div>'+
     '<div class="fx-box an-priv"><b>Seus dados de saúde e suas fotos</b><p>O que você me contou sobre a sua saúde (triagem, dores, remédios ou hormônios, medidas e hábitos) e as suas fotos, se mandar, eu uso só pra montar e acompanhar o seu treino. Só eu vejo. Você pode pedir pra ver, corrigir ou apagar quando quiser.</p><p><b>Guardado no Google:</b> os dados e as fotos ficam nos serviços do Google, que podem usar servidores fora do Brasil (como nos Estados Unidos). Ao autorizar, você concorda com isso também.</p><a href="../privacidade/" target="_blank" rel="noopener">Ler a Política de Privacidade</a></div>'+
-    '<div class="fx-ops" role="group">'+anOpc('priv',ANPRIV,'Li e autorizo o uso dos meus dados de saúde e das minhas fotos','Só pro meu treino e guardados no Google, como explica a Política de Privacidade')+'</div>';
+    '<div class="fx-ops" role="group">'+anOpc('priv',ANPRIV,'Li e autorizo o uso dos meus dados de saúde e das minhas fotos','Só pro meu treino e guardados no Google, como explica a Política de Privacidade')+'</div>'+
+    '<div class="fx-box an-priv"><b>Contrato e cuidados com a sua saúde</b><p>O contrato diz o que eu faço e o que você faz, como funcionam pagamento, cancelamento (nos primeiros 7 dias você pode desistir e recebe tudo de volta), faltas e viagens. O termo de consentimento explica os benefícios e os riscos do exercício e quando parar o treino: dor ou aperto no peito, falta de ar fora do normal, tontura ou desmaio.</p><a href="../termos/" target="_blank" rel="noopener">Ler o contrato e o termo</a></div>'+
+    '<div class="fx-ops" role="group">'+anOpc('termos',ANTERMOS,'Li e aceito o contrato e o termo de consentimento','Declaro que as informações de saúde que dei são verdadeiras')+'</div>';
   // revisão
   var linhas=function(r){return r.filter(function(x){return x[1]!==''&&x[1]!=null;}).map(function(x){return '<div class="row"><span class="mut">'+x[0]+'</span><b>'+e(x[1])+'</b></div>';}).join('');};
   var sec=function(t,n,ir,r){return '<div class="fx-rc"><div class="fx-rch"><b><i>'+n+'</i>'+t+'</b><button type="button" class="fx-ed" data-anir="'+ANP.indexOf(ir)+'">Editar</button></div>'+linhas(r)+'</div>';};
@@ -928,19 +1031,36 @@ function anCorpo(p){var A=AN,a=anA(),pn=anPrimeiro();
     sec('Saúde',3,'corpo',[['Altura e peso',fxNum(anAltura())+' m · '+fxNum(A.peso)+' kg'],['Triagem de saúde',A.parqNada?'Nenhum item':A.parq.length+' item(ns)'],['Dores',A.doresNada?'Nenhuma':A.dores.join(', ')],['Hormônios',A.horm],['Cigarro',A.fuma],['Bebida',A.alcool.split(' (')[0]]])+
     sec('Rotina',4,'sono',[['Sono',A.sono+' de 10 · '+fxNum(A.horas)+' h'],['Estresse',A.estresse+' de 10'],['Disposição',A.energia.split(' -')[0]],['Treinos por semana',A.dias],['Tempo por treino',A.tempo],['Nutricionista',A.nutri]])+
     sec('Objetivo',5,'objetivo',[['Objetivo',A.objetivo.split(' (')[0]],['Prioridades',A.prio.join(' e ')],['Não gosta de',A.naoGosta]])+
-    sec('Fotos e combinados',6,'postura',(A.modo=='sem'?[['Postura','Sem fotos: avaliação ao vivo na chamada']]:[['Jeito',fxModoNome(A.modo)+(A.rosto!==false?', rosto coberto':'')],['Fotos',A.fotosDepois?'Vai mandar depois':['frente','costas','lado'].filter(function(k){return A.fotos[k];}).length+' de 3'],['Uso das fotos',A.aut=='sim'?'Autorizado':'Não autorizado']]).concat([['Combinados',A.regras.split(',')[0]],['Privacidade',A.priv?'Autorizado ('+A.priv+')':'']]))+
+    sec('Fotos e combinados',6,'postura',(A.modo=='sem'?[['Postura','Sem fotos: avaliação ao vivo na chamada']]:[['Jeito',fxModoNome(A.modo)+(A.rosto!==false?', rosto coberto':'')],['Fotos',A.fotosDepois?'Vai mandar depois':['frente','costas','lado'].filter(function(k){return A.fotos[k];}).length+' de 3'],['Uso das fotos',A.aut=='sim'?'Autorizado':'Não autorizado']]).concat([['Combinados',A.regras.split(',')[0]],['Privacidade',A.priv?'Autorizado ('+A.priv+')':''],['Contrato',A.termos?'Aceito ('+A.termos+')':'']]))+
     '</div><p class="small mut fx-dica">Ao enviar, te chamo no WhatsApp pra marcar a chamada de início.</p>';}
 
 function anTela(){var b=document.getElementById('fxsh');if(!b||!AN)return;if(FXC)return fxCamTela();if(FXR)return fxRostoTela();
   var p=ANP[AN.p],fim=AN.fim||AN.env,et=fim?{i:ANE.length,j:0,n:1}:anEtapa(p),corpo=b.querySelector('.fx2-body'),mesmo=ANU===AN.p&&!fim,sc=mesmo&&corpo?corpo.scrollTop:0;
   ANNUM=fim||p=='boas'||p=='revisar'?'':(et.i+1)+'.'+(et.j+(et.i===0?0:1));
   var pct=fim?100:Math.round((et.i+(et.j+1)/et.n)/ANE.length*1000)/10,p0=ANPCT;ANPCT=pct;
-  var h='<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><button type="button" class="fx2-ic" data-anv="1" aria-label="Voltar"'+(AN.p&&!fim?'':' hidden')+'>'+FXI.volta+'</button><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>Anamnese de treino</b></div><button type="button" class="fx2-sair" data-x="1" aria-label="Sair (fica salvo)">Sair</button></div>';
+  var h='<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><button type="button" class="fx2-ic" data-anv="1" aria-label="Voltar"'+(AN.p&&!fim?'':' hidden')+'>'+FXI.volta+'</button><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>Anamnese de treino</b>'+(fim?'':'<small class="an-cont">Tela '+anConta().i+' de '+anConta().n+'</small>')+'</div><span class="an-dir"><button type="button" class="an-letra" data-anletra="1" aria-label="Letra maior ou menor">A+</button><button type="button" class="fx2-sair" data-x="1" aria-label="Sair (fica salvo)">Sair</button></span></div>';
   h+='<div class="fita" style="--p:'+p0+'%;--n:'+ANE.length+'" aria-hidden="true"><i class="fita-reg"></i><i class="fita-cheia"></i><i class="fita-mk"></i><div class="fita-et" style="grid-template-columns:repeat('+ANE.length+',minmax(0,1fr))">'+ANE.map(function(x,i){return '<span class="'+(i<et.i?'ok':i==et.i?'cur':'')+'">'+x[0]+'</span>';}).join('')+'</div></div></div></div>';
   h+='<div class="fx2-body"><div class="fx-pg'+(mesmo?'':' an'+(ANDIR<0?' vt':''))+'" data-pg="'+p+'">'+anCorpo(p)+'</div></div>';
   if(!fim){var r=p=='revisar',pd=anPode(p);h+='<div class="fx2-foot"><div class="fx2-in"><p class="fx2-hint" id="fxhint" aria-live="polite">'+(r||pd?'':anFalta(p))+'</p>'+(r?'<button type="button" class="bt" data-ane="1">Enviar anamnese</button>':'<button type="button" class="bt" data-ann2="1"'+(pd?'':' disabled')+'>'+anRotulo(p)+'</button>')+'</div></div>';}
+  var pd1=!fim&&anPode(p),acende=mesmo&&pd1&&ANPD===false;ANPD=fim?null:pd1;
   b.innerHTML=h;ANU=AN.p;ANDIR=0;var nb=b.querySelector('.fx2-body');if(nb&&sc)nb.scrollTop=sc;
+  if(acende){var bt=b.querySelector('[data-ann2]');if(bt)bt.classList.add('acende');}
+  if(nb&&!fim){anRolaProxima(nb);anDica(b,nb);}
   var fi=b.querySelector('.fita');if(fi){if(p0===pct)fi.style.setProperty('--p',pct+'%');else requestAnimationFrame(function(){requestAnimationFrame(function(){fi.style.setProperty('--p',pct+'%');});});}}
+// v33 (a mãe do Gui ficou na dúvida se tinha mais pergunta embaixo): número da tela, aviso "tem mais aqui embaixo" e, depois de
+// responder uma pergunta de toque único, a tela desce sozinha até a próxima pergunta se ela estiver escondida embaixo.
+function anConta(){var v=ANP.filter(function(x){return !anPula(x);}),i=v.indexOf(ANP[AN.p]);return {i:i<0?1:i+1,n:v.length};}
+function anRolaProxima(nb){var k=ANULT;ANULT=null;if(!k)return;var ls=nb.querySelectorAll('[data-ank="'+k+'"]'),ult=ls[ls.length-1];if(!ult)return;
+  var qs=nb.querySelectorAll('.fx-q'),prox=null;for(var i=0;i<qs.length;i++){if(ult.compareDocumentPosition(qs[i])&4){prox=qs[i];break;}}if(!prox)return;
+  var r0=nb.getBoundingClientRect(),r=prox.getBoundingClientRect();if(r.top<r0.top+nb.clientHeight*0.62)return;
+  var suave=!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  setTimeout(function(){nb.scrollTo({top:nb.scrollTop+(r.top-r0.top)-20,behavior:suave?'smooth':'auto'});},180);}
+function anDica(b,nb){var d=document.createElement('button');d.type='button';d.className='fx-mais';d.innerHTML='Tem mais perguntas aqui embaixo <span aria-hidden="true">↓</span>';b.appendChild(d);
+  var ft=b.querySelector('.fx2-foot');d.style.bottom=((ft?ft.offsetHeight:0)+12)+'px';
+  d.onclick=function(ev){ev.stopPropagation();nb.scrollBy({top:Math.round(nb.clientHeight*0.7),behavior:'smooth'});};
+  var digitando=function(){var a=document.activeElement;return !!a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName);}; // com o teclado aberto o aviso some (não cobre o campo)
+  var ver=function(){d.hidden=digitando()||nb.scrollHeight-nb.clientHeight-nb.scrollTop<70;};nb.addEventListener('scroll',ver,{passive:true});nb.addEventListener('focusin',function(){setTimeout(ver,50);});nb.addEventListener('focusout',function(){setTimeout(ver,150);});ver();setTimeout(ver,400);}
+function anPgoLoja(){var u=navigator.userAgent||'';if(/Android/i.test(u))return 'https://play.google.com/store/apps/details?id=com.personalgo.rnapp';if(/iPhone|iPad|iPod/i.test(u))return 'https://apps.apple.com/br/app/personalgo-treino-personal/id6615069786';return 'https://web.personalgo.app/';}
 function anProx(){if(!AN)return;var p=ANP[AN.p],b=document.querySelector('#fxsh [data-ann2]'),hi=document.getElementById('fxhint'),ok=anPode(p);if(b){b.disabled=!ok;b.textContent=anRotulo(p);}if(hi)hi.textContent=ok?'':anFalta(p);
   var mn=document.getElementById('anmenor');if(mn)mn.hidden=!(anNascOk()&&anIdade()<18);}
 function anIr(i,dir){var vs=ANP.length;while(i>=0&&i<vs&&anPula(ANP[i]))i+=dir<0?-1:1;AN.p=Math.max(0,Math.min(vs-1,i));ANDIR=dir;anSalvar();anTela();}
@@ -958,7 +1078,7 @@ function anClique(ev){var t=ev.target,sx=t.closest&&t.closest('[data-x]');if(sx)
   if(d.ann2){fxVibra();if(AN.rv){AN.rv=0;anIr(ANP.indexOf('revisar'),1);}else anIr(AN.p+1,1);return;}
   if(d.anv){AN.rv=0;anIr(AN.p-1,-1);return;}
   if(d.anir!=null){AN.rv=1;anIr(Number(d.anir),-1);return;}
-  if(d.ank){fxVibra(6);AN[d.ank]=d.anc;if(d.ank=='plano'&&(d.anc=='Ainda não fechei'||d.anc=='Planilha com vídeos'))AN.dur='';if(d.ank=='sit'&&d.anc=='Nunca treinei'){AN.ativ=[];AN.freq=0;}anSalvar();anTela();return;}
+  if(d.ank){fxVibra(6);ANULT=d.ank;AN[d.ank]=d.anc;if(d.ank=='plano'&&(d.anc=='Ainda não fechei'||d.anc=='Planilha com vídeos'))AN.dur='';if(d.ank=='sit'&&d.anc=='Nunca treinei'){AN.ativ=[];AN.freq=0;}anSalvar();anTela();return;}
   if(d.anm){var k=d.anm,i=AN[k].indexOf(d.anc);if(i>=0)AN[k].splice(i,1);else AN[k].push(d.anc);if(d.anx&&AN[k].length)AN[d.anx]=false;fxVibra(6);anSalvar();anTela();return;}
   if(d.annada){var kn=d.annada;AN[kn]=!AN[kn];if(AN[kn]){if(kn=='parqNada'){AN.parq=[];AN.parqTxt='';}if(kn=='doresNada'){AN.dores=[];AN.doresTxt='';}}fxVibra(6);anSalvar();anTela();return;}
   if(d.ann){fxVibra(6);AN[d.ann]=Number(d.v);anSalvar();anTela();return;}
@@ -977,7 +1097,7 @@ function anEnviar(){AN.env=true;anTela();
     sit:c.sit,ativ:c.ativ,ativOutro:c.ativOutro,esporteTxt:c.esporteTxt,onde:c.onde,freq:c.freq,divisao:anPula('treinoatual')?'':c.divisao,treinoTxt:anPula('treinoatual')?'':c.treinoTxt,nivel:c.nivel,tecnica:c.tecnica,
     aparelhos:anPula('aparelhos')?[]:c.aparelhos,faltaMaq:anPula('aparelhos')?'':c.faltaMaq,altura:anAltura(),peso:c.peso,parq:c.parq,parqTxt:c.parqTxt,dores:c.dores,doresTxt:c.doresTxt,horm:c.horm,hormTxt:c.hormTxt,fuma:c.fuma,alcool:c.alcool,
     sono:c.sono,horas:c.horas,estresse:c.estresse,energia:c.energia,dias:c.dias,tempo:c.tempo,nutri:c.nutri,refeicoes:c.refeicoes,frutas:c.frutas,proteina:c.proteina,ultra:c.ultra,agua:c.agua,supl:c.supl,
-    objetivo:c.objetivo,prio:c.prio,naoGosta:c.naoGosta,fotosModo:c.modo,rosto:c.rosto!==false,fotos:c.fotosDepois||c.modo=='sem'?{}:c.fotos,fotosDepois:!!c.fotosDepois&&c.modo!='sem',aut:c.modo=='sem'?'nao':c.aut,regras:c.regras,priv:c.priv};
+    objetivo:c.objetivo,prio:c.prio,naoGosta:c.naoGosta,fotosModo:c.modo,rosto:c.rosto!==false,fotos:c.fotosDepois||c.modo=='sem'?{}:c.fotos,fotosDepois:!!c.fotosDepois&&c.modo!='sem',aut:c.modo=='sem'?'nao':c.aut,regras:c.regras,priv:c.priv,termos:c.termos};
   google.script.run.withSuccessHandler(function(r){if(!AN)return;AN.env=false;
       if(r&&r.ok){AN.fim=true;AN.fimNome=r.primeiro||anPrimeiro();fxVibra([20,40,20]);try{localStorage.removeItem(ANKEY);}catch(x){}anTela();return;}
       if(r&&r.conv){anSalvar();if(r.conv=='vencido')return anVenceu(AN.conv,{});if(r.conv=='usado')return anUsado();return anPortaria('nao');}
@@ -990,7 +1110,8 @@ function anWa(t){return 'https://wa.me/'+ANWA+'?text='+encodeURIComponent(t);}
 function anCasca(corpo){return '<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><button type="button" class="fx2-ic" hidden></button><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>Anamnese de treino</b></div><button type="button" class="fx2-sair" data-x="1">Sair</button></div></div></div><div class="fx2-body"><div class="fx-pg an">'+corpo+'</div></div>';}
 function anPorta(corpo){AN=null;var sh=document.getElementById('fxsh');sh.onclick=anPortaClique;sh.oninput=null;sh.innerHTML=anCasca(corpo);}
 function anOk(){return '<div class="fx-okc">'+fxSvg('<path d="M8.5 16.5l5 5 10-11" stroke-width="2.6"/>',44)+'</div>';}
-function iniciarAnamnese(){MODO='an';document.title='Anamnese de treino · TEAM GO!';
+function iniciarAnamnese(){MODO='an';document.documentElement.classList.add('an-vivo','ck-vivo');
+  letraLigar(); // v33: letra maior (A+) lembrada no celulardocument.title='Anamnese de treino · TEAM GO!';
   var cu=String(qs('c')||'').toLowerCase().replace(/[^a-f0-9]/g,''),cod=cu||String(anLS(ANCK)||'');
   if(!/^[a-f0-9]{10}$/.test(cod))return anPortaria(cu?'nao':'');
   if(cu)anLS(ANCK,cu);
@@ -1083,16 +1204,22 @@ function ckPesoOk(){var t=String(CK.peso||'').trim();if(!t)return true;var n=Num
 function ckPode(p){if(p=='treinos')return CK.treinos!=null;if(p=='energia'||p=='sono'||p=='gosto')return CK[p]!=null;if(p=='dor')return !!CK.dor;if(p=='extra')return ckPesoOk();if(p=='saude')return ckSaudeOk();return true;}
 function ckFalta(p){if(p=='treinos')return 'Toque em quantos treinos você fez.';if(p=='dor')return 'Escolha uma opção.';if(p=='extra')return 'Confere o peso: só o número, em quilos (ex.: 68,5).';if(p=='saude')return 'Confere: a máxima e a mínima juntas, como aparecem no aparelho (ex.: 120 e 80).';return 'Toque numa nota de 0 a 10.';}
 function ckEsc(k,v){var a=CKESC[k];if(v==null)return null;return a[v<=1?0:v<=4?1:v<=6?2:v<=8?3:4];}
-function ckH(t){return '<h1>'+(CKNUM?'<span class="fx-n">'+CKNUM+'</span>':'')+t+'</h1>';}
+// v38: cada pergunta com um ícone desenhado (traço da marca) e o "Pergunta X de Y" em cima do título
+var CKIC={treinos:'<path d="M3 10v4M6 8v8M18 8v8M21 10v4M6 12h12"/>',energia:'<path d="M13 2 5 13.5h6L10 22l8-11.5h-6z"/>',sono:'<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
+  dor:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6" fill="currentColor"/>',saude:'<path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/><path d="M5.5 12.5h3.2l1.6-2.6 2.4 4.8 1.6-2.2h4.2"/>',
+  gosto:'<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',extra:'<path d="M4 5.5h16v10H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/>',revisar:'<path d="M8 4h8v3H8z"/><path d="M16 5.5h2.5V21h-13V5.5H8"/><path d="m8.5 13.5 2.3 2.3 4.7-4.7"/>'};
+function ckH(t){var p=CKP[CK.p],n=CKP.filter(function(x){return x!='revisar';}).length,i=CKP.indexOf(p)+1;
+  return '<div class="ck-cab"><span class="ck-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+(CKIC[p]||'')+'</svg></span><span class="ck-et">'+(p=='revisar'?'Última tela':'Pergunta '+i+' de '+n)+'</span></div><h1>'+t+'</h1>';}
 function ckRegua(k,esq,dir){var a=CK[k],w=ckEsc(k,a);
-  var h='<div class="fx-nt">'+(a==null?'<b class="fx-ntv vz">?</b><span>Toque numa nota</span>':'<b class="fx-ntv" style="color:'+fxCorNota(a)+'">'+a+'</b><span>'+e(ckA(w[0]))+'<small class="ck-sub">'+e(ckA(w[1]))+'</small></span>')+'</div>';
+  var h='<div class="fx-nt">'+(a==null?'<span class="ck-toque">Toque numa nota</span>':'<b class="fx-ntv" style="color:'+fxCorNota(a)+'">'+a+'</b><span>'+e(ckA(w[0]))+'<small class="ck-sub">'+e(ckA(w[1]))+'</small></span>')+'</div>';
   h+='<div class="fx-eq" role="group" aria-label="Nota de 0 a 10" style="--w:'+(a==null?'0%':((a+.5)*100/11).toFixed(2)+'%')+';--cv:'+(a==null?'var(--red)':fxCorNota(a))+'">';
   for(var i=0;i<=10;i++)h+='<button type="button" class="'+(a===i?'on':a!=null&&i<a?'ate':'')+'" data-ckn="'+k+'" data-ckv="'+i+'" aria-pressed="'+(a===i)+'" aria-label="'+i+'" style="--c:'+fxCorNota(i)+'">'+i+'</button>';
-  return h+'</div><div class="fx-eql"><span>'+e(esq)+'</span><span>'+e(dir)+'</span></div>';}
+  var an=CKI&&CKI.ant?CKI.ant[k]:null; // v37: a nota da semana passada, pra comparar sem precisar lembrar
+  return h+'</div><div class="fx-eql"><span>'+e(esq)+'</span><span>'+e(dir)+'</span></div>'+(an!=null?'<p class="ck-ant">Semana passada você deu <b>'+an+'</b>.</p>':'');}
 function ckCorpo(p){var o=CKI.f?'a':'o',h='';
   if(CK.fim)return ckFim();
   if(p=='treinos'){var m=CKI.meta||3,t=CK.treinos;
-    h=ckH('Quantos treinos você fez?')+'<p class="fx-q">Na semana de '+e(CK.sem)+'.</p><p class="small mut">Conta os treinos de musculação e os outros que estavam no seu plano.</p>';
+    h=(CKI.primeiro?'<p class="ck-oi">Oi, '+e(CKI.primeiro)+'! '+(CKI.modo=='direto'?'Vamos registrar a sua semana.':'Bora fechar a semana?')+'</p>':'')+ckH('Quantos treinos você fez?')+'<p class="fx-q">Na semana de '+e(CK.sem)+'.</p><p class="small mut">Conta os treinos de musculação e os outros que estavam no seu plano.</p>'+(CKI.ant&&CKI.ant.treinos!=null?'<p class="ck-ant">Semana passada: <b>'+CKI.ant.treinos+' treino'+(CKI.ant.treinos==1?'':'s')+'</b>.</p>':'');
     h+='<div class="ck-tr" role="group" aria-label="Treinos na semana">';for(var i=0;i<=7;i++)h+='<button type="button" class="'+(t===i?'on':'')+(i>=m?' meta':'')+'" data-ckn="treinos" data-ckv="'+i+'" aria-pressed="'+(t===i)+'"><b>'+i+'</b>'+(i==m?'<small>meta</small>':'')+'</button>';h+='</div>';
     if(t!=null)h+='<p class="ck-fala'+(t>=m?' ok':'')+'">'+(t>=m?ico('ok',18)+' Meta da semana batida. É assim que o resultado aparece.':t>0?'Cada treino conta. Semana que vem a gente busca '+m+'.':'Semana difícil acontece. Me conta no fim o que pegou, que eu ajusto o plano.')+'</p>';
     return h;}
@@ -1119,7 +1246,7 @@ function ckCorpo(p){var o=CKI.f?'a':'o',h='';
   return '';}
 function ckFim(){var o=CKI.f?'a':'o',r=CK.res||{};
   return '<div class="fx-msg ck-fim"><svg class="fx-okc" viewBox="0 0 52 52" width="76" height="76" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M15 27l7.5 7.5L37.5 19" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
-    '<h1>Check-in enviado</h1><p>Valeu, '+e(CKI.primeiro)+'! Já recebi a sua semana.</p><p class="mut">Sua devolutiva chega até <b>'+e(r.prazo||'')+'</b>.</p>'+
+    '<h1>Check-in enviado</h1><p>Valeu, '+e(CKI.primeiro)+'! Já recebi a sua semana.</p>'+(r.seq>=1?'<div class="ck-seq"><b>'+r.seq+'</b><span>semana'+(r.seq>1?'s':'')+' seguida'+(r.seq>1?'s':'')+' de check-in'+(r.prox?'<small>faltam '+(r.prox-r.seq)+' pra medalha de '+r.prox+' semanas</small>':'')+'</span></div>':'')+'<p class="mut">Sua devolutiva chega até <b>'+e(r.prazo||'')+'</b>.</p>'+
     (r.pressao=='urgente'?'<div class="fx-box ck-alerta"><b>Sua pressão ficou bem acima do esperado.</b> Descanse 10 minutos e meça de novo. Se continuar alta, ou se tiver dor no peito, falta de ar, dor de cabeça forte ou visão turva, procure atendimento hoje. Não treine até falar com o Gui.</div>':r.pressao=='alta'?'<div class="fx-box ck-alerta"><b>Sua pressão ficou um pouco acima do esperado.</b> Meça de novo outro dia, em repouso. O Gui vai olhar com cuidado e, se continuar assim, vale mostrar pro seu médico.</div>':'')+
     ((r.vitorias||[]).length?'<div class="ck-vit"><span class="ck-vit-t">Suas vitórias da semana</span>'+(r.vitorias||[]).map(function(t){return '<p>'+ico('ok',18)+'<span>'+e(t)+'</span></p>';}).join('')+'<small class="mut">Não aparece na balança, mas é resultado do treino.</small></div>':'')+
     (CKI.modo!=='direto'&&!r.repetido?'<p class="ck-moeda">+'+(r.moedas||20)+' moedas no seu app</p>':'')+
@@ -1128,11 +1255,11 @@ function ckTela(){var b=document.getElementById('fxsh');if(!b||!CK)return;var p=
   var corpo=b.querySelector('.fx2-body'),mesmo=CKU===CK.p&&!fim,sc=mesmo&&corpo?corpo.scrollTop:0;
   CKNUM=fim||p=='revisar'?'':(et.i+1)+'.'+(et.j+1);
   var pct=fim?100:Math.round((et.i+(et.j+1)/et.n)/CKE.length*1000)/10,p0=CKPCT;CKPCT=pct;
-  var h='<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><button type="button" class="fx2-ic" data-ckv="voltar" aria-label="Voltar"'+(CK.p&&!fim?'':' hidden')+'>'+FXI.volta+'</button><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>Check-in da semana</b></div><button type="button" class="fx2-sair" data-x="1" aria-label="Sair (fica salvo)">Sair</button></div>';
+  var h='<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><button type="button" class="fx2-ic" data-ckv="voltar" aria-label="Voltar"'+(CK.p&&!fim?'':' hidden')+'>'+FXI.volta+'</button><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>Check-in da semana</b>'+(fim?'':'<small class="an-cont">'+(CKP[CK.p]=='revisar'?'Só falta enviar':'Falta'+(CKP.length-CK.p>2?'m':'')+' uns '+Math.max(1,Math.ceil((CKP.length-CK.p)*0.4))+' min')+'</small>')+'</div><span class="an-dir"><button type="button" class="an-letra" data-anletra="1" aria-label="Letra maior ou menor">A+</button><button type="button" class="fx2-sair" data-x="1" aria-label="Sair (fica salvo)">Sair</button></span></div>';
   h+='<div class="fita" style="--p:'+p0+'%;--n:'+CKE.length+'" aria-hidden="true"><i class="fita-reg"></i><i class="fita-cheia"></i><i class="fita-mk"></i><div class="fita-et" style="grid-template-columns:repeat('+CKE.length+',minmax(0,1fr))">'+CKE.map(function(x,i){return '<span class="'+(i<et.i?'ok':i==et.i?'cur':'')+'">'+x[0]+'</span>';}).join('')+'</div></div></div></div>';
   h+='<div class="fx2-body"><div class="fx-pg'+(mesmo?'':' an'+(CKDIR<0?' vt':''))+'" data-pg="'+p+'">'+ckCorpo(p)+'</div></div>';
   if(!fim){var r=p=='revisar',pd=ckPode(p);h+='<div class="fx2-foot"><div class="fx2-in"><p class="fx2-hint" id="fxhint" aria-live="polite">'+(r||pd?'':ckFalta(p))+'</p>'+(r?'<button type="button" class="bt" data-cke="1">Enviar check-in</button>':'<button type="button" class="bt" data-ckp="1"'+(pd?'':' disabled')+'>'+(p=='extra'&&!CK.facil&&!CK.peso&&!CK.recado?'Pular':'Continuar')+'</button>')+'</div></div>';}
-  b.innerHTML=h;CKU=CK.p;CKDIR=0;var nb=b.querySelector('.fx2-body');if(nb&&sc)nb.scrollTop=sc;
+  b.innerHTML=h;CKU=CK.p;CKDIR=0;var nb=b.querySelector('.fx2-body');if(nb&&sc)nb.scrollTop=sc;if(nb&&!fim&&typeof anDica=='function')anDica(b,nb); // v33
   var fi=b.querySelector('.fita');if(fi){if(p0===pct)fi.style.setProperty('--p',pct+'%');else requestAnimationFrame(function(){requestAnimationFrame(function(){fi.style.setProperty('--p',pct+'%');});});}}
 function ckProx(){var p=CKP[CK.p],b=document.querySelector('#fxsh [data-ckp]'),hi=document.getElementById('fxhint'),ok=ckPode(p);if(b){b.disabled=!ok;b.textContent=p=='extra'&&!CK.facil&&!CK.peso&&!CK.recado?'Pular':'Continuar';}if(hi)hi.textContent=ok?'':ckFalta(p);}
 function ckIr(i,dir){CK.p=Math.max(0,Math.min(CKP.length-1,i));CKDIR=dir;ckSalvar();ckTela();var b=document.querySelector('#fxsh .fx2-body');if(b)b.scrollTop=0;}
@@ -1142,17 +1269,20 @@ function ckEnviar(btn){if(CK.env)return;CK.env=1;btn.disabled=true;btn.textConte
   call('alunoCheckinEnviar',[d],function(r){CK.env=0;CK.fim=1;CK.res=r||{};try{localStorage.removeItem(ckKey());}catch(x){}fxVibra(20);ckTela();},function(){CK.env=0;btn.disabled=false;btn.textContent='Enviar check-in';});}
 function ckClique(ev){var x=ev.target.closest('button');if(!x||x.disabled)return;var d=x.dataset;
   if(d.x){sair();return;}if(d.ckapp){sair(true);return;}if(d.ckv=='voltar'){ckVoltar();return;}
-  if(d.ckn){CK[d.ckn]=Number(d.ckv);fxVibra();ckSalvar();ckTela();return;}
-  if(d.ckd!==undefined){CK.dor=CKDORES[Number(d.ckd)][0];if(CK.dor===CKDORES[0][0])CK.onde='';fxVibra();ckSalvar();ckTela();return;}
+  if(d.ckn){CK[d.ckn]=Number(d.ckv);fxVibra();ckSalvar();ckTela();ckSegue(d.ckn=='treinos'?1500:900);return;}
+  if(d.ckd!==undefined){CK.dor=CKDORES[Number(d.ckd)][0];if(CK.dor===CKDORES[0][0])CK.onde='';fxVibra();ckSalvar();ckTela();if(CK.dor===CKDORES[0][0])ckSegue(900);return;}
   if(d.ckp){if(ckPode(CKP[CK.p])){ckIr(CK.p+1,1);fxHist();}return;}
   if(d.cke){ckEnviar(x);return;}
   if(d.cknovo){CK=ckNovo();ckSalvar();ckTela();return;}
   if(d.ckquero){ckLigaSaude();CK.qs=1;var i=CKP.indexOf('saude');ckIr(i,1);fxHist();return;}}
+// v37: depois de responder com um toque, passa sozinho pra próxima tela (dá tempo de ver a resposta; tocar de novo reinicia; Voltar funciona)
+var CKSEG=null;function ckSegue(ms){clearTimeout(CKSEG);var p0=CK.p;CKSEG=setTimeout(function(){if(!CK||CK.fim||CK.env||CK.p!==p0)return;if(ckPode(CKP[CK.p])&&CKP[CK.p]!='revisar'){ckIr(CK.p+1,1);fxHist();}},ms);}
 // v28: quem não tinha o passo da pressão pode pedir na hora (o servidor passa a mostrar nas próximas semanas)
 function ckLigaSaude(){CKI.saude=true;CKP=['treinos','energia','sono','dor','saude','gosto','extra','revisar'];CKE=[['Semana',['treinos','energia','sono']],['Corpo',['dor','saude','gosto']],['Enviar',['extra','revisar']]];}
 function ckDigitou(ev){var t=ev.target;if(!CK||!t.dataset||!t.dataset.cki)return;CK[t.dataset.cki]=t.value;ckSalvar();ckProx();}
-function iniciarCheckin(){MODO='ck';document.title='Check-in da semana · TEAM GO!';var c=qs('a');
-  if(!/^[A-Za-z0-9_-]{4,60}$/.test(c))return telaMsg('Abra pelo app','O check-in abre pelo botão "Fazer meu check-in", no seu app TEAM GO!.');
+function iniciarCheckin(){MODO='ck';letraLigar();document.documentElement.classList.add('an-vivo','ck-vivo'); // v37: o mesmo visual claro e vivo da anamnese
+  document.title='Check-in da semana · TEAM GO!';var c=codigoAqui();
+  if(!/^[A-Za-z0-9_-]{4,60}$/.test(c))return telaMsg('Abra pelo app','Abra o seu app TEAM GO! uma vez neste celular e toque em "Fazer meu check-in". Depois disso, o link do grupo abre direto. Perdeu o link do app? Toque abaixo.');
   document.getElementById('fxsh').innerHTML='<div class="fx-msg"><div class="fx-spin"></div><p class="mut">Abrindo seu check-in…</p></div>';
   google.script.run.withSuccessHandler(function(r){
     if(!r||r.erro)return telaMsg('Link não encontrado','Abra o check-in pelo botão "Fazer meu check-in", no seu app TEAM GO!.');
