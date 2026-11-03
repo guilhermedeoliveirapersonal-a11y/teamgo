@@ -94,6 +94,13 @@ html.tgs-convite:not(.tgs-q) body{padding-bottom:var(--tgs-barra,0px)}
 .tgs-seta{position:fixed;z-index:9600;width:46px;height:46px;pointer-events:none;display:none;animation:tgsSeta 1.1s ease-in-out infinite}
 .tgs-seta.on{display:block}
 .tgs-seta svg{width:100%;height:100%;filter:drop-shadow(0 4px 10px rgba(0,0,0,.6))}
+.tgs-dica{position:fixed;z-index:9600;left:12px;right:12px;bottom:calc(66px + env(safe-area-inset-bottom));display:none;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:#E00018;color:#fff;font:600 15px/1.35 'Libre Franklin',Arial,sans-serif;box-shadow:0 12px 30px -8px rgba(0,0,0,.7)}
+.tgs-dica.topo{bottom:auto;top:64px}
+.tgs-dica.on{display:flex;animation:tgsDica .4s cubic-bezier(.2,.8,.2,1)}
+.tgs-dica span{flex:1}.tgs-dica button{background:none;border:0;color:#fff;font-size:24px;line-height:1;padding:4px 6px;cursor:pointer}
+@keyframes tgsDica{from{opacity:0;transform:translateY(12px)}}
+#tgs-folha a.tgs-btn{display:block;text-decoration:none;box-sizing:border-box;margin-bottom:6px}
+#tgs-folha .tgs-cx svg{display:inline-block;width:20px;height:20px;vertical-align:-4px;margin:0 2px}
 .tgs-passos small{display:block;color:var(--tgs-mut);font-size:13px;margin-top:2px}
 #tgs-folha .tgs-btn.gh{margin-top:4px}
 html.tgs-folhaon .tabs{visibility:hidden}
@@ -286,6 +293,13 @@ html.tgs-folhaon .tabs{visibility:hidden}
     var dentro = /Instagram|FBAN|FBAV|FB_IAB|FBIOS|Line\/|TikTok|musical_ly|Snapchat|LinkedInApp|GSA\//i.test(ua);
     var outroIOS = ios && /CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
     var samsung = /SamsungBrowser/i.test(ua);
+    var android = /Android/i.test(ua);
+    var webview = android && /; wv\)/.test(ua);               // navegador embutido (WhatsApp, Gmail etc.) não instala
+    if (webview) dentro = true;
+    var safariV = +((/Version\/(\d+)/.exec(ua) || [])[1] || 0), ipad = /iPad/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    // 1 toque pra sair do Instagram/Facebook direto pro navegador certo
+    var linkFora = android ? 'intent://' + location.href.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(location.href) + ';end'
+      : ios ? 'x-safari-' + location.href : '';
     var celular = ios || /Android/i.test(ua) || !!(window.matchMedia && matchMedia('(pointer:coarse)').matches);
     var agora = Date.now(), dia = 864e5;
     var adiou = agora - (+(guarda.ler(ADIA) || 0)) < dia;                       // "Agora não": volta amanhã
@@ -314,12 +328,16 @@ html.tgs-folhaon .tabs{visibility:hidden}
     document.body.appendChild(folha);
     var seta = document.createElement('div'); seta.className = 'tgs-seta'; seta.innerHTML = SETA; document.body.appendChild(seta);
     var corpo = $('tgs-fC');
+    var dica = document.createElement('div'); dica.className = 'tgs-dica'; dica.innerHTML = '<span>Toque aqui 👇 e depois em <b>“Adicionar à Tela de Início”</b></span><button type="button" aria-label="Fechar">×</button>';
+    document.body.appendChild(dica);
+    dica.querySelector('button').addEventListener('click', function () { dica.classList.remove('on'); setaEm(''); mostraBarra(); });
 
     function passos(l) { return '<ol class="tgs-passos">' + l.map(function (t) { return '<li><span>' + t + '</span></li>'; }).join('') + '</ol>'; }
     function setaEm(onde) {
       seta.className = 'tgs-seta'; seta.style.cssText = '';
       if (!onde) return;
       if (onde === 'cimaDir') { seta.style.cssText = 'top:6px;right:10px'; seta.classList.add('on', 'cima'); }
+      if (onde === 'baixoMeio') { seta.style.cssText = 'bottom:calc(8px + env(safe-area-inset-bottom));left:50%;margin-left:-23px;rotate:180deg'; seta.classList.add('on'); }
       if (onde === 'baixoDir') { seta.style.cssText = 'bottom:calc(10px + env(safe-area-inset-bottom));right:12px;rotate:180deg'; seta.classList.add('on'); }
     }
     function conteudo(modo) {
@@ -335,14 +353,22 @@ html.tgs-folhaon .tabs{visibility:hidden}
         h = passos(['Toque no menu ' + IC.menu + ' no canto de baixo', 'Toque em <b>“Adicionar página a”</b>', 'Escolha <b>“Tela inicial”</b>. Pronto!']);
         pos = 'baixoDir';
       } else if (modo === 'iphone') {
-        h = passos(['Toque em Compartilhar ' + IC.comp + ' na barra de baixo do Safari <small>(se não aparecer, toque antes em ' + IC.ptsH + ')</small>', 'Role pra baixo e toque em <b>“Adicionar à Tela de Início”</b> ' + IC.mais, 'Toque em <b>“Adicionar”</b>, no canto de cima. Pronto!']);
+        t = 'Só 3 toques e pronto';
+        sub = 'O iPhone não deixa nenhum site instalar sozinho, mas é rapidinho. Siga a seta vermelha:';
+        if (ipad) { h = passos(['Toque em Compartilhar ' + IC.comp + ' lá em cima, no canto direito', 'Toque em <b>“Adicionar à Tela de Início”</b> ' + IC.mais, 'Toque em <b>“Adicionar”</b>. Pronto!']); pos = 'cimaDir'; }
+        else if (safariV >= 26) { folha.dataset.dica = 'Toque nos três pontinhos aqui 👇, depois em <b>Compartilhar</b> e em <b>“Adicionar à Tela de Início”</b>'; h = passos(['Toque nos três pontinhos ' + IC.ptsH + ' aqui embaixo, no canto direito', 'Toque em <b>Compartilhar</b> ' + IC.comp + ' e depois em <b>“Adicionar à Tela de Início”</b> ' + IC.mais, 'Toque em <b>“Adicionar”</b>. Pronto!']); pos = 'baixoDir'; }
+        else { h = passos(['Toque em Compartilhar ' + IC.comp + ' aqui embaixo, no meio da barra', 'Role e toque em <b>“Adicionar à Tela de Início”</b> ' + IC.mais, 'Toque em <b>“Adicionar”</b>, no canto de cima. Pronto!']); pos = 'baixoMeio'; }
+        h = '<button class="tgs-btn tgs-pulso" type="button" data-a="mostrar">Mostrar onde tocar</button>' + h;
       } else if (modo === 'iphoneOutro') {
         h = passos(['Toque em Compartilhar ' + IC.comp + ', no canto de cima, ao lado do endereço', 'Toque em <b>“Adicionar à Tela de Início”</b> ' + IC.mais, 'Toque em <b>“Adicionar”</b>. Pronto!']) +
           '<p class="tgs-aviso">Não achou? Copie seu link e abra no Safari.</p><button class="tgs-btn gh" type="button" data-a="copiar">Copiar meu link</button>';
       } else if (modo === 'dentro') {
         t = 'Abra no navegador pra instalar';
         sub = 'Dentro do Instagram ou do Facebook o celular não deixa instalar. É rapidinho:';
-        h = passos(['Toque nos três pontinhos ' + (ios ? IC.ptsH : IC.pts) + ' no canto de cima', 'Escolha <b>“Abrir no navegador”</b>' + (ios ? ' (ou “Abrir no Safari”)' : ' (ou “Abrir no Chrome”)'), 'Lá vai aparecer o botão pra instalar']) +
+        t = 'Abra no ' + (ios ? 'Safari' : 'Chrome') + ' pra instalar';
+        sub = (webview ? 'Aqui dentro deste app' : 'Dentro do Instagram ou do Facebook') + ' o celular não deixa instalar. Toque no botão:';
+        h = (linkFora ? '<a class="tgs-btn tgs-pulso" href="' + linkFora + '" data-a="fora">Abrir no ' + (ios ? 'Safari' : 'Chrome') + '</a>' : '') +
+          '<p class="tgs-aviso">Não abriu? Toque nos três pontinhos ' + (ios ? IC.ptsH : IC.pts) + ' lá em cima e escolha <b>“Abrir no navegador”</b>.</p>' +
           '<button class="tgs-btn gh" type="button" data-a="copiar">Copiar meu link</button>';
         pos = 'cimaDir';
       } else if (modo === 'pronto') {
@@ -350,10 +376,12 @@ html.tgs-folhaon .tabs{visibility:hidden}
       }
       corpo.innerHTML = '<h2 id="tgs-fT">' + t + '</h2><p class="tgs-sub">' + sub + '</p>' + h +
         (modo === 'pronto' ? '' : '<div class="tgs-linha"><button type="button" data-a="depois">Agora não</button>' + (ja ? '<button type="button" data-a="ja">Já instalei</button>' : '') + '</div>');
+      folha.dataset.pos = pos;
+      if (!(modo === 'iphone' && !ipad && safariV >= 26)) folha.dataset.dica = '';
       if (folha.classList.contains('vis')) setaEm(pos); else folha.dataset.seta = pos;
     }
     function abre(modo) {
-      conteudo(modo); escondeBarra();
+      conteudo(modo); escondeBarra(); dica.classList.remove('on');
       folha.classList.add('on'); raiz.classList.add('tgs-folhaon');
       requestAnimationFrame(function () { requestAnimationFrame(function () { folha.classList.add('vis'); setaEm(folha.dataset.seta || ''); folha.dataset.seta = ''; var cx = folha.querySelector('.tgs-cx'); cx.setAttribute('tabindex', '-1'); cx.style.outline = 'none'; cx.focus({ preventScroll: true }); }); });
     }
@@ -371,9 +399,11 @@ html.tgs-folhaon .tabs{visibility:hidden}
 
     folha.addEventListener('click', function (e) {
       if (e.target.classList.contains('tgs-fundo')) { guarda.por(ADIA, String(Date.now())); return fecha(true); }
-      var b = e.target.closest('button[data-a]'); if (!b) return;
+      var b = e.target.closest('[data-a]'); if (!b) return;
+      if (b.getAttribute('data-a') === 'fora') return;
       var a = b.getAttribute('data-a');
       if (a === 'instalar') instalarAndroid();
+      else if (a === 'mostrar') { var ps = folha.dataset.pos || ''; folha.classList.remove('vis'); setTimeout(function () { folha.classList.remove('on'); raiz.classList.remove('tgs-folhaon'); }, 380); setaEm(ps); var cima = ps.indexOf('cima') === 0; dica.classList.toggle('topo', cima); dica.querySelector('span').innerHTML = folha.dataset.dica || ('Toque aqui ' + (cima ? '👆' : '👇') + ' e depois em <b>“Adicionar à Tela de Início”</b>'); dica.classList.add('on'); }
       else if (a === 'depois') { guarda.por(ADIA, String(Date.now())); fecha(true); }
       else if (a === 'ja') { guarda.por('tg_instala_ja', String(Date.now())); fecha(false); }
       else if (a === 'copiar') {
