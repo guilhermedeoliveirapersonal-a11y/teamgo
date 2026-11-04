@@ -898,6 +898,27 @@ nav.links a{white-space:nowrap}
 .av2-cel{aspect-ratio:1/2!important;background:#111!important}
 @media (prefers-reduced-motion:reduce){.av2-tela,.av2-lista li{transition:none}}
 </style>
+<style id="vida7">
+/* v50: tour do app em stories */
+.res-chip2{margin-left:8px}
+@media (max-width:820px){.res-chip2{margin:8px 0 0}}
+.av2-tourbtn small{font-weight:600;font-size:.72rem;opacity:.85;border:1px solid rgba(255,255,255,.45);border-radius:99px;padding:2px 7px;margin-left:6px}
+.av2-cel{cursor:pointer}
+.tour{position:fixed;inset:0;z-index:200;background:radial-gradient(90% 60% at 50% 20%,#3a0008,#050505 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 16px 20px;animation:tourIn .3s ease}
+.tour[hidden]{display:none}@keyframes tourIn{from{opacity:0;transform:scale(1.03)}}
+.tour-barras{position:absolute;top:12px;left:16px;right:16px;display:flex;gap:4px;max-width:520px;margin:0 auto}
+.tour-barras i{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden}.tour-barras i b{display:block;height:100%;width:0;background:#fff}
+.tour-barras i.ok b{width:100%}.tour-barras i.ag b{animation:tourBar 4.5s linear forwards}@keyframes tourBar{to{width:100%}}
+.tour-x{position:absolute;top:22px;right:14px;z-index:3;width:44px;height:44px;border:0;border-radius:50%;background:rgba(255,255,255,.1);color:#fff;font-size:28px;line-height:1;cursor:pointer}
+.tour-palco{position:relative;height:min(68vh,640px);aspect-ratio:1/2;border-radius:34px;overflow:hidden;border:8px solid #000;box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 80px rgba(244,0,26,.25)}
+.tour-palco img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;animation:tourImg .45s ease}@keyframes tourImg{from{opacity:.2;transform:scale(1.04)}}
+.tour-fim{position:absolute;inset:0;background:linear-gradient(180deg,#1a0004,#0b0b0b);padding:28px 20px;display:flex;flex-direction:column;justify-content:center;gap:12px;text-align:center}
+.tour-fim[hidden]{display:none}.tour-fim h3{font-family:"Big Shoulders Display",sans-serif;font-size:1.9rem;line-height:1;text-transform:uppercase;margin:0}.tour-fim h3 em{color:var(--accent-text);font-style:normal}.tour-fim p{margin:0;color:var(--text-muted)}.tour-fim .btn{justify-content:center;white-space:normal;font-size:.86rem;line-height:1.2;padding:13px 10px;text-align:center}.tour-fim h3{font-size:1.65rem!important}
+.tour-leg{max-width:420px;text-align:center;margin-top:16px;min-height:76px}.tour-leg b{display:block;font-size:1.15rem;color:#fff}.tour-leg span{color:#cfc8c2;font-size:.95rem}
+.tour-ant,.tour-prox{position:absolute;top:60px;bottom:120px;width:40%;background:none;border:0;cursor:pointer}.tour-ant{left:0}.tour-prox{right:0}
+.tour.fim .tour-ant,.tour.fim .tour-prox{display:none}
+@media (prefers-reduced-motion:reduce){.tour,.tour-palco img{animation:none}.tour-barras i.ag b{animation:none;width:100%}}
+</style>
 </head>
 <body>
 <a class="faixa-aluno" href="aluno/" data-so-site>Já é aluno? <b>Área do aluno</b><span aria-hidden="true">→</span></a>
@@ -949,6 +970,7 @@ nav.links a{white-space:nowrap}
       </div>
       <p class="hero-preco">Consultoria online <b>a partir de R$ 195 por mês</b>, no plano de 1 ano: uns R$ 6 por dia.</p>
       <a class="res-chip" href="#depoimentos"><i aria-hidden="true"></i>Veja resultados reais de alunos: 45 dias e 2 anos →</a>
+      <a class="res-chip res-chip2" href="#app" data-tour><i aria-hidden="true"></i>▶ Veja por dentro o app que todo aluno ganha</a>
       <p class="mono" style="margin-top:8px;font-size:0.82rem;color:var(--text-muted)">Me chamar é só uma conversa: você decide depois, com calma. Quem responde sou eu.</p>
     </div>
     <div class="hero-side eco-painel">
@@ -1004,7 +1026,7 @@ nav.links a{white-space:nowrap}
           <li data-tela="4"><b>Você não treina sozinho</b><span>Um time inteiro torcendo, mandando força e comemorando com você.</span></li>
         </ul>
         <p class="av2-obs">Prefere sem jogo? Tem o Modo Direto: só o essencial, com letra maior.</p>
-        <div class="av2-cta"><a class="btn btn-primary" href="#plano">Quero começar o meu</a><span>Descubra o plano certo em 1 minuto</span></div>
+        <div class="av2-cta"><button type="button" class="btn btn-primary av2-tourbtn" data-tour>▶ Ver o app por dentro <small>30 s</small></button><a class="btn btn-ghost" href="#plano">Descobrir meu plano</a></div>
       </div>
       <div class="av2-cel" role="group" aria-label="Telas reais do app">
         <div class="av2-tela on"><img src="site/img/app/hoje.webp" alt="Tela inicial do app: saudação, nível e o Mestre Galo" width="520" height="1040" loading="lazy" decoding="async"></div><div class="av2-tela"><img src="site/img/app/missoes.webp" alt="Missões de hoje e da semana com moedas" width="520" height="1040" loading="lazy" decoding="async"></div><div class="av2-tela"><img src="site/img/app/jornada.webp" alt="Nível, evolução e treinos por semana" width="520" height="1040" loading="lazy" decoding="async"></div><div class="av2-tela"><img src="site/img/app/loja.webp" alt="Loja com o próximo prêmio e as camisetas do time" width="520" height="1040" loading="lazy" decoding="async"></div><div class="av2-tela"><img src="site/img/app/liga.webp" alt="Galera do time e forças que você recebe" width="520" height="1040" loading="lazy" decoding="async"></div>
@@ -1355,6 +1377,13 @@ nav.links a{white-space:nowrap}
   </div>
 </section>
 
+<div id="tour" class="tour" hidden role="dialog" aria-modal="true" aria-label="Tour pelo app TEAM GO!">
+  <div class="tour-barras"></div>
+  <button type="button" class="tour-x" aria-label="Fechar">×</button>
+  <div class="tour-palco"><img alt=""><div class="tour-fim" hidden><p class="eyebrow">Gostou?</p><h3>Esse app pode ser <em>seu</em> já na primeira semana.</h3><p>Você ganha o app no dia em que entra pro time, junto com seu treino feito sob medida.</p><a class="btn btn-primary" href="https://wa.me/5565993497692?text=Oi%20Gui%21%20Vi%20o%20app%20do%20TEAM%20GO%21%20no%20site%20e%20quero%20conhecer%20a%20consultoria" target="_blank" rel="noopener">Quero conhecer no WhatsApp</a><a class="btn btn-ghost tour-plano" href="#plano">Descobrir meu plano (1 min)</a></div></div>
+  <div class="tour-leg"><b></b><span></span></div>
+  <button type="button" class="tour-ant" aria-label="Anterior"></button><button type="button" class="tour-prox" aria-label="Próximo"></button>
+</div>
 <footer>
   <div class="wrap foot-row">
     <span>© 2026 TEAM GO! — Personal Training · Consultoria · Linha de camisetas · Cuiabá, MT</span>
@@ -1582,8 +1611,25 @@ function roda(){clearInterval(tm);if(vis&&!calmo)tm=setInterval(function(){ir(n+
 L.forEach(function(li,i){li.addEventListener('click',function(){ir(i);roda();});});
 var x0=null;cel.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;},{passive:true});
 cel.addEventListener('touchend',function(e){if(x0==null)return;var d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>35){ir(n+(d<0?1:-1));roda();}x0=null;},{passive:true});
-cel.addEventListener('click',function(){ir(n+1);roda();});
 if('IntersectionObserver' in window)new IntersectionObserver(function(es){vis=es[0].isIntersecting;roda();}).observe(cel);})();
+</script>
+<script>
+// v50: tour do app em stories (toque nos lados, arrastar, setas, Esc; avança sozinho em 4,5 s; fim com convite)
+(function(){var T=document.getElementById('tour');if(!T)return;
+var P=[['hoje','Você abre e já sabe o que fazer','Seu treinador te recebe, mostra seu nível e o seu próximo passo.'],['missoes','Cada treino vira uma vitória','Missões simples do dia e da semana. Marcou, ganhou moedas.'],['jornada','Você vê o quanto evoluiu','Do Franguito ao Monstrão, com o gráfico dos seus treinos semana a semana.'],['loja','Constância vira prêmio','Boné, camiseta do time e outros prêmios que ninguém compra: só conquista.'],['liga','Um time inteiro com você','A galera manda força, comemora junto e ninguém treina sozinho.']];
+var img=T.querySelector('.tour-palco img'),fim=T.querySelector('.tour-fim'),lb=T.querySelector('.tour-leg b'),ls=T.querySelector('.tour-leg span'),br=T.querySelector('.tour-barras'),n=0,tm=null,volta=null,calmo=matchMedia('(prefers-reduced-motion: reduce)').matches;
+br.innerHTML=P.concat([0]).map(function(){return '<i><b></b></i>';}).join('');var bs=br.children;
+function mostra(k){n=Math.max(0,Math.min(P.length,k));clearTimeout(tm);[].forEach.call(bs,function(b,i){b.className=i<n?'ok':(i===n?'ag':'');});
+ if(n<P.length){fim.hidden=true;img.hidden=false;T.classList.remove('fim');img.src='site/img/app/'+P[n][0]+'.webp';img.alt=P[n][1];img.style.animation='none';void img.offsetWidth;img.style.animation='';lb.textContent=P[n][1];ls.textContent=P[n][2];if(!calmo)tm=setTimeout(function(){mostra(n+1);},4500);}
+ else{img.hidden=true;fim.hidden=false;T.classList.add('fim');lb.textContent='';ls.textContent='';}}
+function abre(){volta=document.activeElement;T.hidden=false;document.documentElement.style.overflow='hidden';mostra(0);T.querySelector('.tour-x').focus();P.forEach(function(p){new Image().src='site/img/app/'+p[0]+'.webp';});}
+function fecha(){clearTimeout(tm);T.hidden=true;document.documentElement.style.overflow='';if(volta&&volta.focus)volta.focus();}
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-tour],.av2-cel');if(a){e.preventDefault();abre();}});
+T.querySelector('.tour-x').onclick=fecha;T.querySelector('.tour-ant').onclick=function(){mostra(n-1);};T.querySelector('.tour-prox').onclick=function(){mostra(n+1);};
+T.querySelector('.tour-plano').addEventListener('click',fecha);
+document.addEventListener('keydown',function(e){if(T.hidden)return;if(e.key==='Escape')fecha();if(e.key==='ArrowRight')mostra(n+1);if(e.key==='ArrowLeft')mostra(n-1);});
+var x0=null;T.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;},{passive:true});T.addEventListener('touchend',function(e){if(x0==null)return;var d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>40)mostra(n+(d<0?1:-1));x0=null;},{passive:true});
+})();
 </script>
 </body>
 </html>
