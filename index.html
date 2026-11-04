@@ -861,6 +861,39 @@ body.digitando .tg-barra{transform:translateY(110%)}
 @media (min-width:821px){.tg-barra{display:none!important}}
 @media (prefers-reduced-motion:reduce){.tg-barra{transition:none}.tb-plano::after{animation:none;display:none}}
 </style>
+<style id="vida6">
+/* v49: vitrine do app (no lugar do placar, que foi pra Área do aluno) */
+.app-vitr{overflow:hidden}
+.av2-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.av2-txt h2{font-size:clamp(2.1rem,5vw,3.6rem);line-height:.95;text-transform:uppercase}.av2-txt h2 em{color:var(--accent-text);font-style:normal}
+.av2-lista{list-style:none;padding:0;margin:26px 0 18px;display:grid;gap:8px}
+.av2-lista li{padding:14px 16px;border-radius:14px;border:1px solid rgba(247,243,239,.08);cursor:pointer;transition:background .25s,border-color .25s,transform .2s}
+.av2-lista li b{display:block;font-size:1.05rem}.av2-lista li span{color:var(--text-muted);font-size:.93rem}
+.av2-lista li.on{background:rgba(244,0,26,.08);border-color:rgba(244,0,26,.45);transform:translateX(6px)}
+.av2-obs{color:var(--text-muted);font-size:.9rem;margin:0 0 22px}
+.av2-cel{position:relative;width:min(300px,78vw);aspect-ratio:9/16.5;margin:0 auto;border-radius:42px;border:10px solid #050505;outline:1px solid rgba(255,255,255,.12);background:radial-gradient(120% 60% at 50% 0,#3a0008,#111 60%);box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 90px rgba(244,0,26,.18);transform:rotate(-3deg)}
+.av2-cel::before{content:"";position:absolute;top:8px;left:50%;width:34%;height:20px;margin-left:-17%;border-radius:12px;background:#050505;z-index:3}
+.av2-tela{position:absolute;inset:0;padding:40px 14px 14px;display:flex;flex-direction:column;gap:10px;opacity:0;transform:translateY(14px) scale(.98);transition:opacity .45s,transform .45s;font-size:13px;color:#f7f3ef}
+.av2-tela.on{opacity:1;transform:none}
+.av2-top{display:flex;justify-content:space-between;align-items:center;font-family:"Big Shoulders Display",sans-serif;font-size:20px;letter-spacing:.02em}.av2-top i{color:#F4001A;font-style:normal}
+.av2-moeda{font:800 13px "Libre Franklin",sans-serif;color:#FFC21A;border:1px solid rgba(255,194,26,.5);border-radius:99px;padding:4px 9px}
+.av2-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.av2-card small{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.12em;color:#ff4f5e}
+.av2-card span{color:#bdb6b0;font-size:12px}
+.av2-big{font-family:"Big Shoulders Display",sans-serif;font-size:26px;line-height:1;text-transform:uppercase}
+.av2-bar{height:7px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden}.av2-bar i{display:block;height:100%;background:linear-gradient(90deg,#a0000f,#F4001A)}
+.av2-m{display:flex;justify-content:space-between;margin:0;padding:7px 0;border-top:1px solid rgba(255,255,255,.06)}.av2-m em{font-style:normal;color:#FFC21A;font-weight:800}
+.av2-m.feito{color:#9aa}.av2-m.feito em::before{content:"✓ ";color:#3ccf6e}
+.av2-fogo{flex-direction:row;align-items:center;gap:12px}.av2-fogo .av2-big{white-space:nowrap}
+nav.links a{white-space:nowrap}
+.av2-med{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.av2-med i{font-style:normal;font-size:24px;text-align:center;padding:8px 0;border-radius:12px;background:rgba(255,255,255,.05)}.av2-med i.ap{filter:grayscale(1);opacity:.35}
+.av2-loja p{display:flex;justify-content:space-between;margin:0;padding:7px 0;border-top:1px solid rgba(255,255,255,.06)}.av2-loja em{font-style:normal;color:#FFC21A;font-weight:800}
+.av2-gr{display:flex;align-items:flex-end;gap:6px;height:90px}.av2-gr i{flex:1;border-radius:5px 5px 2px 2px;background:linear-gradient(#F4001A,#5a0009)}
+.av2-pontos{position:absolute;bottom:-34px;left:0;right:0;display:flex;justify-content:center;gap:7px}.av2-pontos i{width:7px;height:7px;border-radius:9px;background:rgba(255,255,255,.2);transition:width .3s,background .3s}.av2-pontos i.on{width:22px;background:#F4001A}
+.av2-ex{position:absolute;bottom:-62px;left:-20px;right:-20px;text-align:center;font-size:.72rem;color:var(--text-muted);margin:0}
+@media (max-width:820px){.av2-grid{grid-template-columns:1fr;gap:40px}.av2-cel{order:-1;transform:none;margin-bottom:60px;width:min(260px,72vw)}.av2-lista li.on{transform:none}}
+@media (prefers-reduced-motion:reduce){.av2-tela,.av2-lista li{transition:none}}
+</style>
 </head>
 <body>
 <a class="faixa-aluno" href="aluno/" data-so-site>Já é aluno? <b>Área do aluno</b><span aria-hidden="true">→</span></a>
@@ -870,7 +903,8 @@ body.digitando .tg-barra{transform:translateY(110%)}
     <a class="wordmark brand-chip" href="#top"><img class="brand-logo" src="site/img/logo-h.svg" alt="TEAM GO!" width="191" height="30"></a>
     <nav class="links">
       <a href="#depoimentos">Resultados</a>
-      <a href="#consultoria">Consultoria</a>
+      <a href="#app">O app</a>
+        <a href="#consultoria">Consultoria</a>
       <a href="#personal">Personal</a>
       <a href="#loja">Loja</a>
       <a href="#sobre">Sobre</a>
@@ -921,13 +955,6 @@ body.digitando .tg-barra{transform:translateY(110%)}
   </div>
 </section>
 
-<div class="aovivo" id="aovivo" hidden aria-live="polite">
-  <div class="wrap">
-    <span class="av-tit"><i class="av-pt" aria-hidden="true"></i>Agora no app · <span id="av-mes"></span></span>
-    <div class="av-n" id="av-n"></div>
-    <a class="av-lk" href="#depoimentos">Ver o placar do time</a>
-  </div>
-</div>
 
 <div class="lane"></div>
 
@@ -953,12 +980,49 @@ body.digitando .tg-barra{transform:translateY(110%)}
     <div class="dep-lista" id="dep-lista" hidden></div>
     <div class="dep-pontos" id="dep-pontos" role="group" aria-label="Escolher o resultado"></div>
     <div class="dep-fim" id="dep-fim" hidden><p>O próximo antes e depois<br>pode ser <em>o seu.</em></p><a class="btn btn-primary" href="https://wa.me/5565993497692?text=Oi%21%20Vi%20os%20resultados%20no%20site%20e%20quero%20come%C3%A7ar%20o%20meu%20antes%20e%20depois%21" target="_blank" rel="noopener">Quero começar o meu</a></div>
-    <div class="placar" id="placar" hidden>
-      <div class="placar-top"><p class="eyebrow">Ao vivo do app · <span id="pl-mes"></span></p><h3>O time em números</h3></div>
-      <div class="placar-nums" id="pl-nums"></div>
-      <div class="placar-cols">
-        <div class="placar-box"><h4>Liga dos times</h4><div id="pl-times"></div><p class="placar-nota">Pontos do time = média por aluno. O time campeão do mês ganha moedas no app.</p></div>
-        <div class="placar-box"><h4>Pódio do mês</h4><ol class="podio" id="pl-podio"></ol><p class="placar-nota">Só aparece o nome de quem autorizou no app.</p></div>
+  </div>
+</section>
+
+<section class="sec app-vitr" id="app">
+  <div class="wrap">
+    <div class="av2-grid">
+      <div class="av2-txt">
+        <p class="eyebrow">O app do time</p>
+        <h2>Treinar vira <em>jogo.</em><br>E o jogo te faz voltar.</h2>
+        <p class="lede">Todo aluno ganha o app do TEAM GO! no celular. Ele lembra você de treinar, mostra sua evolução e transforma a constância em prêmio de verdade.</p>
+        <ul class="av2-lista">
+          <li data-tela="0" class="on"><b>Missões do dia</b><span>3 tarefas simples: treinar, beber água, se mexer. Marcou, ganhou moedas.</span></li>
+          <li data-tela="1"><b>Níveis e medalhas</b><span>De Franguito a Monstrão: cada semana que você cumpre te leva pro próximo nível.</span></li>
+          <li data-tela="2"><b>Loja de prêmios</b><span>Troque as moedas por camiseta, garrafa, treino extra e outros prêmios.</span></li>
+          <li data-tela="3"><b>Sua evolução</b><span>Seus treinos, energia e sono semana a semana, e o antes e depois só pra você.</span></li>
+        </ul>
+        <p class="av2-obs">Prefere sem jogo? Tem o Modo Direto: só o essencial, com letra maior.</p>
+        <a class="btn btn-primary" href="#plano">Quero entrar pro time</a>
+      </div>
+      <div class="av2-cel" aria-label="Exemplos de telas do app" role="img">
+        <div class="av2-tela on">
+          <div class="av2-top"><b>TEAM <i>GO!</i></b><span class="av2-moeda">G 340</span></div>
+          <div class="av2-card"><small>MISSÕES DE HOJE</small><b class="av2-big">2 de 3</b><div class="av2-bar"><i style="width:66%"></i></div>
+            <p class="av2-m feito">Treinei hoje <em>+10</em></p><p class="av2-m feito">Bebi 2 litros de água <em>+5</em></p><p class="av2-m">Caminhei 20 minutos <em>+5</em></p></div>
+          <div class="av2-card av2-fogo"><b class="av2-big">🔥 6</b><span>semanas seguidas batendo a meta</span></div>
+        </div>
+        <div class="av2-tela">
+          <div class="av2-top"><b>TEAM <i>GO!</i></b><span class="av2-moeda">G 340</span></div>
+          <div class="av2-card"><small>SEU NÍVEL</small><b class="av2-big">Frango Sarado</b><span>Faltam 120 pontos pra virar Monstrinho</span><div class="av2-bar"><i style="width:72%"></i></div></div>
+          <div class="av2-card"><small>MEDALHAS</small><div class="av2-med"><i>🥇</i><i>💧</i><i>🔥</i><i>🏆</i><i class="ap">🎯</i><i class="ap">⭐</i></div></div>
+        </div>
+        <div class="av2-tela">
+          <div class="av2-top"><b>LOJA</b><span class="av2-moeda">G 340</span></div>
+          <div class="av2-card"><small>SEU PRÓXIMO PRÊMIO</small><b class="av2-big">Garrafa do time</b><div class="av2-bar"><i style="width:85%"></i></div><span>Faltam 60 moedas</span></div>
+          <div class="av2-card av2-loja"><p>👕 Camiseta TEAM GO! <em>900</em></p><p>🏋️ Treino extra <em>500</em></p><p>🥤 Garrafa <em>400</em></p></div>
+        </div>
+        <div class="av2-tela">
+          <div class="av2-top"><b>SUA EVOLUÇÃO</b></div>
+          <div class="av2-card"><small>TREINOS POR SEMANA</small><div class="av2-gr"><i style="height:45%"></i><i style="height:60%"></i><i style="height:60%"></i><i style="height:80%"></i><i style="height:75%"></i><i style="height:100%"></i></div></div>
+          <div class="av2-card"><p class="av2-m">Energia média <em>7,7</em></p><p class="av2-m">Sono médio <em>7,1</em></p></div>
+        </div>
+        <div class="av2-pontos" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+        <p class="av2-ex">Telas de exemplo, com dados inventados</p>
       </div>
     </div>
   </div>
@@ -1351,31 +1415,7 @@ else(function(){var w=document.getElementById(innerWidth<821?'tg-barra':'tg-what
   document.getElementById('ind-faixa').hidden=false;
 }catch(e){}})();
 </script>
-<script>
-// v24: placar do time vindo do app (números do mês, liga dos times e pódio). Carrega quando a seção chega perto;
-// guarda 6 h no celular; se não vier, a seção continua escondida.
-(function(){var APP='https://script.google.com/macros/s/AKfycbx0Nq7NgEz5-_1kDIpmm-yf4k_HPLKCGJ4eCAELk3SKQgDJ-_yGpruULFlOK1RsEPi9/exec',el=document.getElementById('placar');if(!el||!window.fetch)return;
-var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
-var cor=function(c){return /^#[0-9a-fA-F]{6}$/.test(c)?c:'#888888';},num=function(x){return Number(x||0).toLocaleString('pt-BR');};
-function mostrar(p){if(!p||!p.times||(Number(p.treinos)<5&&!p.times.some(function(t){return t.pts>0;})))return;
-  document.getElementById('pl-mes').textContent=p.mes||'';
-  document.getElementById('pl-nums').innerHTML=[[p.treinos,'treinos confirmados'],[p.checkins,'check-ins no mês'],[p.perfeitas,'semanas perfeitas'],[p.recordes,'recordes batidos']].map(function(x){return '<div class="pl-n"><b>'+num(x[0])+'</b><span>'+x[1]+'</span></div>';}).join('');
-  var mx=Math.max.apply(null,p.times.map(function(t){return t.pts||0;}).concat([1]));
-  document.getElementById('pl-times').innerHTML=p.times.slice().sort(function(a,b){return b.pts-a.pts;}).map(function(t){return '<div class="pl-t"><div class="pl-tn"><i style="background:'+cor(t.cor)+'"></i>'+esc(t.nome)+'<b>'+num(t.pts)+' pts</b></div><div class="pl-tb"><span style="width:'+Math.max(3,Math.round(100*(t.pts||0)/mx))+'%;background:'+cor(t.cor)+'"></span></div></div>';}).join('');
-  document.getElementById('pl-podio').innerHTML=(p.podio||[]).map(function(x){return '<li><span class="pl-pos">'+Number(x.pos)+'º</span><div><b>'+esc(x.nome)+'</b><small>'+esc(x.nivel)+(x.time?' · <i style="background:'+cor(x.cor)+'"></i>'+esc(x.time):'')+'</small></div></li>';}).join('')||'<li class="pl-vazio">O pódio começa com os primeiros treinos do mês.</li>';
-  el.hidden=false;faixa(p);conta(document.querySelectorAll('#pl-nums b'));}
-function faixa(p){var f=document.getElementById('aovivo');if(!f||Number(p.treinos)<5)return;document.getElementById('av-mes').textContent=p.mes||'';
-  document.getElementById('av-n').innerHTML=[[p.treinos,'treinos confirmados'],[p.checkins,'check-ins'],[p.recordes,'recordes']].filter(function(x){return Number(x[0])>0;}).map(function(x){return '<span><b>'+num(x[0])+'</b>'+x[1]+'</span>';}).join('');f.hidden=false;conta(document.querySelectorAll('#av-n b'));}
-function conta(bs){if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window))return;[].forEach.call(bs,function(b){var fim=Number(String(b.textContent).replace(/\D/g,''));if(!(fim>9))return;
-  var io2=new IntersectionObserver(function(es){if(!es[0].isIntersecting)return;io2.disconnect();var t0=performance.now();(function passo(t){var k=Math.min(1,(t-t0)/900),v=Math.round(fim*(1-Math.pow(1-k,3)));b.textContent=num(v);if(k<1)requestAnimationFrame(passo);})(t0);});io2.observe(b);});}
-var c=null;try{c=JSON.parse(localStorage.getItem('tg_placar')||'null');}catch(e){}
-if(c&&Date.now()-c.t<6*3600e3){mostrar(c.r);return;}
-var foi=false,busca=function(){if(foi)return;foi=true;fetch(APP,{method:'POST',body:JSON.stringify({f:'placar',a:[]}),credentials:'omit'}).then(function(r){return r.json();}).then(function(j){if(j&&j.ok){mostrar(j.r);try{localStorage.setItem('tg_placar',JSON.stringify({t:Date.now(),r:j.r}));}catch(e){}}}).catch(function(){});};
-var alvo=document.getElementById('depoimentos');
-if('IntersectionObserver' in window&&alvo){var io=new IntersectionObserver(function(es){if(es.some(function(x){return x.isIntersecting;})){io.disconnect();busca();}},{rootMargin:'700px'});io.observe(alvo);}else setTimeout(busca,3000);
-window.addEventListener('load',function(){setTimeout(function(){(window.requestIdleCallback||setTimeout)(busca);},2500);});
-})();
-</script>
+
 <script>
 // DEPOIMENTOS: só entra quem autorizou POR ESCRITO (data em "autorizado"). Sem nenhum, a seção mostra só o texto de sempre.
 // Com fotos de antes e depois (com autorização pra foto): antesImg:'site/img/dep/rodrigo-antes.webp', depoisImg:'site/img/dep/rodrigo-depois.webp', tempoFoto:'Depois de 8 meses'
@@ -1545,6 +1585,18 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
  var feito=false,fim=function(){if(feito)return;feito=true;removeEventListener('scrollend',fim);chega(alvo);};
  if('onscrollend' in window){addEventListener('scrollend',fim);setTimeout(fim,1500);}else setTimeout(fim,800);});
 if(location.hash){var a0=document.getElementById(location.hash.slice(1));if(a0)setTimeout(function(){chega(a0);},900);}})();
+</script>
+<script>
+// v49: vitrine do app: troca a tela sozinha a cada 3,5 s (só quando aparece), toque na lista ou arrastar no celular escolhe
+(function(){var L=[].slice.call(document.querySelectorAll('.av2-lista li')),T=[].slice.call(document.querySelectorAll('.av2-tela')),P=[].slice.call(document.querySelectorAll('.av2-pontos i')),cel=document.querySelector('.av2-cel');if(!cel||!T.length)return;
+var n=0,tm=null,vis=false,calmo=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function ir(k){n=(k+T.length)%T.length;[L,T,P].forEach(function(g){g.forEach(function(e,i){e.classList.toggle('on',i===n);});});}
+function roda(){clearInterval(tm);if(vis&&!calmo)tm=setInterval(function(){ir(n+1);},3500);}
+L.forEach(function(li,i){li.addEventListener('click',function(){ir(i);roda();});});
+var x0=null;cel.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;},{passive:true});
+cel.addEventListener('touchend',function(e){if(x0==null)return;var d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>35){ir(n+(d<0?1:-1));roda();}x0=null;},{passive:true});
+cel.addEventListener('click',function(){ir(n+1);roda();});
+if('IntersectionObserver' in window)new IntersectionObserver(function(es){vis=es[0].isIntersecting;roda();}).observe(cel);})();
 </script>
 </body>
 </html>
