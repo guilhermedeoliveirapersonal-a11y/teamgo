@@ -856,6 +856,8 @@ html.lb-aberto{overflow:hidden}
 @media (max-width:420px){.tb-plano small{display:none}.tg-barra a{font-size:.93rem}.tb-wa{flex:.9!important}}
 .tb-wa svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
 body.tem-barra footer{padding-bottom:84px}
+html:has(body.tem-barra){scroll-padding-bottom:84px}
+body.digitando .tg-barra{transform:translateY(110%)}
 @media (min-width:821px){.tg-barra{display:none!important}}
 @media (prefers-reduced-motion:reduce){.tg-barra{transition:none}.tb-plano::after{animation:none;display:none}}
 </style>
@@ -1325,6 +1327,7 @@ var TGC='';try{TGC=localStorage.getItem('tg_codigo')||'';if(!/^[A-Za-z0-9_-]{4,6
 if(TGC){document.getElementById('tg-meu-app').hidden=false;}
 else(function(){var w=document.getElementById(innerWidth<821?'tg-barra':'tg-whats'),h=document.querySelector('.hero'),fim=document.querySelector('footer'),pl=document.getElementById('plano');if(!w||!('IntersectionObserver' in window)){if(w)w.hidden=false;return;} // v26: WhatsApp flutuante pra visitante, depois do topo e longe do rodapé
   var vh=true,vf=false,vp=false,at=function(){var esc=vh||vf||vp;if(w.id==='tg-barra'){if(!esc)w.hidden=false;w.classList.toggle('on',!esc);document.body.classList.toggle('tem-barra',!esc);}else w.hidden=esc;};
+  document.addEventListener('focusin',function(e){if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))document.body.classList.add('digitando');});document.addEventListener('focusout',function(){document.body.classList.remove('digitando');});
   if(pl&&w.id==='tg-barra')new IntersectionObserver(function(e){vp=e[0].isIntersecting;at();},{rootMargin:'-30% 0px -30% 0px'}).observe(pl);
   new IntersectionObserver(function(e){vh=e[0].isIntersecting;at();}).observe(h);
   if(fim)new IntersectionObserver(function(e){vf=e[0].isIntersecting;at();}).observe(fim);})();
