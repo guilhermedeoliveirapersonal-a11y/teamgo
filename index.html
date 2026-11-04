@@ -916,6 +916,7 @@ nav.links a{white-space:nowrap}
 .tour-fim[hidden]{display:none}.tour-fim h3{font-family:"Big Shoulders Display",sans-serif;font-size:1.9rem;line-height:1;text-transform:uppercase;margin:0}.tour-fim h3 em{color:var(--accent-text);font-style:normal}.tour-fim p{margin:0;color:var(--text-muted)}.tour-fim .btn{justify-content:center;white-space:normal;font-size:.86rem;line-height:1.2;padding:13px 10px;text-align:center}.tour-fim h3{font-size:1.65rem!important}
 .tour-leg{max-width:420px;text-align:center;margin-top:16px;min-height:76px}.tour-leg b{display:block;font-size:1.15rem;color:#fff}.tour-leg span{color:#cfc8c2;font-size:.95rem}
 .tour-ant,.tour-prox{position:absolute;top:60px;bottom:120px;width:40%;background:none;border:0;cursor:pointer}.tour-ant{left:0}.tour-prox{right:0}
+.tour.pausa .tour-barras i.ag b{animation-play-state:paused}.tour.pausa .tour-leg{opacity:.4}
 .tour.fim .tour-ant,.tour.fim .tour-prox{display:none}
 @media (prefers-reduced-motion:reduce){.tour,.tour-palco img{animation:none}.tour-barras i.ag b{animation:none;width:100%}}
 </style>
@@ -1380,8 +1381,8 @@ nav.links a{white-space:nowrap}
 <div id="tour" class="tour" hidden role="dialog" aria-modal="true" aria-label="Tour pelo app TEAM GO!">
   <div class="tour-barras"></div>
   <button type="button" class="tour-x" aria-label="Fechar">×</button>
-  <div class="tour-palco"><img alt=""><div class="tour-fim" hidden><p class="eyebrow">Gostou?</p><h3>Esse app pode ser <em>seu</em> já na primeira semana.</h3><p>Você ganha o app no dia em que entra pro time, junto com seu treino feito sob medida.</p><a class="btn btn-primary" href="https://wa.me/5565993497692?text=Oi%20Gui%21%20Vi%20o%20app%20do%20TEAM%20GO%21%20no%20site%20e%20quero%20conhecer%20a%20consultoria" target="_blank" rel="noopener">Quero conhecer no WhatsApp</a><a class="btn btn-ghost tour-plano" href="#plano">Descobrir meu plano (1 min)</a></div></div>
-  <div class="tour-leg"><b></b><span></span></div>
+  <div class="tour-palco"><img alt=""><div class="tour-fim" hidden><p class="eyebrow">Gostou?</p><h3>Esse app pode ser <em>seu</em> já na primeira semana.</h3><p>Você ganha o app no dia em que entra pro time, junto com seu treino feito sob medida.</p><a class="btn btn-primary" href="https://wa.me/5565993497692?text=Oi%20Gui%21%20Vim%20pelo%20site%2C%20vi%20o%20app%20do%20TEAM%20GO%21%20e%20quero%20conhecer%20a%20consultoria" target="_blank" rel="noopener">Quero conhecer no WhatsApp</a><a class="btn btn-ghost tour-plano" href="#plano">Descobrir meu plano (1 min)</a></div></div>
+  <div class="tour-leg" aria-live="polite"><b></b><span></span></div>
   <button type="button" class="tour-ant" aria-label="Anterior"></button><button type="button" class="tour-prox" aria-label="Próximo"></button>
 </div>
 <footer>
@@ -1620,14 +1621,17 @@ var P=[['hoje','Você abre e já sabe o que fazer','Seu treinador te recebe, mos
 var img=T.querySelector('.tour-palco img'),fim=T.querySelector('.tour-fim'),lb=T.querySelector('.tour-leg b'),ls=T.querySelector('.tour-leg span'),br=T.querySelector('.tour-barras'),n=0,tm=null,volta=null,calmo=matchMedia('(prefers-reduced-motion: reduce)').matches;
 br.innerHTML=P.concat([0]).map(function(){return '<i><b></b></i>';}).join('');var bs=br.children;
 function mostra(k){n=Math.max(0,Math.min(P.length,k));clearTimeout(tm);[].forEach.call(bs,function(b,i){b.className=i<n?'ok':(i===n?'ag':'');});
- if(n<P.length){fim.hidden=true;img.hidden=false;T.classList.remove('fim');img.src='site/img/app/'+P[n][0]+'.webp';img.alt=P[n][1];img.style.animation='none';void img.offsetWidth;img.style.animation='';lb.textContent=P[n][1];ls.textContent=P[n][2];if(!calmo)tm=setTimeout(function(){mostra(n+1);},4500);}
- else{img.hidden=true;fim.hidden=false;T.classList.add('fim');lb.textContent='';ls.textContent='';}}
-function abre(){volta=document.activeElement;T.hidden=false;document.documentElement.style.overflow='hidden';mostra(0);T.querySelector('.tour-x').focus();P.forEach(function(p){new Image().src='site/img/app/'+p[0]+'.webp';});}
+ if(n<P.length){fim.hidden=true;img.hidden=false;T.classList.remove('fim');img.src='site/img/app/'+P[n][0]+'.webp';img.alt=P[n][1];img.style.animation='none';void img.offsetWidth;img.style.animation='';lb.textContent=P[n][1];ls.textContent=P[n][2];if(P[n+1])new Image().src='site/img/app/'+P[n+1][0]+'.webp';if(!calmo)tm=setTimeout(function(){mostra(n+1);},4500);}
+ else{img.hidden=true;fim.hidden=false;T.classList.add('fim');lb.textContent='';ls.textContent='';var b0=fim.querySelector('a');if(b0)b0.focus();}}
+function abre(){volta=document.activeElement;T.hidden=false;document.documentElement.style.overflow='hidden';mostra(0);T.querySelector('.tour-x').focus();}
 function fecha(){clearTimeout(tm);T.hidden=true;document.documentElement.style.overflow='';if(volta&&volta.focus)volta.focus();}
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-tour],.av2-cel');if(a){e.preventDefault();abre();}});
-T.querySelector('.tour-x').onclick=fecha;T.querySelector('.tour-ant').onclick=function(){mostra(n-1);};T.querySelector('.tour-prox').onclick=function(){mostra(n+1);};
+T.querySelector('.tour-x').onclick=fecha;var segurou=function(){return T.solto&&Date.now()-T.solto<400;};T.querySelector('.tour-ant').onclick=function(){if(!segurou())mostra(n-1);};T.querySelector('.tour-prox').onclick=function(){if(!segurou())mostra(n+1);};
 T.querySelector('.tour-plano').addEventListener('click',fecha);
 document.addEventListener('keydown',function(e){if(T.hidden)return;if(e.key==='Escape')fecha();if(e.key==='ArrowRight')mostra(n+1);if(e.key==='ArrowLeft')mostra(n-1);});
+var segura=null;T.querySelector('.tour-palco').parentNode.addEventListener('pointerdown',function(e){if(n>=P.length||e.target.closest('.tour-x,a'))return;segura=setTimeout(function(){clearTimeout(tm);T.classList.add('pausa');},250);});
+['pointerup','pointercancel'].forEach(function(ev){T.addEventListener(ev,function(){clearTimeout(segura);if(T.classList.contains('pausa')){T.classList.remove('pausa');T.solto=Date.now();if(!calmo&&n<P.length)tm=setTimeout(function(){mostra(n+1);},2500);}});});
+T.addEventListener('keydown',function(e){if(e.key!=='Tab')return;var f=[].filter.call(T.querySelectorAll('button,a'),function(x){return x.offsetParent;});if(!f.length)return;var a=f[0],z=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus();}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus();}});
 var x0=null;T.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;},{passive:true});T.addEventListener('touchend',function(e){if(x0==null)return;var d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>40)mostra(n+(d<0?1:-1));x0=null;},{passive:true});
 })();
 </script>
