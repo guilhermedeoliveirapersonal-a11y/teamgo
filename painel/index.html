@@ -71,18 +71,49 @@ html{background:#111111}
   if (k) { guarda.por(CHAVE, k); history.replaceState(null, '', location.pathname); }
   else k = guarda.ler(CHAVE);
   if (!valida(k)) return pedirLink('Abra pelo botão "Abrir meu painel" do e-mail "Seu painel TEAM GO!", ou cole o link do painel aqui.');
-  if (navigator.onLine === false) return semInternet();
+  // v52: abre na hora com a última cópia (casca + dados de até 12 h), confere com o servidor por trás e avisa se chegou coisa nova.
+  // O botão ↻ do painel (e o puxar pra baixo) pede dados novos sem usar a cópia. Offline também abre com a cópia.
+  var CASCA = 'tg_painel_casca', DADOS = 'tg_painel_dados', MARCA_D = '/*@@TGDADOS@@*/', cg = null, cd = null, fresco = false;
+  try { cg = JSON.parse(guarda.ler(CASCA) || 'null'); if (!cg || !cg.v || !cg.html || cg.html.indexOf(MARCA_D) < 0) cg = null; } catch (e) { cg = null; }
+  try { fresco = sessionStorage.getItem('tg_fresco') === '1'; sessionStorage.removeItem('tg_fresco'); } catch (e) { }
+  try { cd = JSON.parse(guarda.ler(DADOS) || 'null'); if (!cd || cd.k !== k || !cd.s || !cd.t || Date.now() - cd.t > 12 * 36e5 || !cg || cd.v !== cg.v) cd = null; } catch (e) { cd = null; }
+  var rapido = !!(cg && cd && !fresco), montado = false;
+  if (navigator.onLine === false && !(cg && cd)) return semInternet();
   P.instalarGoogle();
   // v27: com a liberação de aparelho ligada, cada chamada leva também a senha deste aparelho (chave.senha)
   var t = guarda.ler(APAR) || '';
   if (!/^[a-f0-9]{32}$/.test(t)) t = '';
-  P.porta('cascaPainel', [t ? k + '.' + t : k]).then(function (r) {
-    P.montar(r.html, $('tgs-abre')); sai(); window.TG_MODO = 'direto';
+  // v51: a casca do painel (visual + programa) fica guardada no celular pela versão; a cada abertura só os dados descem
+  function instalador() {
     // v47: convite pra instalar o painel na tela do celular (o mesmo do app)
     if (window.TGInstalar) window.TGInstalar({ guarda: guarda, nome: 'Painel GO!', oQue: 'o painel', icone: 'icones/icone-192.png', chaves: { adia: 'tg_painel_instala_depois', ja: 'tg_painel_instala_ja', barra: 'tg_painel_instala_barra' } });
+  }
+  function aviso() { // chegou coisa nova enquanto o painel aberto estava com a cópia
+    var d = document.createElement('div'); d.id = 'tg-novo';
+    d.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom));z-index:90;background:#E00018;color:#fff;border-radius:999px;padding:10px 16px;font:700 13px "Libre Franklin",sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5);display:flex;gap:10px;align-items:center';
+    d.innerHTML = 'Dados novos chegaram <button type="button" style="border:0;border-radius:999px;background:#fff;color:#B0001A;font:800 12px sans-serif;padding:6px 12px;cursor:pointer">Atualizar</button>';
+    d.querySelector('button').onclick = function () { location.reload(); };
+    document.body.appendChild(d);
+  }
+  function mostrar(base, dados) {
+    P.montar(base.split(MARCA_D).join(dados), $('tgs-abre')); sai(); window.TG_MODO = 'direto'; montado = true; instalador();
+  }
+  if (rapido) { window.TG_VELHO = cd.t; mostrar(cg.html, cd.s); }
+  P.porta('cascaPainel', [t ? k + '.' + t : k, cg ? cg.v : '']).then(function (r) {
+    if (typeof r.dados !== 'string') { // servidor antigo: painel inteiro de uma vez
+      if (!montado) { P.montar(r.html, $('tgs-abre')); sai(); window.TG_MODO = 'direto'; montado = true; instalador(); }
+      return;
+    }
+    if (r.html) { if (!guarda.por(CASCA, JSON.stringify({ v: r.v, html: r.html }))) guarda.tira(CASCA); }
+    guarda.por(DADOS, JSON.stringify({ k: k, v: r.v, t: Date.now(), s: r.dados }));
+    if (montado) { if (cd && r.dados !== cd.s && Date.now() - cd.t > 120000) aviso(); return; }
+    var base = r.html || (cg && cg.html);
+    if (!base) { guarda.tira(CASCA); return location.reload(); }
+    mostrar(base, r.dados);
   }, function (e) {
-    if (e && e.servidor && /Aparelho não liberado/.test(e.message)) { guarda.tira(APAR); return liberar(); }
-    if (e && e.servidor) { guarda.tira(CHAVE); return pedirLink('Essa chave não abre o painel. Cole o link do painel mais recente.'); }
+    if (montado && !(e && e.servidor)) return; // sem sinal: continua com a cópia
+    if (e && e.servidor && /Aparelho não liberado/.test(e.message)) { guarda.tira(APAR); guarda.tira(DADOS); return montado ? location.reload() : liberar(); }
+    if (e && e.servidor) { guarda.tira(CHAVE); guarda.tira(DADOS); return montado ? location.reload() : pedirLink('Essa chave não abre o painel. Cole o link do painel mais recente.'); }
     // plano B: o painel no endereço do Google (jeito antigo)
     window.TG_MODO = 'google';
     location.replace(P.APP + '?p=painel&k=' + encodeURIComponent(k));

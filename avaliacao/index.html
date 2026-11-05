@@ -394,6 +394,11 @@ html.letra-g #fxsh .fx-pg,html.letra-g #fxsh .fx2-foot{zoom:1.15}
 .ck-vivo .ck-seq b{font-family:var(--disp);font-size:52px;font-weight:800;line-height:.9;color:#D45A00}
 .ck-vivo .ck-seq span{font-weight:700;color:#5A3200;line-height:1.3}.ck-vivo .ck-seq small{display:block;font-weight:600;color:#8A5A20;margin-top:2px}
 .ck-oi{margin:0 0 14px;font-weight:700;color:var(--ink2);font-size:15px}
+/* v55: celular pequeno (320px) ou letra grande: uma coluna só, nada some pela direita */
+@media (max-width:360px){.an-dupla{grid-template-columns:1fr}}
+html.letra-g .an-dupla{grid-template-columns:1fr}
+.an-dupla .fx-op{min-width:0}.an-dupla .fx-opt{min-width:0;overflow-wrap:anywhere}
+.an-priv a,.fx-box a{display:inline-block;padding:12px 2px;min-height:44px;box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -800,7 +805,8 @@ function fxProtocolo(m,f){var a=f?'a':'o',n=1;
       '<b>Costas:</b> gire no mesmo lugar, sem tirar os pés da marca. Braços colados ao corpo.',
       '<b>Lado:</b> o <b>lado direito</b> virado pra câmera, braços levantados à frente formando um ângulo reto com o tronco (assim o braço não esconde o quadril).']]];
   return fxMontagem()+G.map(function(x,i){var h=(i==3?fxPoses():'')+'<p class="fx-pg-t">'+x[0]+'</p><ol class="fx-passos" start="'+n+'">'+x[1].map(function(t){return '<li>'+t+'</li>';}).join('')+'</ol>';n+=x[1].length;return h;}).join('')+
-    '<p class="fx-ok-ver">'+ico('ok',16)+'<span>Em cada foto precisam aparecer, sem nada na frente: <b>pés, joelhos, quadril e ombros.</b></span></p>';}
+    '<p class="fx-ok-ver">'+ico('ok',16)+'<span>Em cada foto precisam aparecer, sem nada na frente: <b>pés, joelhos, quadril e ombros.</b></span></p>'+
+    '<details class="fx-como"><summary>Não consigo ficar em pé sem apoio</summary><p class="fx-lead">Tudo bem, a avaliação se adapta. Pode tirar as fotos <b>sentad'+a+' numa cadeira firme, sem braços</b>, com as costas retas e os pés apoiados no chão, ou ao lado de uma parede ou barra pra se apoiar. Se preferir, volte e escolha &quot;sem fotos&quot;: eu faço a avaliação ao vivo na chamada, no seu ritmo.</p></details>';}
 // por que o padrão importa (abre o passo do preparo)
 function fxPorque(){return '<p class="fx-lead">Estas fotos são a sua avaliação postural. Feitas sempre do mesmo jeito, elas mostram com precisão o alinhamento do seu corpo e permitem comparar um ciclo com o outro. Foto fora do padrão (de cima, de perto, com zoom ou com o corpo “arrumado”) pode esconder um desvio ou mostrar um que não existe.</p>';}
 // na tela das fotos: o mesmo protocolo, recolhido, pra rever
@@ -842,7 +848,7 @@ function fxRascunho(o,fora){var c={};for(var k in o)if(fora.indexOf(k)<0)c[k]=o[
 // mapa do corpo pras dores, triagem de saúde com "Nenhum destes" num toque e fotos que podem ficar pra depois.
 // Alimentação: só retrato de hábitos, não é dieta (prescrever dieta é só pra nutricionista).
 var AN=null,MODO='',ANU=-1,ANDIR=0,ANPCT=0,ANA={},ANNUM='',ANULT=null,ANPD=null;
-var ANE=[['Você',['boas','nome','contato','plano']],['Treino',['pratica','onde','treinoatual','nivel','aparelhos']],['Saúde',['corpo','parq','dores','horm','habitos']],
+var ANE=[['Você',['boas','nome','contato','acesso','plano']],['Treino',['pratica','onde','treinoatual','nivel','aparelhos']],['Saúde',['corpo','condicoes','parq','dores','horm','habitos']],
   ['Rotina',['sono','estresse','agenda','alim1','alim2']],['Objetivo',['objetivo','prioridade','preferencias']],['Enviar',['postura','protocolo','fotos','regras','revisar']]];
 var ANP=[].concat.apply([],ANE.map(function(x){return x[1];}));
 var ANKEY='tg_anamnese',ANWA='5565993497692',ANCK='tg_anconv',ANPL={go:'Consultoria GO!',premium:'GO! Premium',presencial:'Presencial',planilha:'Planilha com vídeos'};
@@ -850,9 +856,17 @@ var ANPLANOS=[['Consultoria GO!','Online, treino no app e acompanhamento'],['GO!
 var ANATIV=['Musculação','Corrida ou caminhada','Funcional ou CrossFit','Lutas','Esporte coletivo','Pilates ou yoga','Bike','Natação'];
 var ANAP=[['Costas',['Pullover Machine','T-Bar Row','Remada Pronada e/ou neutra','Remada alta','Remada baixa']],['Peito',['Supino reto máquina','Supino declinado máquina','Supino reto deitado máquina','Supino inclinado máquina','Chest Dips']],
   ['Ombros',['Desenvolvimento máquina (bateria de pesos)','Desenvolvimento máquina (plate loaded)','Elevação lateral máquina']],['Pernas',['Pendulum Squat','Hack Squat','Leg Press Horizontal','Elevação Pélvica','Hip Press','Belt Squat']]];
-var ANPARQ=['Um médico já disse que você tem problema no coração ou pressão alta','Sente dor no peito em repouso, no dia a dia ou quando faz exercício','Perdeu o equilíbrio por tontura ou desmaiou nos últimos 12 meses',
-  'Tem outra doença crônica (ex.: diabetes, asma, tireoide)','Toma remédio de uso contínuo por alguma doença crônica','Tem (ou teve nos últimos 12 meses) problema em osso, articulação ou músculo que pode piorar com exercício',
-  'Um médico já disse que você só deve fazer exercício com supervisão médica'];
+// v51: coração, pressão, doença crônica e remédio saíram da triagem e viraram o passo "O que um médico já falou pra você" (ANCOND);
+// o servidor junta as duas coisas na triagem (PAR-Q+) de sempre. Aqui ficam só as perguntas de sintoma e de restrição.
+var ANPARQ=['Sente dor no peito em repouso, no dia a dia ou quando faz exercício','Perdeu o equilíbrio por tontura ou desmaiou nos últimos 12 meses',
+  'Tem (ou teve nos últimos 12 meses) problema em osso, articulação ou músculo que pode piorar com exercício','Um médico já disse que você só deve fazer exercício com supervisão médica'];
+var ANCOND=['Pressão alta (hipertensão)','Diabetes','Sobrepeso ou obesidade','Colesterol ou triglicerídeos altos','Problema no coração','Asma ou bronquite','Problema de tireoide','Osteoporose ou osteopenia','Artrose ou artrite',
+  'Hérnia de disco ou problema na coluna','Varizes ou trombose','Gravidez, amamentação ou pós-parto recente','Depressão, ansiedade ou outra condição de saúde mental','Já teve AVC (derrame) ou tem epilepsia','Câncer (em tratamento ou nos últimos 5 anos)','Deficiência física ou limitação de movimento','Outra condição'];
+var ANACESSO=['Uso cadeira de rodas','Uso bengala, muleta ou andador','Tenho baixa visão ou não enxergo','Tenho surdez ou dificuldade de ouvir','Tenho dificuldade nas mãos ou nos braços','Tenho dificuldade de leitura (leio devagar ou tenho dislexia)','Prefiro textos curtos e simples','Alguém me ajuda a usar o celular','Prefiro falar por texto, não por chamada'];
+var ANEQUIP=['Halteres','Barra e anilhas','Elásticos ou faixas','Banco','Kettlebell','Barra fixa','Esteira ou bicicleta','Colchonete','Nenhum equipamento'];
+var ANBARR=['Falta de tempo','Cansaço no fim do dia','Falta de motivação','Dor ou lesão','Treinar sem acompanhamento','Não sabia o que fazer','Custo','Nada, sempre fui constante'];
+var ANEXCL=['Nenhum equipamento','Nada, sempre fui constante']; // escolhas que cancelam as outras da mesma lista
+var ANVF=2; // versão desta anamnese pro servidor: 2 = tem condições de saúde, remédio, horário e responsável
 // mapa do corpo: [nome, pontos (x,y) no desenho de frente]
 var ANDOR=[['Pescoço',[[50,33]]],['Ombros',[[35,41],[65,41]]],['Cotovelos',[[26.5,80],[73.5,80]]],['Punhos e mãos',[[25,104],[75,104]]],['Coluna ou lombar',[[50,76]]],['Quadril',[[37,102],[63,102]]],['Joelhos',[[40,150],[60,150]]],['Tornozelos e pés',[[39.5,186],[60.5,186]]]];
 var ANMUSC=['Costas','Peito','Ombros','Bíceps','Tríceps','Pernas (quádriceps)','Posterior de coxa','Glúteos','Panturrilha','Abdômen'];
@@ -861,14 +875,21 @@ var ANSTR=['Zero','Bem baixo','Baixo','Baixo','Moderado','Moderado','Alto','Alto
 
 function anNovo(){return {v:1,t:Date.now(),t0:Date.now(),p:0,ref:'an'+Date.now().toString(36)+Math.random().toString(36).slice(2,10),site:'',nome:'',versao:'',whats:'',email:'',nascD:'',nascM:'',nascA:'',plano:'',dur:'',ind:'',
   sit:'',ativ:[],ativOutro:'',esporteTxt:'',onde:'',freq:null,divisao:'',treinoTxt:'',nivel:'',tecnica:'',aparelhos:[],naoSeiAp:false,faltaMaq:'',
-  altura:'',peso:'',parq:[],parqNada:false,parqTxt:'',dores:[],doresNada:false,doresTxt:'',horm:'',hormTxt:'',fuma:'',alcool:'',
+  altura:'',peso:'',cond:[],condNada:false,outra:'',condTxt:'',acesso:[],acessoNada:false,acessoTxt:'',apelido:'',remedio:'',remedioTxt:'',famCor:'',parq:[],parqNada:false,parqTxt:'',dores:[],doresNada:false,doresTxt:'',cirurgia:'',horm:'',hormTxt:'',fuma:'',alcool:'',
+  horario:'',respNome:'',respWhats:'',rotinaDia:'',objTxt:'',barreira:[],pn:'',
   sono:null,horas:7,estresse:null,energia:'',dias:null,tempo:'',nutri:'',refeicoes:'',frutas:'',proteina:'',ultra:'',agua:'',supl:[],
   objetivo:'',prio:[],naoGosta:'',modo:'',rosto:true,fotos:{},th:{},st:{},q:{},ant:{},fotosDepois:false,aut:null,chk:{},regras:'',priv:'',termos:''};}
 // Política de Privacidade (…/teamgo/privacidade/): a versão aceita vai junto com a anamnese
 var ANPRIV='Versão 1.1 de 31/10/2026';
 // v32: contrato e termo de consentimento (…/teamgo/termos/): igual a TERMOS_VERSAO no Código e à data da página
 var ANTERMOS='Versão 1.0 de 02/11/2026';
-function anSalvar(){try{localStorage.setItem(ANKEY,fxRascunho(AN,['th','ant']));}catch(x){}} // v25: a imagem das fotos nunca fica no celular
+function anSalvar(){try{AN.pn=ANP[AN.p]||'';localStorage.setItem(ANKEY,fxRascunho(AN,['th','ant']));}catch(x){}} // v25: a imagem das fotos nunca fica no celular
+// v51: rascunho de uma versão antiga ganha os campos novos (sem isso `AN.cond.indexOf` quebrava) e volta pro passo pelo NOME, não pelo
+// número (passo novo no meio da lista empurrava todo mundo pro passo errado). Item de triagem que saiu da lista é descartado.
+function anMescla(ra){var n=anNovo(),k;for(k in n)if(ra[k]===undefined||ra[k]===null)ra[k]=n[k];
+  ['cond','barreira','aparelhos','dores','prio','supl','ativ','parq','acesso'].forEach(function(c){if(!Array.isArray(ra[c]))ra[c]=[];});
+  ra.parq=ra.parq.filter(function(x){return ANPARQ.indexOf(x)>=0;});
+  if(ra.pn){var i=ANP.indexOf(ra.pn);if(i>=0)ra.p=i;}return ra;}
 function anA(){return AN.versao=='f'?'a':AN.versao=='m'?'o':'o(a)';}
 function anPrimeiro(){var n=String(AN.nome||'').trim().split(/\s+/)[0]||'';return n?n.charAt(0).toUpperCase()+n.slice(1).toLowerCase():'';}
 function anMusc(){return AN.ativ.indexOf('Musculação')>=0;}
@@ -883,16 +904,23 @@ function anAltura(){var n=Number(String(AN.altura||'').replace(',','.'));if(n>=1
 function anNascOk(){var d=Number(AN.nascD),m=Number(AN.nascM),a=Number(AN.nascA),dt=new Date(a,m-1,d);return a>=1920&&dt<=new Date()&&dt.getDate()===d&&dt.getMonth()===m-1;}
 function anIdade(){var d=Number(AN.nascD),m=Number(AN.nascM),a=Number(AN.nascA),h=new Date();return h.getFullYear()-a-((h.getMonth()<m-1||(h.getMonth()===m-1&&h.getDate()<d))?1:0);}
 function anZap(){return String(AN.whats||'').replace(/\D/g,'');}
+// v51: menor de idade precisa do responsável (nome e WhatsApp); altura e peso que dão IMC impossível provavelmente estão trocados ou com vírgula errada
+function anMenor(){return anNascOk()&&anIdade()<18;}
+function anRespOk(){var z=String(AN.respWhats||'').replace(/\D/g,'');return String(AN.respNome||'').trim().split(/\s+/).length>=2&&z.length>=10&&z.length<=13;}
+function anImc(){var h=anAltura(),p=Number(String(AN.peso||'').replace(',','.'));return h>0&&p>0?p/(h*h):0;}
+function anImcOk(){var i=anImc();return i>=12&&i<=75;}
 function anPode(p){var A=AN;
   if(p=='boas')return true;
   if(p=='nome')return String(A.nome).trim().split(/\s+/).length>=2&&!!A.versao;
-  if(p=='contato')return anZap().length>=10&&anZap().length<=13&&/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(A.email).trim())&&anNascOk();
+  if(p=='contato')return anZap().length>=10&&anZap().length<=13&&/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(A.email).trim())&&anNascOk()&&!!A.horario&&(!anMenor()||anRespOk());
   if(p=='plano')return !!A.plano&&(A.plano=='Ainda não fechei'||A.plano=='Planilha com vídeos'||!!A.dur);
   if(p=='pratica')return !!A.sit&&(A.sit=='Nunca treinei'||A.ativ.length>0);
   if(p=='onde')return !!A.onde&&A.freq!=null;
   if(p=='treinoatual')return !!A.divisao;
+  if(p=='acesso')return true;
   if(p=='nivel')return !!A.nivel&&!!A.tecnica;
-  if(p=='corpo'){var h=anAltura();return h>=1&&h<=2.3&&anNumOk(A.peso,30,300);}
+  if(p=='corpo'){var h=anAltura();return h>=1&&h<=2.3&&anNumOk(A.peso,30,300)&&anImcOk();}
+  if(p=='condicoes')return (A.condNada||A.cond.length>0)&&(A.cond.indexOf('Outra condição')<0||String(A.outra).trim().length>=3)&&!!A.remedio;
   if(p=='parq')return A.parqNada||(A.parq.length>0&&String(A.parqTxt).trim().length>=3);
   if(p=='dores')return A.doresNada||A.dores.length>0;
   if(p=='horm')return !!A.horm;
@@ -912,12 +940,13 @@ function anPode(p){var A=AN;
 function anFalta(p){var A=AN;
   if(p=='regras')return !A.regras?'Responda sobre os combinados.':'Marque a autorização dos seus dados pra continuar.';
   if(p=='nome')return String(A.nome).trim().split(/\s+/).length<2?'Escreva seu nome completo (nome e sobrenome).':'Toque em aluna ou aluno.';
-  if(p=='contato'){if(anZap().length<10||anZap().length>13)return 'Confere o WhatsApp com DDD (ex.: 65 99999 9999).';if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(A.email).trim()))return 'Confere o e-mail.';return 'Confere a data de nascimento (dia, mês e ano).';}
+  if(p=='contato'){if(anZap().length<10||anZap().length>13)return 'Confere o WhatsApp com DDD (ex.: 65 99999 9999).';if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(A.email).trim()))return 'Confere o e-mail.';if(!anNascOk())return 'Confere a data de nascimento (dia, mês e ano).';if(anMenor()&&!anRespOk())return 'Escreva o nome completo e o WhatsApp do seu responsável.';return 'Toque no melhor horário pra eu te chamar.';}
   if(p=='plano')return A.plano?'Escolha por quanto tempo.':'Escolha uma opção.';
   if(p=='pratica')return A.sit?'Marque o que você pratica.':'Toque na opção que mais combina com você.';
   if(p=='onde')return A.onde?'Toque em quantas vezes por semana.':'Escolha onde você treina.';
   if(p=='nivel')return 'Responda as 2 perguntas.';
-  if(p=='corpo')return 'Altura em metros (ex.: 1,72) e peso em quilos (ex.: 72,5).';
+  if(p=='corpo')return anAltura()>=1&&anAltura()<=2.3&&anNumOk(AN.peso,30,300)&&!anImcOk()?'Confere a altura e o peso: do jeito que estão, parecem trocados ou com a vírgula no lugar errado.':'Altura em metros (ex.: 1,72) e peso em quilos (ex.: 72,5).';
+  if(p=='condicoes')return !(AN.condNada||AN.cond.length)?'Marque o que vale pra você, ou "Nenhuma dessas".':AN.cond.indexOf('Outra condição')>=0&&String(AN.outra).trim().length<3?'Escreva qual é a outra condição.':'Responda se toma remédio de uso contínuo.';
   if(p=='parq')return A.parq.length?'Conta um pouco no campo de baixo (o que é e se tem liberação médica).':'Marque o que vale pra você, ou "Nenhum destes".';
   if(p=='dores')return 'Toque onde dói, ou em "Não sinto dor".';
   if(p=='habitos'||p=='nivel'||p=='estresse'||p=='agenda'||p=='alim1'||p=='alim2')return 'Responda as perguntas da tela.';
@@ -957,12 +986,15 @@ function anCorpo(p){var A=AN,a=anA(),pn=anPrimeiro();
     '<dl class="fx-dl"><div><dt>Tempo</dt><dd>8 min</dd></div><div><dt>Etapas</dt><dd>6</dd></div><div><dt>Fotos</dt><dd>3</dd></div></dl><p class="small mut fx-dica">Pode parar e continuar depois: o que você preencher fica salvo neste celular. As fotos podem ficar pra depois.</p>'+
     '<div class="fx-prot"><b>Depois que você enviar</b><div class="fx-pi">'+FXO.cel(22)+'<span>Te chamo no WhatsApp pra uma chamada de início</span></div><div class="fx-pi">'+FXO.lista(22)+'<span>Monto seu treino no app TEAM GO!</span></div><div class="fx-pi">'+FXO.relogio(22)+'<span>Na segunda seguinte você começa</span></div></div>'+
     '<input class="an-pote" tabindex="-1" autocomplete="off" aria-hidden="true" data-ani="site" value="'+e(A.site)+'">';
-  if(p=='nome')return anH('Como você se chama?')+anTxt('nome','Nome completo','Ex.: Ana Paula Souza',1)+anGrupoQ('Você é aluna ou aluno?','Pra eu falar com você do jeito certo e deixar o app na sua versão.')+'<div class="an-seg" role="group" style="grid-template-columns:1fr 1fr">'+[['f','Aluna'],['m','Aluno']].map(function(x){var on=A.versao===x[0];return '<button type="button" class="'+(on?'on':'')+'" data-ank="versao" data-anc="'+x[0]+'" aria-pressed="'+on+'">'+x[1]+'</button>';}).join('')+'</div>';
+  if(p=='nome')return anH('Como você se chama?')+anTxt('nome','Nome completo (pode ser o seu nome social)','Ex.: Ana Paula Souza',1)+anGrupoQ('Você é aluna ou aluno?','Pra eu falar com você do jeito certo e deixar o app na sua versão. Na tela "Pra deixar tudo mais fácil" você pode dizer como prefere ser chamado(a).')+'<div class="an-seg" role="group" style="grid-template-columns:1fr 1fr">'+[['f','Aluna'],['m','Aluno']].map(function(x){var on=A.versao===x[0];return '<button type="button" class="'+(on?'on':'')+'" data-ank="versao" data-anc="'+x[0]+'" aria-pressed="'+on+'">'+x[1]+'</button>';}).join('')+'</div>';
   if(p=='contato')return anH(pn?'Prazer, '+e(pn)+'!':'Seus contatos')+'<p class="fx-lead">Só pra eu conseguir falar com você e mandar o seu app.</p>'+
     '<label class="fx-l">WhatsApp com DDD<input class="fx-in" data-ani="whats" inputmode="tel" autocomplete="tel" placeholder="65 99999 9999" value="'+e(A.whats)+'"></label>'+
     '<label class="fx-l">E-mail<input class="fx-in" data-ani="email" type="email" inputmode="email" autocomplete="email" placeholder="voce@email.com" value="'+e(A.email)+'"></label>'+
     '<p class="fx-l" style="margin-bottom:0">Data de nascimento</p><div class="an-data"><input class="fx-in" data-ani="nascD" inputmode="numeric" maxlength="2" placeholder="Dia" aria-label="Dia" value="'+e(A.nascD)+'"><input class="fx-in" data-ani="nascM" inputmode="numeric" maxlength="2" placeholder="Mês" aria-label="Mês" value="'+e(A.nascM)+'"><input class="fx-in" data-ani="nascA" inputmode="numeric" maxlength="4" placeholder="Ano" aria-label="Ano" value="'+e(A.nascA)+'"></div>'+
-    '<p class="small mut fx-dica" id="anmenor"'+(anNascOk()&&anIdade()<18?'':' hidden')+'>Como você é menor de idade, vou conversar também com seu responsável antes de começar.</p>';
+    '<div id="anmenor"'+(anMenor()?'':' hidden')+'><p class="small mut fx-dica">Como você é menor de idade, preciso também do contato do seu responsável: ele vai conversar comigo antes de você começar.</p>'+
+      '<label class="fx-l">Nome completo do responsável<input class="fx-in" data-ani="respNome" autocomplete="off" value="'+e(A.respNome)+'"></label>'+
+      '<label class="fx-l">WhatsApp do responsável, com DDD<input class="fx-in" data-ani="respWhats" inputmode="tel" autocomplete="off" placeholder="65 99999 9999" value="'+e(A.respWhats)+'"></label></div>'+
+    anGrupoQ('Qual o melhor horário pra eu te chamar?','Assim eu já ligo na hora certa e a gente não perde tempo trocando mensagem.')+anSeg('horario',['Manhã','Tarde','Noite','Qualquer um'],2);
   if(p=='plano')return anH('Qual plano você escolheu?')+'<div class="fx-ops" role="group">'+ANPLANOS.map(function(x){return anOpc('plano',x[0],x[0],x[1]);}).join('')+'</div>'+
     (A.plano&&A.plano!='Ainda não fechei'&&A.plano!='Planilha com vídeos'?anGrupoQ('Por quanto tempo?')+anSeg('dur',['Mensal','Trimestral','Semestral','Anual'],2):'')+
     anTxt('ind','Alguém te indicou? <span class="mut">(opcional)</span>','Nome de quem indicou',1);
@@ -975,14 +1007,29 @@ function anCorpo(p){var A=AN,a=anA(),pn=anPrimeiro();
     anTxt('treinoTxt','Se quiser, cola aqui os exercícios e séries <span class="mut">(opcional, do jeito que tiver)</span>','Ex.: Treino A: supino 4x10, remada 4x10…');
   if(p=='nivel')return anH('Seu nível')+anGrupoQ('Como você se vê na musculação?')+'<div class="fx-ops" role="group">'+[['Iniciante (nunca treinei ou treino há pouco tempo)','Iniciante','Nunca treinei ou treino há pouco tempo'],['Intermediário (já treino há um tempo, conheço os exercícios básicos)','Intermediário','Já conheço os exercícios básicos'],['Avançado (treino há anos, domino técnica e periodização)','Avançado','Treino há anos e domino a técnica']].map(function(x){return anOpc('nivel',x[0],x[1],x[2]);}).join('')+'</div>'+
     anGrupoQ('E a sua execução dos exercícios?')+'<div class="fx-ops" role="group">'+[['Ruim, preciso de bastante correção','Preciso de bastante correção'],['Razoável, erro em alguns pontos','Razoável, erro em alguns pontos'],['Boa, executo com segurança','Boa, faço com segurança'],['Ótima, tenho bom domínio técnico','Ótima, tenho domínio técnico']].map(function(x){return anOpc('tecnica',x[0],x[1]);}).join('')+'</div>';
-  if(p=='aparelhos')return anH('Aparelhos da sua academia')+'<p class="fx-lead">Marque o que tem lá. Não sabe o nome? Pode pular: a gente confere na chamada.</p>'+ANAP.map(function(g){return anGrupoQ(g[0])+'<div class="fx-ops" role="group">'+g[1].map(function(x){return anMul('aparelhos',x);}).join('')+'</div>';}).join('')+
-    anTxt('faltaMaq','Faltou alguma máquina que você gostaria de usar? <span class="mut">(opcional)</span>','');
+  if(p=='aparelhos'){var casa=A.onde=='Em casa',cond=A.onde=='Academia de condomínio';  // v51: em casa não faz sentido listar máquina de academia: pergunta o que a pessoa tem
+    return anH(casa?'O que você tem pra treinar':'Aparelhos da sua academia')+'<p class="fx-lead">'+(casa?'Marque o que tem em casa. Se não tiver nada, tudo bem: dá pra treinar com o peso do corpo.':'Marque o que tem lá. Não sabe o nome? Pode pular: a gente confere na chamada.')+'</p>'+
+    (casa||cond?anGrupoQ(casa?'Equipamentos':'Equipamentos básicos')+'<div class="fx-ops an-dupla" role="group">'+ANEQUIP.map(function(x){return anMul('aparelhos',x);}).join('')+'</div>':'')+
+    (casa?'':(cond?anGrupoQ('Máquinas, se tiver')+'':'')+ANAP.map(function(g){return anGrupoQ(g[0])+'<div class="fx-ops" role="group">'+g[1].map(function(x){return anMul('aparelhos',x);}).join('')+'</div>';}).join(''))+
+    anTxt('faltaMaq',casa?'Tem algo que você gostaria de ter pra treinar? <span class="mut">(opcional)</span>':'Faltou alguma máquina que você gostaria de usar? <span class="mut">(opcional)</span>','');}
   if(p=='corpo')return anH('Seu corpo hoje')+'<p class="fx-lead">Do jeito que você souber. Se não lembrar o peso exato, vale o último que viu.</p><div class="an-vis2"><label class="fx-kgw"><input class="fx-kg" data-ani="altura" inputmode="decimal" autocomplete="off" placeholder="1,70" aria-label="Altura em metros" value="'+e(A.altura)+'"><span>m</span></label>'+
     '<label class="fx-kgw"><input class="fx-kg" data-ani="peso" inputmode="decimal" autocomplete="off" placeholder="70" aria-label="Peso em quilos" value="'+e(A.peso)+'"><span>kg</span></label></div>';
-  if(p=='parq')return anH('Sua saúde')+'<p class="fx-lead">Perguntas padrão de qualquer avaliação física. Se algo valer pra você, não te impede de treinar: eu ajusto o treino e posso pedir uma liberação médica.</p>'+
+  if(p=='acesso')return anH('Pra deixar tudo mais fácil pra você')+'<p class="fx-lead">Toque no que ajuda. Se nada disso vale pra você, é só seguir. Eu adapto o treino, o jeito de falar e as telas.</p>'+
+    '<div class="fx-ops an-dupla" role="group">'+anNada('acessoNada','Nenhum, está tudo certo')+ANACESSO.map(function(x){return anMul('acesso',x,'','','acessoNada');}).join('')+'</div>'+
+    (A.acesso.length?anTxt('acessoTxt','Quer contar mais? O que eu posso fazer pra ficar melhor pra você? <span class="mut">(opcional)</span>',''):'')+
+    anTxt('apelido','Como você prefere ser chamado(a)? <span class="mut">(opcional)</span>','Ex.: nome social ou apelido');
+  if(p=='condicoes'){var fem=A.versao=='f';
+    return anH('O que um médico já falou pra você?')+'<p class="fx-lead">Só o que um médico já falou. É pra eu escolher os exercícios certos e te proteger: não é diagnóstico e não te impede de treinar.</p>'+
+    '<div class="fx-ops an-dupla" role="group">'+anNada('condNada','Nenhuma dessas')+ANCOND.map(function(x){return anMul('cond',x,'','','condNada');}).join('')+'</div>'+
+    (A.cond.indexOf('Outra condição')>=0?anTxt('outra','Qual outra condição?','Ex.: epilepsia',1):'')+
+    (A.cond.length?anTxt('condTxt','Conta um pouco: desde quando e se está controlada <span class="mut">(opcional)</span>',''):'')+
+    anGrupoQ('Você toma algum remédio de uso contínuo?')+anSeg('remedio',['Não','Sim'])+(A.remedio=='Sim'?anTxt('remedioTxt','Quais? <span class="mut">(se lembrar)</span>','',1):'')+
+    anGrupoQ('Na sua família, alguém teve infarto ou morte súbita antes dos 60 anos? <span class="mut">(opcional)</span>')+anSeg('famCor',['Não','Sim','Não sei']);}
+  if(p=='parq')return anH('Sua saúde')+'<p class="fx-lead">Mais 4 perguntas padrão de qualquer avaliação física. Se algo valer pra você, não te impede de treinar: eu ajusto o treino e posso pedir uma liberação médica.</p>'+
     '<div class="fx-ops" role="group">'+anNada('parqNada','Nenhum destes vale pra mim')+ANPARQ.map(function(x){return anMul('parq',x,'','','parqNada');}).join('')+'</div>'+(A.parq.length?anTxt('parqTxt','Conta um pouco: o que é, desde quando e se você tem liberação médica pra treinar',''):'');
   if(p=='dores')return anH('Sente alguma dor?')+'<p class="fx-lead">Toque onde sente dor ou desconforto nas articulações. Pode marcar mais de um lugar.</p><div class="an-dor">'+anMapa()+'<div class="fx-ops" role="group">'+anNada('doresNada','Não sinto dor')+ANDOR.map(function(x){return anMul('dores',x[0],'','','doresNada');}).join('')+'</div></div>'+
-    (A.dores.length?anTxt('doresTxt','Qual lado e como é? <span class="mut">(opcional)</span>','Ex.: joelho direito dói quando agacho'):'');
+    (A.dores.length?anTxt('doresTxt','Qual lado e como é? <span class="mut">(opcional)</span>','Ex.: joelho direito dói quando agacho'):'')+
+    anTxt('cirurgia','Já fez alguma cirurgia ou teve lesão importante? <span class="mut">(opcional)</span>','Ex.: cirurgia no joelho em 2022');
   if(p=='horm')return anH('Hormônios')+'<p class="fx-lead">Pergunta sem julgamento: muda o treino e a sua segurança. Fica só entre a gente.</p>'+anGrupoQ('Você usa ou já usou anabolizante ou outro hormônio pra treino?')+
     '<div class="fx-ops" role="group">'+[['Não','Nunca usei'],['Já usei',''],['Uso agora','']].map(function(x){return anOpc('horm',x[0],x[0],x[1]);}).join('')+'</div>'+(A.horm&&A.horm!='Não'?anTxt('hormTxt','Quais e quais doses, se lembrar <span class="mut">(opcional)</span>',''):'');
   if(p=='habitos')return anH('Cigarro e bebida')+anGrupoQ('Você fuma?')+anSeg('fuma',['Não fumo','Ocasionalmente','Diariamente'])+anGrupoQ('E bebida alcoólica?')+'<div class="fx-ops" role="group">'+[['Não bebo',''],['Ocasionalmente (socialmente/fins de semana)','Socialmente ou nos fins de semana'],['Regularmente (várias vezes por semana)','Várias vezes por semana']].map(function(x){return anOpc('alcool',x[0],x[0].split(' (')[0],x[1]);}).join('')+'</div>';
@@ -990,16 +1037,18 @@ function anCorpo(p){var A=AN,a=anA(),pn=anPrimeiro();
     '<div class="an-step"><button type="button" data-anstep="-1" aria-label="Menos meia hora">−</button><b id="anhoras">'+fxNum(A.horas)+' h</b><button type="button" data-anstep="1" aria-label="Mais meia hora">+</button></div>';
   if(p=='estresse')return anH('Estresse e energia')+anGrupoQ('De 0 a 10, como está seu estresse no dia a dia?')+anRegua('estresse',ANSTR,'Tranquilo','No limite')+anGrupoQ('Como está sua disposição pra treinar?')+
     '<div class="fx-ops" role="group">'+[['Alta - chego animado(a) e pronto para treinar','Alta','Chego animad'+a+' e pront'+a],['Média - varia bastante de um dia para o outro','Média','Varia de um dia pro outro'],['Baixa - treino mais por disciplina do que vontade','Baixa','Treino mais por disciplina que por vontade']].map(function(x){return anOpc('energia',x[0],x[1],x[2]);}).join('')+'</div>';
-  if(p=='agenda')return anH('Sua agenda')+anGrupoQ('Quantos dias por semana você tem pra treinar?')+anNum('dias',1,7,' dias')+anGrupoQ('Quanto tempo por treino?')+anSeg('tempo',['Até 30 minutos','30 a 45 minutos','45 a 60 minutos','60 a 90 minutos','Mais de 90 minutos'],3);
+  if(p=='agenda')return anH('Sua agenda')+anGrupoQ('Quantos dias por semana você tem pra treinar?')+anNum('dias',1,7,' dias')+anGrupoQ('Quanto tempo por treino?')+anSeg('tempo',['Até 30 minutos','30 a 45 minutos','45 a 60 minutos','60 a 90 minutos','Mais de 90 minutos'],3)+
+    anGrupoQ('Como é o seu dia a dia, fora do treino? <span class="mut">(opcional)</span>','Ajuda a escolher o volume de treino e a meta de passos.')+anSeg('rotinaDia',['Sentado quase o dia todo','Em pé ou andando','Trabalho físico pesado'],1);
   if(p=='alim1')return anH('Sua alimentação')+'<div class="fx-box"><b>Não é dieta.</b> Quem monta dieta é nutricionista. Aqui é só pra eu entender sua rotina e, se fizer sentido, te indicar um(a).</div>'+
     anGrupoQ('Você acompanha com nutricionista?')+'<div class="fx-ops" role="group">'+[['Sim',''],['Não, mas quero uma indicação','Te passo um contato de confiança'],['Não','']].map(function(x){return anOpc('nutri',x[0],x[0],x[1]);}).join('')+'</div>'+
     anGrupoQ('Quantas refeições você faz por dia?')+anSeg('refeicoes',['1 a 2','3','4 a 5','6 ou mais'])+anGrupoQ('Frutas, verduras e legumes')+anSeg('frutas',['Quase todo dia','Algumas vezes na semana','Quase nunca']);
   if(p=='alim2')return anH('Sua alimentação')+anGrupoQ('Carne, frango, peixe, ovo ou feijão nas refeições principais')+anSeg('proteina',['Na maioria','Em algumas','Raramente'])+anGrupoQ('Fast food, doce ou refrigerante')+anSeg('ultra',['Quase nunca','1 a 2 vezes na semana','Quase todo dia'])+
     anGrupoQ('Água por dia')+anSeg('agua',['Menos de 1 litro','1 a 2 litros','Mais de 2 litros'])+anGrupoQ('Usa algum suplemento?','Opcional. Pode marcar mais de um.')+'<div class="fx-ops an-dupla" role="group">'+['Whey','Creatina','Cafeína ou pré-treino','Multivitamínico','Outro'].map(function(x){return anMul('supl',x);}).join('')+'</div>';
-  if(p=='objetivo')return anH('O que você quer?')+'<div class="fx-ops" role="group">'+[['Hipertrofia (ganho de massa muscular)','Ganhar músculo',''],['Emagrecimento com preservação de massa muscular','Perder gordura sem perder músculo',''],['Condicionamento físico geral / saúde','Saúde e disposição',''],['Performance esportiva','Render mais num esporte',''],['Estética focada em um grupo muscular específico','Melhorar uma parte do corpo',''],['Reabilitação ou retorno pós-lesão','Voltar depois de uma lesão','Com liberação médica']].map(function(x){return anOpc('objetivo',x[0],x[1],x[2]);}).join('')+'</div>';
+  if(p=='objetivo')return anH('O que você quer?')+'<div class="fx-ops" role="group">'+[['Hipertrofia (ganho de massa muscular)','Ganhar músculo',''],['Emagrecimento com preservação de massa muscular','Perder gordura sem perder músculo',''],['Condicionamento físico geral / saúde','Saúde e disposição',''],['Performance esportiva','Render mais num esporte',''],['Estética focada em um grupo muscular específico','Melhorar uma parte do corpo',''],['Reabilitação ou retorno pós-lesão','Voltar depois de uma lesão','Com liberação médica']].map(function(x){return anOpc('objetivo',x[0],x[1],x[2]);}).join('')+'</div>'+
+    anTxt('objTxt','Em uma frase, o que você quer conquistar? Tem alguma data? <span class="mut">(opcional)</span>','Ex.: voltar a brincar com meu filho sem cansar; casamento em março');
   if(p=='prioridade')return anH('Músculos prioritários')+'<p class="fx-lead">Escolha até 2, na ordem. O primeiro que você tocar é a prioridade 1.</p><div class="an-musc" role="group">'+ANMUSC.map(function(x){var i=A.prio.indexOf(x);return '<button type="button" class="'+(i>=0?'on':'')+'" data-anprio="'+e(x)+'" aria-pressed="'+(i>=0)+'">'+(i>=0?'<i>'+(i+1)+'</i>':'')+e(x)+'</button>';}).join('')+
     '<button type="button" class="an-sem'+(A.prio[0]=='Não tenho prioridade específica'?' on':'')+'" data-anprio="Não tenho prioridade específica">Sem prioridade</button></div>';
-  if(p=='preferencias')return anH('Do seu jeito')+anTxt('naoGosta','Tem algum exercício que você não gosta ou não quer fazer? <span class="mut">(opcional)</span>','Ex.: não gosto de burpee');
+  if(p=='preferencias')return anH('Do seu jeito')+anGrupoQ('O que mais já atrapalhou você de treinar? <span class="mut">(opcional)</span>','Pode marcar mais de um. Assim eu já penso no plano pra isso não te derrubar de novo.')+'<div class="fx-ops an-dupla" role="group">'+ANBARR.map(function(x){return anMul('barreira',x);}).join('')+'</div>'+anTxt('naoGosta','Tem algum exercício que você não gosta ou não quer fazer? <span class="mut">(opcional)</span>','Ex.: não gosto de burpee');
   // 22/10 noite (Gui): avaliação séria. Escolha + autorização, depois o preparo conferido item por item, depois as fotos
   if(p=='postura'){var vf=A.versao=='f',fm=A.modo=='banho'||A.modo=='treino';
     return anH('Sua postura')+fxPostura(1)+anGrupoQ('Como você prefere ser avaliad'+(vf?'a':'o')+'?','A roupa é escolha sua; o protocolo das fotos é um só.')+fxModoOps(vf,1)+
@@ -1026,11 +1075,11 @@ function anCorpo(p){var A=AN,a=anA(),pn=anPrimeiro();
   var linhas=function(r){return r.filter(function(x){return x[1]!==''&&x[1]!=null;}).map(function(x){return '<div class="row"><span class="mut">'+x[0]+'</span><b>'+e(x[1])+'</b></div>';}).join('');};
   var sec=function(t,n,ir,r){return '<div class="fx-rc"><div class="fx-rch"><b><i>'+n+'</i>'+t+'</b><button type="button" class="fx-ed" data-anir="'+ANP.indexOf(ir)+'">Editar</button></div>'+linhas(r)+'</div>';};
   return anH('Tudo certo?')+'<p class="fx-lead">Confere antes de enviar. Dá pra mudar qualquer parte.</p><div class="fx-rev">'+
-    sec('Você',1,'nome',[['Nome',A.nome],['WhatsApp',A.whats],['E-mail',A.email],['Nascimento',A.nascD+'/'+A.nascM+'/'+A.nascA],['Plano',A.plano+(A.dur?' · '+A.dur:'')],['Indicação',A.ind]])+
+    sec('Você',1,'nome',[['Nome',A.nome],['WhatsApp',A.whats],['E-mail',A.email],['Nascimento',A.nascD+'/'+A.nascM+'/'+A.nascA],['Melhor horário',A.horario],['Responsável',anMenor()?A.respNome+' · '+A.respWhats:''],['Plano',A.plano+(A.dur?' · '+A.dur:'')],['Indicação',A.ind]])+
     sec('Treino',2,'pratica',[['Hoje',A.sit+(A.ativ.length?': '+A.ativ.join(', '):'')],['Onde',A.onde],['Por semana',A.freq!=null?A.freq+'x':''],['Divisão',anPula('treinoatual')?'':A.divisao.split(' (')[0]],['Nível',A.nivel.split(' (')[0]],['Execução',A.tecnica.split(',')[0]],['Aparelhos',anPula('aparelhos')?'':(A.aparelhos.length?A.aparelhos.length+' marcados':'Não marcou')]])+
-    sec('Saúde',3,'corpo',[['Altura e peso',fxNum(anAltura())+' m · '+fxNum(A.peso)+' kg'],['Triagem de saúde',A.parqNada?'Nenhum item':A.parq.length+' item(ns)'],['Dores',A.doresNada?'Nenhuma':A.dores.join(', ')],['Hormônios',A.horm],['Cigarro',A.fuma],['Bebida',A.alcool.split(' (')[0]]])+
-    sec('Rotina',4,'sono',[['Sono',A.sono+' de 10 · '+fxNum(A.horas)+' h'],['Estresse',A.estresse+' de 10'],['Disposição',A.energia.split(' -')[0]],['Treinos por semana',A.dias],['Tempo por treino',A.tempo],['Nutricionista',A.nutri]])+
-    sec('Objetivo',5,'objetivo',[['Objetivo',A.objetivo.split(' (')[0]],['Prioridades',A.prio.join(' e ')],['Não gosta de',A.naoGosta]])+
+    sec('Saúde',3,'corpo',[['Altura e peso',fxNum(anAltura())+' m · '+fxNum(A.peso)+' kg'],['O que o médico já falou',A.condNada?'Nenhuma':A.cond.map(function(x){return x=='Outra condição'?'Outra: '+A.outra:x.split(' (')[0];}).join(', ')],['Remédio contínuo',A.remedio=='Sim'?'Sim'+(A.remedioTxt?': '+A.remedioTxt:''):A.remedio],['Triagem de saúde',A.parqNada?'Nenhum item':A.parq.length+' item(ns)'],['Dores',A.doresNada?'Nenhuma':A.dores.join(', ')],['Cirurgia ou lesão',A.cirurgia],['Hormônios',A.horm],['Cigarro',A.fuma],['Bebida',A.alcool.split(' (')[0]]])+
+    sec('Rotina',4,'sono',[['Sono',A.sono+' de 10 · '+fxNum(A.horas)+' h'],['Estresse',A.estresse+' de 10'],['Disposição',A.energia.split(' -')[0]],['Treinos por semana',A.dias],['Tempo por treino',A.tempo],['Dia a dia',A.rotinaDia],['Nutricionista',A.nutri]])+
+    sec('Objetivo',5,'objetivo',[['Objetivo',A.objetivo.split(' (')[0]],['Em uma frase',A.objTxt],['Prioridades',A.prio.join(' e ')],['Já atrapalhou',A.barreira.join(', ')],['Não gosta de',A.naoGosta]])+
     sec('Fotos e combinados',6,'postura',(A.modo=='sem'?[['Postura','Sem fotos: avaliação ao vivo na chamada']]:[['Jeito',fxModoNome(A.modo)+(A.rosto!==false?', rosto coberto':'')],['Fotos',A.fotosDepois?'Vai mandar depois':['frente','costas','lado'].filter(function(k){return A.fotos[k];}).length+' de 3'],['Uso das fotos',A.aut=='sim'?'Autorizado':'Não autorizado']]).concat([['Combinados',A.regras.split(',')[0]],['Privacidade',A.priv?'Autorizado ('+A.priv+')':''],['Contrato',A.termos?'Aceito ('+A.termos+')':'']]))+
     '</div><p class="small mut fx-dica">Ao enviar, te chamo no WhatsApp pra marcar a chamada de início.</p>';}
 
@@ -1062,7 +1111,7 @@ function anDica(b,nb){var d=document.createElement('button');d.type='button';d.c
   var ver=function(){d.hidden=digitando()||nb.scrollHeight-nb.clientHeight-nb.scrollTop<70;};nb.addEventListener('scroll',ver,{passive:true});nb.addEventListener('focusin',function(){setTimeout(ver,50);});nb.addEventListener('focusout',function(){setTimeout(ver,150);});ver();setTimeout(ver,400);}
 function anPgoLoja(){var u=navigator.userAgent||'';if(/Android/i.test(u))return 'https://play.google.com/store/apps/details?id=com.personalgo.rnapp';if(/iPhone|iPad|iPod/i.test(u))return 'https://apps.apple.com/br/app/personalgo-treino-personal/id6615069786';return 'https://web.personalgo.app/';}
 function anProx(){if(!AN)return;var p=ANP[AN.p],b=document.querySelector('#fxsh [data-ann2]'),hi=document.getElementById('fxhint'),ok=anPode(p);if(b){b.disabled=!ok;b.textContent=anRotulo(p);}if(hi)hi.textContent=ok?'':anFalta(p);
-  var mn=document.getElementById('anmenor');if(mn)mn.hidden=!(anNascOk()&&anIdade()<18);}
+  var mn=document.getElementById('anmenor');if(mn)mn.hidden=!anMenor();}
 function anIr(i,dir){var vs=ANP.length;while(i>=0&&i<vs&&anPula(ANP[i]))i+=dir<0?-1:1;AN.p=Math.max(0,Math.min(vs-1,i));ANDIR=dir;anSalvar();anTela();}
 function anVoltar(){if(!AN||!document.getElementById('fxsh'))return false;if(FXC){fxCamFechar();fxHist();return true;}if(FXR){FXR=null;anTela();fxHist();return true;}
   if(!AN.fim&&!AN.env&&AN.p>0){AN.rv=0;anIr(AN.p-1,-1);fxHist();return true;}return false;}
@@ -1079,8 +1128,8 @@ function anClique(ev){var t=ev.target,sx=t.closest&&t.closest('[data-x]');if(sx)
   if(d.anv){AN.rv=0;anIr(AN.p-1,-1);return;}
   if(d.anir!=null){AN.rv=1;anIr(Number(d.anir),-1);return;}
   if(d.ank){fxVibra(6);ANULT=d.ank;AN[d.ank]=d.anc;if(d.ank=='plano'&&(d.anc=='Ainda não fechei'||d.anc=='Planilha com vídeos'))AN.dur='';if(d.ank=='sit'&&d.anc=='Nunca treinei'){AN.ativ=[];AN.freq=0;}anSalvar();anTela();return;}
-  if(d.anm){var k=d.anm,i=AN[k].indexOf(d.anc);if(i>=0)AN[k].splice(i,1);else AN[k].push(d.anc);if(d.anx&&AN[k].length)AN[d.anx]=false;fxVibra(6);anSalvar();anTela();return;}
-  if(d.annada){var kn=d.annada;AN[kn]=!AN[kn];if(AN[kn]){if(kn=='parqNada'){AN.parq=[];AN.parqTxt='';}if(kn=='doresNada'){AN.dores=[];AN.doresTxt='';}}fxVibra(6);anSalvar();anTela();return;}
+  if(d.anm){var k=d.anm,i=AN[k].indexOf(d.anc);if(i>=0)AN[k].splice(i,1);else{var gr=ANEQUIP.indexOf(d.anc)>=0?ANEQUIP:ANBARR.indexOf(d.anc)>=0?ANBARR:null;if(gr)AN[k]=AN[k].filter(function(x){return ANEXCL.indexOf(d.anc)>=0?gr.indexOf(x)<0:ANEXCL.indexOf(x)<0;});AN[k].push(d.anc);}if(d.anx&&AN[k].length)AN[d.anx]=false;fxVibra(6);anSalvar();anTela();return;}
+  if(d.annada){var kn=d.annada;AN[kn]=!AN[kn];if(AN[kn]){if(kn=='parqNada'){AN.parq=[];AN.parqTxt='';}if(kn=='doresNada'){AN.dores=[];AN.doresTxt='';}if(kn=='condNada'){AN.cond=[];AN.condTxt='';AN.outra='';}if(kn=='acessoNada'){AN.acesso=[];AN.acessoTxt='';}}fxVibra(6);anSalvar();anTela();return;}
   if(d.ann){fxVibra(6);AN[d.ann]=Number(d.v);anSalvar();anTela();return;}
   if(d.anstep){AN.horas=Math.max(3,Math.min(12,(Number(AN.horas)||7)+Number(d.anstep)*.5));anSalvar();var hb=document.getElementById('anhoras');if(hb)hb.textContent=fxNum(AN.horas)+' h';anProx();return;}
   if(d.anprio){var v=d.anprio,sem='Não tenho prioridade específica';if(v==sem)AN.prio=AN.prio[0]==sem?[]:[sem];else{AN.prio=AN.prio.filter(function(x){return x!=sem;});var j=AN.prio.indexOf(v);if(j>=0)AN.prio.splice(j,1);else if(AN.prio.length<2)AN.prio.push(v);else toast('Já escolheu 2. Toque num deles pra trocar.');}fxVibra(6);anSalvar();anTela();return;}
@@ -1092,10 +1141,14 @@ function anClique(ev){var t=ev.target,sx=t.closest&&t.closest('[data-x]');if(sx)
   if(d.fxk=='modo'&&d.fxc!='sem'&&AN.aut=='nao')AN.aut=null;
   if(d.fxk){fxVibra(6);AN[d.fxk]=d.fxc;anSalvar();anTela();return;}
   if(d.ane)anEnviar();}
-function anEnviar(){AN.env=true;anTela();
-  var c=AN,dados={conv:c.conv,ref:c.ref,site:c.site,seg:Math.round((Date.now()-c.t0)/1000),nome:String(c.nome).trim(),versao:c.versao,whats:c.whats,email:String(c.email).trim(),nascD:c.nascD,nascM:c.nascM,nascA:c.nascA,plano:c.plano,dur:c.dur,ind:c.ind,
+function anPendente(){var vs=ANP.filter(function(x){return x!='boas'&&x!='revisar'&&!anPula(x);});for(var i=0;i<vs.length;i++)if(!anPode(vs[i]))return vs[i];return '';}
+function anApar(){var c=AN;if(anPula('aparelhos'))return [];return c.aparelhos.filter(function(x){var eq=ANEQUIP.indexOf(x)>=0;return c.onde=='Em casa'?eq:c.onde=='Academia de bairro'?!eq:true;});}
+function anEnviar(){var pe=anPendente();if(pe){AN.rv=0;toast('Faltou responder uma tela. Te levei até ela.','erro');anIr(ANP.indexOf(pe),-1);return;}
+  AN.env=true;anTela();
+  var c=AN,dados={vf:ANVF,conv:c.conv,ref:c.ref,site:c.site,seg:Math.round((Date.now()-c.t0)/1000),nome:String(c.nome).trim(),versao:c.versao,whats:c.whats,email:String(c.email).trim(),nascD:c.nascD,nascM:c.nascM,nascA:c.nascA,plano:c.plano,dur:c.dur,ind:c.ind,
     sit:c.sit,ativ:c.ativ,ativOutro:c.ativOutro,esporteTxt:c.esporteTxt,onde:c.onde,freq:c.freq,divisao:anPula('treinoatual')?'':c.divisao,treinoTxt:anPula('treinoatual')?'':c.treinoTxt,nivel:c.nivel,tecnica:c.tecnica,
-    aparelhos:anPula('aparelhos')?[]:c.aparelhos,faltaMaq:anPula('aparelhos')?'':c.faltaMaq,altura:anAltura(),peso:c.peso,parq:c.parq,parqTxt:c.parqTxt,dores:c.dores,doresTxt:c.doresTxt,horm:c.horm,hormTxt:c.hormTxt,fuma:c.fuma,alcool:c.alcool,
+    aparelhos:anApar(),faltaMaq:anPula('aparelhos')?'':c.faltaMaq,altura:anAltura(),peso:c.peso,cond:c.condNada?[]:c.cond,acesso:c.acessoNada?[]:c.acesso,acessoNada:!!c.acessoNada,acessoTxt:c.acessoTxt,apelido:c.apelido,condNada:!!c.condNada,outra:c.outra,condTxt:c.condTxt,remedio:c.remedio,remedioTxt:c.remedio=='Sim'?c.remedioTxt:'',famCor:c.famCor,parq:c.parq,parqTxt:c.parqTxt,dores:c.dores,doresTxt:c.doresTxt,cirurgia:c.cirurgia,
+    horario:c.horario,respNome:anMenor()?c.respNome:'',respWhats:anMenor()?c.respWhats:'',rotinaDia:c.rotinaDia,objTxt:c.objTxt,barreira:c.barreira,horm:c.horm,hormTxt:c.hormTxt,fuma:c.fuma,alcool:c.alcool,
     sono:c.sono,horas:c.horas,estresse:c.estresse,energia:c.energia,dias:c.dias,tempo:c.tempo,nutri:c.nutri,refeicoes:c.refeicoes,frutas:c.frutas,proteina:c.proteina,ultra:c.ultra,agua:c.agua,supl:c.supl,
     objetivo:c.objetivo,prio:c.prio,naoGosta:c.naoGosta,fotosModo:c.modo,rosto:c.rosto!==false,fotos:c.fotosDepois||c.modo=='sem'?{}:c.fotos,fotosDepois:!!c.fotosDepois&&c.modo!='sem',aut:c.modo=='sem'?'nao':c.aut,regras:c.regras,priv:c.priv,termos:c.termos};
   google.script.run.withSuccessHandler(function(r){if(!AN)return;AN.env=false;
@@ -1127,7 +1180,7 @@ var ANESC=null;
 function anAbrir(cod,r,escolha){var ra=anRascunho();
   // rascunho de outro convite (link trocado, ou outra pessoa no mesmo celular): pergunta antes de apagar
   if(ra&&ra.conv&&ra.conv!==cod&&ra.p>0&&!escolha){ANESC={cod:cod,r:r};return anPorta('<h1>Tem uma anamnese começada aqui</h1><p class="fx-lead">Neste celular já tem respostas'+(ra.nome?' de <b>'+e(String(ra.nome).trim().split(' ')[0])+'</b>':'')+', de outro link. São suas?</p><button type="button" class="bt" data-anesc="seguir">Sim, continuar de onde parei</button><button type="button" class="bt sec" data-anesc="zero">Não, começar do zero</button>');}
-  AN=!ra||escolha=='zero'||(ra.conv&&ra.conv!==cod&&escolha!='seguir')?anNovo():ra;
+  AN=!ra||escolha=='zero'||(ra.conv&&ra.conv!==cod&&escolha!='seguir')?anNovo():anMescla(ra);
   AN.conv=cod;if(!(AN.p>=0&&AN.p<ANP.length))AN.p=0;
   if(r.nome&&!AN.nome)AN.nome=r.nome;if(r.whats&&!AN.whats)AN.whats=r.whats;
   var pl=ANPL[r.plano]||ANPL[qs('plano')];if(pl&&!AN.plano)AN.plano=pl;
