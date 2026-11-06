@@ -265,6 +265,15 @@ h1 .fx-n{display:inline-block;margin-right:10px;color:var(--red);font-weight:600
 .fx-rb{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fx-rosto .bt.sec{color:#fff;border-color:#fff}
 .fx-mont{display:block;width:100%;max-width:420px;height:auto;margin:12px 0 4px;color:var(--ink2)}
 .fx-passos{margin:4px 0 0;padding-left:22px;color:var(--ink2);font-size:14.5px;line-height:1.55}.fx-passos li{margin:6px 0}.fx-passos b{color:var(--ink)}
+/* v58: página das fotos da anamnese (?f=fotos) */
+.fx-eb{margin:0 0 6px;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--red)}
+.fx-sub2{margin:26px 0 8px;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--ink3)}
+.fx-passos2{list-style:none;counter-reset:fxp;padding:0;margin:0 0 6px}
+.fx-passos2 li{counter-increment:fxp;position:relative;margin:0;padding:12px 0 12px 46px;border-top:1px solid var(--line2);font-size:15px;line-height:1.5;min-height:44px}
+.fx-passos2 li:last-child{border-bottom:1px solid var(--line2)}
+.fx-passos2 li::before{content:counter(fxp);position:absolute;left:0;top:8px;width:34px;text-align:center;font-family:var(--disp);font-weight:800;font-size:34px;line-height:1;color:var(--red)}
+.fx-pg[data-pg=intro] .fx-poses{margin:18px 0 0}
+.fx-pg[data-pg=intro] .fx-dl dd{white-space:nowrap;font-size:26px}
 .fx-pg-t{margin:16px 0 0;font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
 .fx-ok-ver{display:flex;gap:8px;align-items:flex-start;margin:14px 0 0;padding:10px 12px;background:var(--okt);border-radius:4px;font-size:14.5px;color:var(--ink)}.fx-ok-ver svg{flex:none;margin-top:2px;color:var(--ok)}
 /* 22/10 noite: preparo das fotos (as 3 posições com o fio de prumo e o checklist conferido antes da câmera) */
@@ -433,23 +442,37 @@ window.addEventListener('popstate',function(){if(typeof MODO!='undefined'&&MODO=
 function telaMsg(t,txt,tentar){var b=document.getElementById('fxsh');b.onclick=function(ev){var x=ev.target.closest('button');if(!x)return;if(x.dataset.tentar)iniciar();else if(x.dataset.app)sair();};
   b.innerHTML='<div class="fx2-body"><div class="fx-msg"><h1>'+e(t)+'</h1><p>'+e(txt)+'</p>'+(tentar?'<button type="button" class="bt" data-tentar="1">Tentar de novo</button>':'')+'<button type="button" class="bt sec" style="margin-top:10px" data-app="1">Ir pro app TEAM GO!</button></div></div>';}
 // rascunhos (anamnese e atualização) com mais de 30 dias saem do celular, mesmo os de outro link
-function limparRascunhos(){try{var ag=Date.now();for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(!/^tg_(ficha_|ck_|anamnese$)/.test(k||''))continue;var x=null;try{x=JSON.parse(localStorage.getItem(k));}catch(e){}if(!x||!x.t||ag-x.t>30*864e5)localStorage.removeItem(k);}}catch(e){}}
-function iniciar(){limparRascunhos();if(qs('f')=='protocolo')return iniciarProtocolo();if(qs('f')=='anamnese')return iniciarAnamnese();if(qs('f')=='checkin')return iniciarCheckin();var c=codigoAqui();
+function limparRascunhos(){try{var ag=Date.now();for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(!/^tg_(ficha_|fotos_|ck_|anamnese$)/.test(k||''))continue;var x=null;try{x=JSON.parse(localStorage.getItem(k));}catch(e){}if(!x||!x.t||ag-x.t>30*864e5)localStorage.removeItem(k);}}catch(e){}}
+function iniciar(){limparRascunhos();if(qs('f')=='protocolo')return iniciarProtocolo();if(qs('f')=='anamnese')return iniciarAnamnese();if(qs('f')=='checkin')return iniciarCheckin();if(qs('f')=='fotos')return iniciarFotosAnamnese();var c=codigoAqui();
   if(!/^[A-Za-z0-9_-]{4,60}$/.test(c))return telaMsg('Abra pelo app','Abra o seu app TEAM GO! uma vez neste celular e toque em "Fazer minha atualização". Perdeu o link do app? Toque abaixo.');
   document.getElementById('fxsh').innerHTML='<div class="fx-msg"><div class="fx-spin"></div><p class="mut">Abrindo sua ficha…</p></div>';
   google.script.run.withSuccessHandler(function(r){
     if(!r||r.erro)return telaMsg('Link não encontrado','Abra a atualização pelo botão "Fazer minha atualização", no seu app TEAM GO!.');
     D={codigo:c,primeiro:r.primeiro||'',f:!!r.f,ciclo:{n:r.ciclo||''},evolucao:r.evolucao||[],links:{whats:r.whats||''},fotos:r.fotos||'',rosto:r.rosto!==false,roupa:r.roupa||''};iniciarFicha();
   }).withFailureHandler(function(){telaMsg('Não consegui conectar','Confere a internet e tenta de novo. O que você já preencheu continua salvo neste celular.',true);}).alunoFichaInicio(c);}
+// v58: área "Enviar as fotos da anamnese" (?f=fotos&a=código). Só abre pra quem deixou as fotos pra depois; o resto vê uma mensagem simples.
+function iniciarFotosAnamnese(){var c=codigoAqui();
+  if(!/^[A-Za-z0-9_-]{4,60}$/.test(c))return telaMsg('Abra pelo app','Abra o seu app TEAM GO! uma vez neste celular e toque em "Enviar minhas fotos". Perdeu o link do app? Toque abaixo.');
+  document.getElementById('fxsh').innerHTML='<div class="fx-msg"><div class="fx-spin"></div><p class="mut">Abrindo…</p></div>';
+  google.script.run.withSuccessHandler(function(r){
+    if(!r||r.erro)return telaMsg('Link não encontrado','Abra esta página pelo botão "Enviar minhas fotos", no seu app TEAM GO!.');
+    if(r.feito)return telaMsg('Já recebi, obrigado!',r.feito=='n'?'Você escolheu seguir sem fotos: eu olho a sua postura ao vivo na chamada de início.':'As suas fotos da anamnese já chegaram. Não precisa mandar de novo.');
+    if(!r.pend)return telaMsg('Nenhuma foto pendente','Não tem foto da anamnese esperando por você. Se quiser mandar alguma mesmo assim, me chama no WhatsApp.');
+    SF=true;FXUP={fn:'alunoFotosAnamneseFoto',args:function(p,b64){return [D.codigo,p,b64];}};
+    D={codigo:c,primeiro:r.primeiro||'',f:!!r.f,ciclo:{n:''},evolucao:[],links:{whats:r.whats||''},fotos:r.fotos||'',rosto:r.rosto!==false,roupa:r.roupa||''};iniciarFicha();
+  }).withFailureHandler(function(){telaMsg('Não consegui conectar','Confere a internet e tenta de novo. O que você já fez continua salvo neste celular.',true);}).alunoFotosAnamneseInicio(c);}
 // FXUP: pra onde a foto sobe (a anamnese troca pela anamneseFoto)
 var FXUP={fn:'alunoFisicoFoto',args:function(p,b64){return [D.codigo,p,b64];}};
+// v58 (06/11): SF = modo "só as fotos da anamnese" (?f=fotos): reaproveita o preparo, a autorização e a câmera guiada da ficha, sem as outras perguntas
+var SF=false;
 var FX=null,FXC=null,FXA={},FXU=-1,FXDIR=0,FXNUM='',FXPCT=0,FXP=['intro','peso','medidas','roupa','adesao','fome','cardio','refeicoes','alimentacao','percepcao','recuperacao','treino','preparo','fotos','extra','revisar'];
 // passos em 5 etapas com nome; botão fixo embaixo; as 3 fotos numa tela; cartões de resposta com ícone; revisão com "Editar"
 // v25 (fim da tarde): fotos por último (o mais difícil no fim) e o jeito de acompanhar escolhido no começo:
 // sem fotos pula o passo das fotos e ganha a "roupa de prova"; as medidas viram obrigatórias.
 var FXE=[['Corpo',['intro','peso','medidas','roupa']],['Seu mês',['adesao','fome','cardio','refeicoes','alimentacao','percepcao']],['Treino',['recuperacao','treino']],['Fotos',['preparo','fotos']],['Enviar',['extra','revisar']]];
-function fxPula(p){return p=='roupa'?FX.modo!='sem':p=='fotos'||p=='preparo'?FX.modo=='sem':false;}
-function fxEtapas(){return FXE.map(function(x){return [x[0],x[1].filter(function(p){return !fxPula(p);})];}).filter(function(x){return x[1].length;});}
+function fxPula(p){if(SF){if(p=='intro'||p=='revisar')return false;if(p=='preparo'||p=='fotos')return FX.modo=='sem';return true;}return p=='roupa'?FX.modo!='sem':p=='fotos'||p=='preparo'?FX.modo=='sem':false;}
+var FXE_SF=[['Início',['intro']],['Fotos',['preparo','fotos']],['Enviar',['revisar']]];
+function fxEtapas(){return (SF?FXE_SF:FXE).map(function(x){return [x[0],x[1].filter(function(p){return !fxPula(p);})];}).filter(function(x){return x[1].length;});}
 var FXT={frente:'Foto de frente',costas:'Foto de costas',lado:'Foto do lado direito',livre:'Foto extra'};
 var FXN={frente:'Frente',costas:'Costas',lado:'Lado direito',livre:'Foto extra'};
 var FXD={frente:'Braços colados ao corpo, sem contrair. Tem que dar pra ver pés, joelhos, quadril e ombros.',costas:'Braços colados ao corpo, sem contrair. Tem que dar pra ver pés, joelhos, quadril e ombros.',lado:'Braços levantados à frente, formando um ângulo reto com o tronco.'};
@@ -487,7 +510,7 @@ var FXO={
   balanca:function(s){return fxSvg('<rect x="5" y="6" width="22" height="20" rx="4"/><path d="M11 12.5h10M16 12.5l2.5-2.5"/>',s);},
   video:function(s){return fxSvg('<rect x="3.5" y="8" width="17" height="16" rx="3"/><path d="M20.5 14l8-4.5v13l-8-4.5"/>',s);}
 };
-function fxKey(){return 'tg_ficha_'+D.codigo;}
+function fxKey(){return (SF?'tg_fotos_':'tg_ficha_')+D.codigo;}
 function fxSalvar(){if(typeof MODO!='undefined'&&MODO=='an')return anSalvar();try{localStorage.setItem(fxKey(),fxRascunho(FX,['antPed','th','ant','antD']));}catch(x){}}
 function fxNovo(){return {v:3,t:Date.now(),p:0,ref:Date.now().toString(36)+Math.random().toString(36).slice(2,8),modo:D.fotos||'',rosto:D.rosto!==false,roupa:'',roupaQual:D.roupa||'',aut:null,fotos:{},th:{},st:{},q:{},peso:'',med:{},med2:{},adesao:null,just:'',fome:'',fomeTxt:'',cardio:'',cardioTxt:'',refl:'',reflTxt:'',perc:'',percTxt:'',recup:'',recupTxt:'',vol:'',volTxt:'',tempo:'',carga:'',cargaTxt:'',obs:'',frutas:'',ultra:'',agua:'',nutri:''};}
 function fxVibra(ms){try{if(navigator.vibrate)navigator.vibrate(ms||8);}catch(x){}}
@@ -502,7 +525,7 @@ function iniciarFicha(){letraLigar();document.documentElement.classList.add('an-
   FXU=-1;FXA={};var sh=document.getElementById('fxsh');sh.onclick=fxClique;sh.oninput=fxDigitou;fxTela();fxAnteriores();fxHist();
 }
 // fotos do último envio (miniaturas do Drive), pra guiar o enquadramento e comparar antes × agora
-function fxAnteriores(){if(!FX||FX.ant||FX.antPed||FX.modo=='sem')return;FX.antPed=1;
+function fxAnteriores(){if(SF||!FX||FX.ant||FX.antPed||FX.modo=='sem')return;FX.antPed=1;
   google.script.run.withSuccessHandler(function(r){if(!FX)return;FX.antPed=0;FX.ant=(r&&r.fotos)||{};FX.antD=(r&&r.d)||'';fxSalvar();if(!FXC)fxTela();}).withFailureHandler(function(){if(FX)FX.antPed=0;}).alunoFisicoAnteriores(D.codigo);}
 function fxNumero(x){var t=String(x==null?'':x).trim().replace(',','.');if(!t)return NaN;var n=Number(t);return isFinite(n)?n:NaN;}
 // média das 2 medidas de cada ponto (protocolo: mede 2 vezes; se a diferença passar de 1 cm, mede a 3ª e corrige)
@@ -579,6 +602,7 @@ function fxLinhaMed(m){var ev=D.evolucao||[],u=ev[ev.length-1],a=FX.med[m[0]],v=
   return {v:isNaN(v)?'—':fxNum(v),c:ruim?' fe':dif>1?' fa':'',w:ruim?m[1]+' fora do comum ('+m[2]+' a '+m[3]+' cm). Confere?':dif>1?'Diferença de '+fxNum(Math.round(dif*10)/10)+' cm: meça a 3ª vez e corrija a que destoou.':ul&&!isNaN(v)&&Math.abs(v-ul)>4?'Mudou '+fxNum(Math.round(Math.abs(v-ul)*10)/10)+' cm desde o último envio. Confere a fita?':''};}
 function fxRevCard(t,n,ir,linhas,extra){return '<div class="fx-rc"><div class="fx-rch"><b><i>'+n+'</i>'+t+'</b><button type="button" class="fx-ed" data-fxir="'+FXP.indexOf(ir)+'">Editar</button></div>'+(extra||'')+linhas.map(function(r){return '<div class="row"><span class="mut">'+r[0]+'</span><b>'+e(r[1])+'</b></div>';}).join('')+'</div>';}
 function fxCorpo(p){var ev=D.evolucao||[],u=ev[ev.length-1],h='',o=D.f?'a':'o';
+  if(SF){var sc=sfCorpo(p);if(sc!==null)return sc;}
   if(FX.fim){var z=function(x){return ('0'+x).slice(-2);},t=new Date();
     return '<div class="fx-fim"><div class="fx-okc">'+fxSvg('<path d="M8.5 16.5l5 5 10-11" stroke-width="2.6"/>',44)+'</div><h1>Recebi tudo'+(D.primeiro?', '+e(D.primeiro):'')+'!</h1><p>Seu relatório de evolução e o treino novo chegam em até 72 horas úteis. As moedas do ciclo já entraram no seu TEAM GO!.</p>'+
       '<dl class="fx-recibo"><div><dt>Ciclo</dt><dd>'+e(D.ciclo&&D.ciclo.n||'')+'</dd></div><div><dt>Enviado</dt><dd>'+z(t.getDate())+'/'+z(t.getMonth()+1)+' às '+t.getHours()+'h'+z(t.getMinutes())+'</dd></div></dl><button type="button" class="bt" data-x="j">Ver no TEAM GO!</button></div>';}
@@ -646,9 +670,9 @@ function fxComparar(){var a=FX.ant||{},ps=['frente','costas','lado'].filter(func
 // topo (voltar, marca, sair) + fita métrica das 5 etapas, miolo que rola e botão fixo embaixo
 function fxTela(){var b=document.getElementById('fxsh');if(!b||!FX)return;if(FXC)return fxCamTela();if(FXR)return fxRostoTela();if(typeof MODO!='undefined'&&MODO=='an')return anTela();
   var p=FXP[FX.p],E=fxEtapas(),fim=FX.fim||FX.env,et=fim?{i:E.length,j:0,n:1}:fxEtapa(p),corpo=b.querySelector('.fx2-body'),mesmo=FXU===FX.p&&!fim,sc=mesmo&&corpo?corpo.scrollTop:0;
-  FXNUM=fim||p=='intro'?'':(et.i+1)+'.'+(et.j+(et.i===0?0:1));
+  FXNUM=fim||p=='intro'||SF?'':(et.i+1)+'.'+(et.j+(et.i===0?0:1));
   var pct=fim?100:Math.round((et.i+(et.j+1)/et.n)/E.length*1000)/10,p0=FXPCT;FXPCT=pct;
-  var h='<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><button type="button" class="fx2-ic" data-fxv="1" aria-label="Voltar"'+(FX.p&&!fim?'':' hidden')+'>'+FXI.volta+'</button><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>Atualização do físico</b></div><span class="an-dir"><button type="button" class="an-letra" data-anletra="1" aria-label="Letra maior ou menor">A+</button><button type="button" class="fx2-sair" data-x="1" aria-label="Sair e voltar pro app">Sair</button></span></div>';
+  var h='<div class="fx2-top"><div class="fx2-in"><div class="fx2-bar"><button type="button" class="fx2-ic" data-fxv="1" aria-label="Voltar"'+(FX.p&&!fim?'':' hidden')+'>'+FXI.volta+'</button><div class="fx2-tt"><span class="marca"><b>TEAM</b> GO!</span><b>'+(SF?'Fotos da anamnese':'Atualização do físico')+'</b></div><span class="an-dir"><button type="button" class="an-letra" data-anletra="1" aria-label="Letra maior ou menor">A+</button><button type="button" class="fx2-sair" data-x="1" aria-label="Sair e voltar pro app">Sair</button></span></div>';
   h+='<div class="fita" style="--p:'+p0+'%" aria-hidden="true"><i class="fita-reg"></i><i class="fita-cheia"></i><i class="fita-mk"></i><div class="fita-et">'+E.map(function(x,i){return '<span class="'+(i<et.i?'ok':i==et.i?'cur':'')+'">'+x[0]+'</span>';}).join('')+'</div></div></div></div>';
   h+='<div class="fx2-body"><div class="fx-pg'+(mesmo?'':' an'+(FXDIR<0?' vt':''))+'" data-pg="'+p+'">'+fxCorpo(p)+'</div></div>';
   if(!fim){var r=p=='revisar',pd=fxPode(p);h+='<div class="fx2-foot"><div class="fx2-in"><p class="fx2-hint" id="fxhint" aria-live="polite">'+(r||pd?'':fxFalta(p))+'</p>'+(r?'<button type="button" class="bt" data-fxe="1">Enviar</button>':'<button type="button" class="bt" data-fxn="1"'+(pd?'':' disabled')+'>'+fxRotulo(p)+'</button>')+'</div></div>';}
@@ -680,7 +704,7 @@ function fxClique(ev){var t=ev.target,sx=t.closest&&t.closest('[data-x]');if(sx)
   if(d.fxrosto){FX.rosto=FX.rosto===false;fxVibra(6);fxSalvar();fxTela();return;}
   if(d.fxapaga){fxPedirApagar(b);return;}
   if(d.fxchk){FX.chk=FX.chk||{};FX.chk[d.fxchk]=!FX.chk[d.fxchk];fxVibra(6);fxSalvar();fxTela();return;}
-  if(d.fxsemfoto||(d.fxk=='aut'&&d.fxc=='nao')){if(!confirm(FXSEMQ))return;fxVibra(6);fxSemFotos();toast('Combinado: sem fotos. As medidas viram o seu acompanhamento.');fxIr(!fxMed4()?FXP.indexOf('medidas'):!FX.roupa?FXP.indexOf('roupa'):FXP.indexOf('extra'),fxMed4()&&FX.roupa?1:-1);return;}
+  if(d.fxsemfoto||(d.fxk=='aut'&&d.fxc=='nao')){if(!confirm(FXSEMQ))return;fxVibra(6);fxSemFotos();if(SF){toast('Combinado: sem fotos. Eu olho sua postura ao vivo na chamada.');fxIr(FXP.indexOf('revisar'),1);return;}toast('Combinado: sem fotos. As medidas viram o seu acompanhamento.');fxIr(!fxMed4()?FXP.indexOf('medidas'):!FX.roupa?FXP.indexOf('roupa'):FXP.indexOf('extra'),fxMed4()&&FX.roupa?1:-1);return;}
   if(d.fxk=='modo'&&d.fxc!='sem'&&FX.aut=='nao')FX.aut=null;
   if(d.fxk){fxVibra(6);FX[d.fxk]=d.fxc;fxSalvar();fxTela();if(d.fxk=='modo')fxAnteriores();return;}
   if(d.fxa!=null){fxVibra(6);FX.adesao=Number(d.fxa);fxSalvar();fxTela();return;}
@@ -691,6 +715,26 @@ function fxClique(ev){var t=ev.target,sx=t.closest&&t.closest('[data-x]');if(sx)
 function fxPedirApagar(b){if(!D||!D.codigo){toast('Peça no WhatsApp do Gui.');return;}
   if(!confirm('Pedir pra apagar todas as suas fotos guardadas? O Guilherme confirma e te avisa no app.'))return;
   b.disabled=true;b.textContent='Enviando…';call('alunoFotosApagar',[],function(){b.textContent='Pedido enviado';toast('Pedido enviado. Te aviso no app quando estiver feito.');},function(){b.disabled=false;b.textContent='Apagar minhas fotos';});}
+
+// ---- v58: só as fotos da anamnese (?f=fotos). Telas próprias do começo, da revisão e do fim; o preparo e as fotos são os da ficha.
+function sfCorpo(p){var o=D.f?'a':'o',sem=FX.modo=='sem';
+  if(FX.fim)return '<div class="fx-fim"><div class="fx-okc">'+fxSvg('<path d="M8.5 16.5l5 5 10-11" stroke-width="2.6"/>',44)+'</div><h1>'+(sem?'Combinado':'Recebi')+(D.primeiro?', '+e(D.primeiro):'')+'!</h1><p>'+(sem?'Na chamada de início eu olho a sua postura ao vivo, por vídeo e sem gravar. Se mudar de ideia, é só abrir esta página de novo pelo app.':'Suas fotos chegaram direitinho. Vou analisar a sua postura e usar isso pra escolher os exercícios certos pro seu corpo. Se precisar de alguma foto de novo, eu te chamo.')+'</p><button type="button" class="bt" data-x="1">Voltar pro TEAM GO!</button></div>';
+  if(FX.env)return '<div class="fx-env"><div class="fx-spin"></div><b>Enviando as suas fotos…</b><p class="small mut">Leva uns segundos. Não feche esta página.</p></div>';
+  if(p=='intro')return '<p class="fx-eb">Falta só isso</p><h1>'+(D.primeiro?e(D.primeiro)+', suas':'Suas')+' 3 fotos</h1><p class="fx-lead">Você deixou as fotos pra depois, sem problema. Preciso de 3: de frente, de costas e de lado. Com elas eu vejo a sua postura e escolho os exercícios certos pro seu corpo.</p>'+
+    fxPoses()+
+    '<dl class="fx-dl"><div><dt>Tempo</dt><dd>5 min</dd></div><div><dt>Fotos</dt><dd>'+(sem?'0':'3')+'</dd></div><div><dt>Quem vê</dt><dd>Só eu</dd></div></dl>'+
+    '<p class="fx-sub2">Como vai ser</p><ol class="fx-passos fx-passos2"><li><b>Você escolhe a roupa.</b> É decisão sua, e dá pra seguir sem fotos.</li><li><b>Confere o preparo.</b> Lugar, luz e celular, uns 2 minutos.</li><li><b>Tira as 3 fotos.</b> A câmera guiada mostra onde ficar.</li></ol>'+
+    '<p class="fx-q">Como você prefere ser acompanhad'+o+'?</p>'+fxModoOps(D.f,1)+(sem?fxSemNota(1):'')+
+    '<details class="fx-como"><summary>Por que essas fotos são tão importantes?</summary>'+fxPostura(1)+'</details><details class="fx-como"><summary>Quem vê suas fotos</summary>'+fxQuemVe(true)+'</details>'+
+    '<p class="small mut fx-dica">Pode sair e voltar depois: o que você fez fica salvo neste celular.</p>';
+  if(p=='revisar'){var fo=['frente','costas','lado'].filter(function(k){return FX.fotos[k];}).length,mi='<div class="fx-rth">'+['frente','costas','lado'].filter(function(k){return FX.th[k];}).map(function(k){return '<img src="'+FX.th[k]+'" alt="'+FXN[k]+'">';}).join('')+'</div>';
+    return fxH('Tudo certo?')+'<p class="fx-lead">Confere antes de enviar. Dá pra mudar qualquer parte.</p><p class="fx-priv">Seus dados são cuidados como explica a <a href="../privacidade/" target="_blank" rel="noopener">Política de Privacidade</a>.</p><div class="fx-rev">'+
+      (sem?fxRevCard('Acompanhamento',1,'intro',[['Jeito','Sem fotos: postura ao vivo na chamada de início']]):fxRevCard('Fotos',1,'fotos',[['Jeito',fxModoNome(FX.modo)+(FX.rosto!==false?', rosto coberto':'')],['Fotos',fo+' de 3'],['Autorização',FX.aut=='sim'?'Autorizado':'Não autorizado']],mi))+'</div><p class="small mut fx-dica">Ao enviar, as fotos chegam direto pra mim, sem passar por mais ninguém.</p>';}
+  return null;}
+function sfEnviar(){FX.env=true;fxTela();
+  call('alunoFotosAnamneseEnviar',[{ref:FX.ref,modo:FX.modo,rosto:FX.rosto!==false,aut:FX.aut=='sim'&&FX.modo!='sem',fotos:FX.modo=='sem'?{}:FX.fotos}],
+    function(){FX.env=false;FX.fim=true;fxVibra([20,40,20]);try{localStorage.removeItem(fxKey());}catch(x){}fxTela();},
+    function(er){if(!FX)return;FX.env=false;if(/fotos/.test(er||'')&&FX.modo!='sem'){['frente','costas','lado'].forEach(function(k){FX.st[k]='';delete FX.fotos[k];delete FX.th[k];});FX.p=FXP.indexOf('fotos');}fxSalvar();fxTela();});}
 // ---- câmera guiada
 function fxCamAbrir(p){var tim=0;try{tim=Number(localStorage.getItem('tg_fxtim')||0)||0;}catch(x){}FXC={p:p,fac:'environment',tim:tim,ghost:true};fxCamTela();fxCamLigar();fxNivelLigar();}
 function fxCamLigar(){var c=FXC;if(!c)return;if(c.st){c.st.getTracks().forEach(function(t){t.stop();});c.st=null;}
@@ -733,7 +777,7 @@ function fxSobe(p,c,q){FX.st[p]='env';FX.q[p]=q;
   var b64=c.toDataURL('image/jpeg',.82).split(',')[1],t=document.createElement('canvas'),tk=Math.min(1,360/Math.max(c.width,c.height));t.width=Math.round(c.width*tk);t.height=Math.round(c.height*tk);t.getContext('2d').drawImage(c,0,0,t.width,t.height);FX.th[p]=t.toDataURL('image/jpeg',.72);fxTela();
   var vez=0,manda=function(){google.script.run.withSuccessHandler(function(r){if(r&&r.ok){FX.fotos[p]=r.id;FX.st[p]='ok';fxVibra(12);}else{FX.st[p]='erro';delete FX.fotos[p];if(r&&r.erro)toast(r.erro,'erro');}fxSalvar();fxTela();})
     .withFailureHandler(function(){if(++vez<2)return setTimeout(manda,1500);FX.st[p]='erro';fxSalvar();fxTela();toast('Sem conexão. Tenta de novo?','erro');})[FXUP.fn].apply(null,FXUP.args(p,b64));};manda();}
-function fxEnviar(){FX.env=true;fxTela();var med={};FXM.forEach(function(m){var v=fxMedia(m[0]);if(!isNaN(v))med[m[0]]=v;});
+function fxEnviar(){if(SF)return sfEnviar();FX.env=true;fxTela();var med={};FXM.forEach(function(m){var v=fxMedia(m[0]);if(!isNaN(v))med[m[0]]=v;});
   call('alunoFisicoEnviar',[{ref:FX.ref,modo:FX.modo,rosto:FX.rosto!==false,roupa:FX.roupa,roupaQual:FX.roupaQual,aut:FX.aut=='sim'&&FX.modo!='sem',fotos:FX.modo=='sem'?{}:FX.fotos,peso:FX.peso,med:med,adesao:FX.adesao,just:FX.just,fome:FX.fome,fomeTxt:FX.fomeTxt,cardio:FX.cardio,cardioTxt:FX.cardioTxt,refl:FX.refl,reflTxt:FX.reflTxt,frutas:FX.frutas,ultra:FX.ultra,agua:FX.agua,nutri:FX.nutri,perc:FX.perc,percTxt:FX.percTxt,recup:FX.recup,recupTxt:FX.recupTxt,vol:FX.vol,volTxt:FX.volTxt,tempo:FX.tempo,carga:FX.carga,cargaTxt:FX.cargaTxt,obs:FX.obs}],
     function(){FX.env=false;FX.fim=true;fxVibra([20,40,20]);try{localStorage.removeItem(fxKey());}catch(x){}fxTela();},
     function(er){if(!FX)return;FX.env=false;if(/fotos/.test(er||'')&&FX.modo!='sem'){['frente','costas','lado'].forEach(function(k){FX.st[k]='';delete FX.fotos[k];delete FX.th[k];});FX.p=FXP.indexOf('fotos');}else if(/medidas/.test(er||''))FX.p=FXP.indexOf('medidas');fxSalvar();fxTela();});}
@@ -1104,7 +1148,7 @@ function anRolaProxima(nb){var k=ANULT;ANULT=null;if(!k)return;var ls=nb.querySe
   var r0=nb.getBoundingClientRect(),r=prox.getBoundingClientRect();if(r.top<r0.top+nb.clientHeight*0.62)return;
   var suave=!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
   setTimeout(function(){nb.scrollTo({top:nb.scrollTop+(r.top-r0.top)-20,behavior:suave?'smooth':'auto'});},180);}
-function anDica(b,nb){var d=document.createElement('button');d.type='button';d.className='fx-mais';d.innerHTML='Tem mais perguntas aqui embaixo <span aria-hidden="true">↓</span>';b.appendChild(d);
+function anDica(b,nb){var d=document.createElement('button');d.type='button';d.className='fx-mais';d.innerHTML=(typeof SF!='undefined'&&SF?'Tem mais aqui embaixo ':'Tem mais perguntas aqui embaixo ')+'<span aria-hidden="true">↓</span>';b.appendChild(d);
   var ft=b.querySelector('.fx2-foot');d.style.bottom=((ft?ft.offsetHeight:0)+12)+'px';
   d.onclick=function(ev){ev.stopPropagation();nb.scrollBy({top:Math.round(nb.clientHeight*0.7),behavior:'smooth'});};
   var digitando=function(){var a=document.activeElement;return !!a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName);}; // com o teclado aberto o aviso some (não cobre o campo)
