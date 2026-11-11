@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+<!-- Mestra Franga (identidade nova, 11/11/2026): par do Mestre Galo novo. Atleta: cabeça grande, rabo de cavalo com xuxinha, olhos abertos com 2 cílios, top vermelho com o GO, tanquinho leve, quadril marcado, coxas de frango (quadríceps e gota) com punho de penas, tênis, uma asa na cintura e a outra com o halterzinho. Sem short escuro, sem muque grandão, sem cintura de vespa. Desenho original. -->
+<defs>
+  <pattern id="ret" width="3.2" height="3.2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="1.6" cy="1.6" r=".75" fill="#241512" opacity=".32"/></pattern>
+  <radialGradient id="pena" cx="40%" cy="32%" r="75%"><stop offset="0" stop-color="#FFFBF3"/><stop offset=".65" stop-color="#FBEBD3"/><stop offset="1" stop-color="#EBCFA6"/></radialGradient>
+  <radialGradient id="crista" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#FF3445"/><stop offset=".55" stop-color="#E6001A"/><stop offset="1" stop-color="#9C0214"/></radialGradient>
+  <linearGradient id="cauda" x1="0" y1="1" x2="1" y2="0"><stop offset=".35" stop-color="#FBEBD3"/><stop offset=".8" stop-color="#F3A9A0"/><stop offset="1" stop-color="#E6001A"/></linearGradient>
+  <linearGradient id="bico" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFC24D"/><stop offset="1" stop-color="#E58A12"/></linearGradient>
+  <radialGradient id="luz" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  <filter id="papel" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="7" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 .14  0 0 0 0 .08  0 0 0 0 .07  0 0 0 .22 0" result="g"/><feComposite in="g" in2="SourceGraphic" operator="in" result="gg"/><feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="gg"/></feMerge></filter>
+<filter id="vol" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="5.5" result="b"/>
+  <feDiffuseLighting in="b" surfaceScale="5" diffuseConstant="1.22" lighting-color="#fff" result="d"><feDistantLight azimuth="225" elevation="52"/></feDiffuseLighting>
+  <feComposite in="d" in2="SourceAlpha" operator="in" result="d2"/>
+  <feBlend in="SourceGraphic" in2="d2" mode="multiply" result="m"/>
+  <feSpecularLighting in="b" surfaceScale="5" specularConstant=".5" specularExponent="16" lighting-color="#FFF4E0" result="s"><feDistantLight azimuth="225" elevation="40"/></feSpecularLighting>
+  <feComposite in="s" in2="SourceAlpha" operator="in" result="s2"/>
+  <feComposite in="m" in2="s2" operator="arithmetic" k1="0" k2="1" k3=".55" k4="0"/>
+</filter>
+</defs>
+<ellipse cx="100" cy="229" rx="46" ry="7" fill="#000" opacity=".28"/>
+<g filter="url(#papel)" stroke="#241512" stroke-linejoin="round" stroke-linecap="round">
+  
+  <g class="cauda" stroke-width="2.4">
+    <path d="M126 178 C138 172 150 166 162 164 C158 176 146 184 130 186 Z" fill="url(#cauda)"/>
+    <path d="M124 170 C134 158 142 146 156 140 C154 154 146 166 130 178 Z" fill="url(#cauda)"/>
+    <path d="M140 158 C136 166 132 172 128 176" fill="none" stroke="#C9A77A" stroke-width="1.2"/>
+  </g>
+  
+  <path d="M81 206 L80 214 M119 206 L120 214" fill="none" stroke-width="9.4"/>
+  <path d="M81 206 L80 214 M119 206 L120 214" fill="none" stroke="#F2A532" stroke-width="5"/>
+  
+  <g stroke-width="2.6">
+    <path d="M66 222 C66 212 74 208 84 209 C93 210 97 215 97 222 C97 227 91 229 82 229 L72 229 C68 229 66 226 66 222 Z" fill="#F7F1E6"/>
+    <path d="M134 222 C134 212 126 208 116 209 C107 210 103 215 103 222 C103 227 109 229 118 229 L128 229 C132 229 134 226 134 222 Z" fill="#F7F1E6"/>
+    <path d="M67 225 H96 M104 225 H133" fill="none" stroke="#7A0412" stroke-width="2.4"/>
+    <path d="M74 216 C80 220 86 220 92 215 M126 216 C120 220 114 220 108 215" fill="none" stroke="#E6001A" stroke-width="2.6"/>
+  </g>
+  
+  <path filter="url(#vol)" d="M100 128 C117 128 127 136 128 148 C129 158 125 164 126 172 C127 180 136 184 136 192 C136 198 120 202 100 202 C80 202 64 198 64 192 C64 184 73 180 74 172 C75 164 71 158 72 148 C73 136 83 128 100 128 Z" fill="url(#pena)" stroke-width="3"/>
+  <path d="M124 150 C127 162 122 168 124 176 C126 182 133 186 134 192" fill="none" stroke="#E6C79C" stroke-width="5" opacity=".8"/>
+  
+  <g stroke-width="2.8">
+    <path filter="url(#vol)" d="M98 184 C100 196 96 205 90 209 L84 207 L80 210 L76 207 L70 207 C63 204 59 196 61 188 C62 183 66 180 72 180 C82 179 92 180 98 184 Z" fill="url(#pena)" stroke="none"/>
+    <path filter="url(#vol)" d="M102 184 C100 196 104 205 110 209 L116 207 L120 210 L124 207 L130 207 C137 204 141 196 139 188 C138 183 134 180 128 180 C118 179 108 180 102 184 Z" fill="url(#pena)" stroke="none"/>
+    <path d="M64 182 C60 188 59 197 63 203 C65 206 68 207 70 207 L76 207 L80 210 L84 207 L90 209 C96 205 99 197 98.5 188 M136 182 C140 188 141 197 137 203 C135 206 132 207 130 207 L124 207 L120 210 L116 207 L110 209 C104 205 101 197 101.5 188" fill="none"/>
+    <path d="M89 190 C93 196 93 202 89 206 M67 190 C69 196 73 200 78 202 M111 190 C107 196 107 202 111 206 M133 190 C131 196 127 200 122 202" fill="none" stroke="#C9A77A" stroke-width="1.4"/>
+  </g>
+  
+  <path d="M100 166 V180 M93.5 169.5 Q96.8 171.5 100 169.5 Q103.2 171.5 106.5 169.5 M94.5 175.5 Q97.3 177.3 100 175.5 Q102.7 177.3 105.5 175.5" fill="none" stroke="#C9A77A" stroke-width="1.3"/>
+  
+  <path filter="url(#vol)" d="M79 133 C85 143 115 143 121 133 L126 138 C128 146 128 153 127 160 C115 166 85 166 73 160 C72 153 72 146 74 138 Z" fill="url(#crista)" stroke-width="2.8"/>
+  <path d="M74 156.5 C86 162 114 162 126 156.5" fill="none" stroke="#7A0412" stroke-width="2.6"/>
+  <path d="M80 135 C86 145 114 145 120 135" fill="none" stroke="#7A0412" stroke-width="1.2"/>
+  
+  <g fill="none" stroke="#FFF3E0" stroke-width="2.3" stroke-linejoin="miter" stroke-linecap="butt">
+    <path d="M98.8 144 L93 146 V156.6 L98.8 158.4 V151.8 H96.4"/>
+    <path d="M101.2 144 L107 146 V156.6 L101.2 158.4 Z"/>
+  </g>
+  
+  <g class="bracoD" stroke-width="2.8">
+    <path filter="url(#vol)" d="M124 139 C134 138 144 146 148 157 C150 165 145 171 136 172 L128 171 C131 166 133 161 132 155 C131 149 128 145 124 143 Z" fill="url(#pena)"/>
+    <path d="M128 165 C123 167 121 172 124 175 C127 178 133 176 136 171 Z" fill="url(#pena)"/>
+    <path d="M137 149 C142 154 144 160 143 166" fill="none" stroke="#C9A77A" stroke-width="1.4"/>
+  </g>
+  
+  <g class="bracoE" stroke-width="2.8">
+    <path filter="url(#vol)" d="M76 141 C68 133 52 135 45 144 C41 151 46 157 54 155 C61 153 70 151 75 148 Z" fill="url(#pena)"/>
+    <path d="M41 152 C38 142 38 131 41 122 L50 122 C51 131 51 142 49 152 Z" fill="url(#pena)"/>
+    <path d="M47 140 C51 138 56 139 59 143" fill="none" stroke="#C9A77A" stroke-width="1.3"/>
+    <g class="halter">
+      <path d="M45 94 V136" stroke-width="6.4"/><path d="M45 94 V136" stroke="#6E6670" stroke-width="2.6"/>
+      <rect x="36" y="89" width="18" height="7" rx="2" fill="#E6001A"/>
+      <rect x="36" y="134" width="18" height="7" rx="2" fill="#E6001A"/>
+      <path d="M38 119 C37 111 42 107 47 108 C52 109 54 116 51 121 C47 126 39 125 38 119 Z" fill="url(#pena)"/>
+      <path d="M40 113 Q44.5 115 49 113 M40 118 Q44.5 120 50 117.5" fill="none" stroke="#C9A77A" stroke-width="1.1"/>
+    </g>
+    </g>
+  
+  <g class="cabeca">
+    
+    <g class="rabo" stroke-width="2.8">
+      <path filter="url(#vol)" d="M130 44 C132 30 148 22 162 28 C176 34 182 52 178 70 C176 80 172 88 166 96 C167 86 166 78 162 72 C161 84 156 94 150 102 C152 90 151 78 146 70 C143 62 138 56 132 54 Z" fill="url(#pena)"/>
+      <path d="M148 30 C162 34 170 48 170 64 M142 40 C154 46 160 58 160 72" fill="none" stroke="#C9A77A" stroke-width="1.4"/>
+      <path d="M176 56 C178 70 174 84 168 92" fill="none" stroke="#000" stroke-width="4" opacity=".12"/>
+    </g>
+    <path filter="url(#vol)" d="M100 34 C128 34 150 54 150 81 C150 101 140 116 127 124 C119 128 110 130 100 130 C90 130 81 128 73 124 C60 116 50 101 50 81 C50 54 72 34 100 34 Z" fill="url(#pena)" stroke-width="3"/>
+    <path d="M139 62 C149 84 145 110 127 122 C137 104 140 86 134 66 Z" fill="#E6C79C" stroke="none" opacity=".85"/>
+    <path d="M142 82 C144 100 138 112 127 122 C135 110 139 98 140 84 Z" fill="url(#ret)" stroke="none"/>
+    <ellipse cx="80" cy="55" rx="25" ry="14" fill="url(#luz)" stroke="none"/>
+    <path d="M57 105 C50 107 48 112 54 113 C50 117 54 121 62 117 M143 105 C150 107 152 112 146 113 C150 117 146 121 138 117" fill="url(#pena)" stroke-width="2.4"/>
+    
+    <g stroke-width="2.4">
+      <ellipse cx="134" cy="41" rx="9" ry="6.8" transform="rotate(-32 134 41)" fill="url(#crista)"/>
+      <path d="M128 41.5 C130 39 131 37 131 34.5 M133.5 46 C135.5 43 137.5 40.5 140.5 39" fill="none" stroke="#9C0214" stroke-width="1.2"/>
+    </g>
+    
+    <g class="crista" stroke-width="2.8">
+      <path d="M81 46 C74 37 79 26 88 29 C88 19 101 16 104 26 C109 18 122 21 119 33 C126 33 128 41 122 46 C108 41 94 41 81 46 Z" fill="url(#crista)"/>
+      <path d="M103 27 C101 33 101 38 102 43 M88 30 C91 35 92 39 93 43" fill="none" stroke="#9C0214" stroke-width="1.3" opacity=".8"/>
+      <path d="M83 36 C83 31 85 30 88 30.5 M97 21 C99 18 101 18 103 19" fill="none" stroke="#FF9AA1" stroke-width="2.2" opacity=".9"/>
+    </g>
+    <g class="olhos">
+      <ellipse cx="82" cy="81" rx="12" ry="14" fill="#FFFDF8" stroke-width="2.4"/>
+      <ellipse cx="84" cy="83" rx="8.2" ry="10.6" fill="#2B1A14" stroke="none"/>
+      <ellipse cx="84" cy="89" rx="5.8" ry="4.3" fill="#7A4421" stroke="none" opacity=".75"/>
+      <circle cx="87.4" cy="77" r="3.5" fill="#fff" stroke="none"/><circle cx="80.6" cy="89" r="1.6" fill="#fff" stroke="none"/>
+      <ellipse cx="118" cy="81" rx="12" ry="14" fill="#FFFDF8" stroke-width="2.4"/>
+      <ellipse cx="116" cy="83" rx="8.2" ry="10.6" fill="#2B1A14" stroke="none"/>
+      <ellipse cx="116" cy="89" rx="5.8" ry="4.3" fill="#7A4421" stroke="none" opacity=".75"/>
+      <circle cx="119.4" cy="77" r="3.5" fill="#fff" stroke="none"/><circle cx="112.6" cy="89" r="1.6" fill="#fff" stroke="none"/>
+      <path d="M71.5 73 L64.5 69 M70.6 77.5 L63.6 76 M128.5 73 L135.5 69 M129.4 77.5 L136.4 76" fill="none" stroke-width="2.4"/>
+    </g>
+    <path d="M70.5 75 C72 67 80 63.5 88 66.5 M129.5 75 C128 67 120 63.5 112 66.5" fill="none" stroke-width="3.6"/>
+    <path d="M71 58 Q81 51.5 91 56.5 M129 58 Q119 51.5 109 56.5" fill="none" stroke-width="3"/>
+    <ellipse cx="66" cy="100" rx="8" ry="4.5" fill="#FF6E6E" stroke="none" opacity=".45"/>
+    <ellipse cx="134" cy="100" rx="8" ry="4.5" fill="#FF6E6E" stroke="none" opacity=".45"/>
+    <path d="M96.5 105 C94.5 110 96 115 100 116 C104 115 105.5 110 103.5 105 Z" fill="url(#crista)" stroke-width="2.2"/>
+    <path d="M91 95 C94 90.5 106 90.5 109 95 C107 100 104 103 100 104.5 C96 103 93 100 91 95 Z" fill="url(#bico)" stroke-width="2.4"/>
+    <path d="M95 95 C98 93.4 102 93.4 105 95" fill="none" stroke="#FFE3A3" stroke-width="1.4"/>
+    <path d="M95.5 101.5 C98 106 102 106 104.5 101.5" fill="#C9700F" stroke-width="2"/>
+  </g>
+</g>
+</svg>
