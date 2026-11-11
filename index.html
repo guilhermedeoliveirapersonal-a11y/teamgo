@@ -1743,7 +1743,7 @@ var x0=null;T.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;
 var calmo=matchMedia('(prefers-reduced-motion: reduce)').matches,temIO='IntersectionObserver' in window;
 var hero=document.querySelector('.hero');
 if(hero&&!calmo&&temIO){hero.classList.add('hp-pre');var io0=new IntersectionObserver(function(es){es.forEach(function(e){
-  if(e.isIntersecting){if(!hero.classList.contains('hp-on')){hero.classList.remove('hp-pre');hero.classList.add('hp-on');}hero.classList.remove('hp-fora');}else if(hero.classList.contains('hp-on'))hero.classList.add('hp-fora');});},{threshold:.05});io0.observe(hero);}
+  if(e.isIntersecting){if(!hero.classList.contains('hp-on')){hero.classList.remove('hp-pre');hero.classList.add('hp-on');}hero.classList.remove('hp-fora');}else if(hero.classList.contains('hp-on'))hero.classList.add('hp-fora');});},{threshold:.05});io0.observe(hero);setTimeout(function(){if(hero.classList.contains('hp-pre')){hero.classList.remove('hp-pre');hero.classList.add('hp-on');}},2500);} /* garantia: se o navegador nunca avisar que o topo apareceu, mostra mesmo assim */
 function quebra(el){var i=0,txt='';(function t(n){[].forEach.call(n.childNodes,function(c){if(c.nodeType===3)txt+=c.nodeValue;else if(c.tagName==='BR')txt+=' ';else t(c);});})(el);txt=txt.replace(/\s+/g,' ').trim();if(!txt)return;el.setAttribute('aria-label',txt);
 (function anda(n){[].slice.call(n.childNodes).forEach(function(c){
 if(c.nodeType===3){var f=document.createDocumentFragment();c.nodeValue.split(/(\s+)/).forEach(function(p){if(!p)return;
@@ -1757,7 +1757,7 @@ function acende(el){el.classList.remove('tt-pre');el.classList.add('tt-on');[].f
 setTimeout(function(){el.classList.remove('tt-on');[].forEach.call(el.querySelectorAll('.go-on'),function(g){g.classList.remove('go-on');});},2400);}
 if(!calmo&&temIO){var T=[].slice.call(document.querySelectorAll('.hero h1,section h2')).filter(function(h){return !h.closest('#tour,.quiz,.tour');});
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){io.unobserve(e.target);acende(e.target);}});},{threshold:.35});
-T.forEach(function(h){quebra(h);h.classList.add('tt-pre');io.observe(h);});
+T.forEach(function(h){quebra(h);h.classList.add('tt-pre');io.observe(h);});setTimeout(function(){if(innerHeight&&!document.querySelector('.tt-on,.go-on')&&document.querySelector('.tt-pre'))T.forEach(function(h){if(h.classList.contains('tt-pre')&&h.getBoundingClientRect().top<innerHeight)acende(h);});},4000);
 var cartas=document.querySelector('.pr-grid');if(cartas){cartas.classList.add('pr-pre');var io2=new IntersectionObserver(function(es){if(es[0].isIntersecting){io2.disconnect();cartas.classList.remove('pr-pre');}},{threshold:.25});io2.observe(cartas);}}
 /* trilha: cada seção da jornada enche a linha conforme a rolagem; marco acende ao chegar */
 var F=[].slice.call(document.querySelectorAll('.fase-sec')),M=[].slice.call(document.querySelectorAll('.marco'));
