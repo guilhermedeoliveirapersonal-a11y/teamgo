@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://script.google.com">
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Libre+Franklin:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* Página do app TEAM GO! (v19): monta o app aqui mesmo e conversa com o Google pela porta de dados.
    Tudo da página tem o prefixo tgs- pra não misturar com o visual do app. */
@@ -35,7 +35,7 @@ html{background:#111111}
 .tgs-pulsa{animation:tgsPulsa 1.4s ease-in-out infinite}
 @keyframes tgsPulsa{50%{opacity:.55}}
 /* telas próprias (sem link, sem internet, link não encontrado) */
-.tgs-tela{position:fixed;inset:0;z-index:8000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px max(20px,env(safe-area-inset-right)) 24px max(20px,env(safe-area-inset-left));text-align:center;background:radial-gradient(120% 70% at 50% 10%,#2a0a0e 0,#111 60%);color:#F7F3EF;font-family:'Libre Franklin',Arial,sans-serif;box-sizing:border-box}
+.tgs-tela{position:fixed;inset:0;z-index:8000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px max(20px,env(safe-area-inset-right)) 24px max(20px,env(safe-area-inset-left));text-align:center;background:radial-gradient(120% 70% at 50% 10%,#2a0a0e 0,#111 60%);color:#F7F3EF;font-family:'Montserrat',Arial,sans-serif;box-sizing:border-box}
 .tgs-tela h1{font-family:'Big Shoulders Display','Arial Narrow',Arial,sans-serif;font-weight:900;font-size:30px;text-transform:uppercase;margin:0;letter-spacing:.02em}
 .tgs-tela p{margin:0;color:var(--tgs-mut);max-width:34ch;line-height:1.5;font-size:15px}
 .tgs-caixa{width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px}
@@ -55,7 +55,7 @@ html{background:#111111}
 html.tgs-q,html.tgs-q body{margin:0;height:100%;background:#111111;overflow:hidden}
 #tgs-quadro{position:fixed;inset:0;bottom:var(--tgs-barra,0px);width:100%;height:calc(100% - var(--tgs-barra,0px));border:0;display:block;background:#111111}
 /* convite pra instalar (só no navegador, nunca no app instalado) */
-#tgs-instala{display:none;position:fixed;left:0;right:0;bottom:0;z-index:8500;align-items:center;gap:12px;padding:12px max(16px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));background:#1B1B1B;border-top:1px solid var(--tgs-line);font-family:'Libre Franklin',Arial,sans-serif;box-sizing:border-box}
+#tgs-instala{display:none;position:fixed;left:0;right:0;bottom:0;z-index:8500;align-items:center;gap:12px;padding:12px max(16px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));background:#1B1B1B;border-top:1px solid var(--tgs-line);font-family:'Montserrat',Arial,sans-serif;box-sizing:border-box}
 #tgs-instala.on{display:flex}
 #tgs-instala img{width:40px;height:40px;border-radius:10px;flex:none}
 #tgs-instala .tgs-tx{flex:1;min-width:0;font-size:13.5px;line-height:1.35;color:var(--tgs-mut)}
@@ -67,7 +67,7 @@ html.tgs-q,html.tgs-q body{margin:0;height:100%;background:#111111;overflow:hidd
 html.tgs-convite:not(.tgs-q) .tabs{bottom:calc(var(--tgs-barra,0px) + 10px)}
 html.tgs-convite:not(.tgs-q) body{padding-bottom:var(--tgs-barra,0px)}
 /* v45 (03/11): convite grande pra instalar, logo ao abrir, com o passo a passo certo pra cada celular */
-#tgs-folha{position:fixed;inset:0;z-index:9500;display:none;align-items:flex-end;justify-content:center;font-family:'Libre Franklin',Arial,sans-serif;color:#F7F3EF}
+#tgs-folha{position:fixed;inset:0;z-index:9500;display:none;align-items:flex-end;justify-content:center;font-family:'Montserrat',Arial,sans-serif;color:#F7F3EF}
 #tgs-folha.on{display:flex}
 #tgs-folha .tgs-fundo{position:absolute;inset:0;background:rgba(0,0,0,.62);opacity:0;transition:opacity .3s ease;backdrop-filter:blur(3px)}
 #tgs-folha.vis .tgs-fundo{opacity:1}
@@ -94,7 +94,7 @@ html.tgs-convite:not(.tgs-q) body{padding-bottom:var(--tgs-barra,0px)}
 .tgs-seta{position:fixed;z-index:9600;width:46px;height:46px;pointer-events:none;display:none;animation:tgsSeta 1.1s ease-in-out infinite}
 .tgs-seta.on{display:block}
 .tgs-seta svg{width:100%;height:100%;filter:drop-shadow(0 4px 10px rgba(0,0,0,.6))}
-.tgs-dica{position:fixed;z-index:9600;left:12px;right:12px;bottom:calc(66px + env(safe-area-inset-bottom));display:none;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:#E00018;color:#fff;font:600 15px/1.35 'Libre Franklin',Arial,sans-serif;box-shadow:0 12px 30px -8px rgba(0,0,0,.7)}
+.tgs-dica{position:fixed;z-index:9600;left:12px;right:12px;bottom:calc(66px + env(safe-area-inset-bottom));display:none;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:#E00018;color:#fff;font:600 15px/1.35 'Montserrat',Arial,sans-serif;box-shadow:0 12px 30px -8px rgba(0,0,0,.7)}
 .tgs-dica.topo{bottom:auto;top:64px}
 .tgs-dica.on{display:flex;animation:tgsDica .4s cubic-bezier(.2,.8,.2,1)}
 .tgs-dica span{flex:1}.tgs-dica button{background:none;border:0;color:#fff;font-size:24px;line-height:1;padding:4px 6px;cursor:pointer}

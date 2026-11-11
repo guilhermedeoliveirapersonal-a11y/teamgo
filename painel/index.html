@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://script.google.com">
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Libre+Franklin:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* Página do painel do treinador (v19). A chave do painel chega depois do # (o navegador nunca manda essa parte
    pra internet), fica guardada no celular e sai do endereço. Tudo da página tem o prefixo tgs-. */
@@ -32,7 +32,7 @@ html{background:#111111}
 .tgs-marca i{display:block;font-style:normal;font-weight:800;font-size:18px;letter-spacing:.3em;color:#B8ACA9;margin-top:8px}
 .tgs-pulsa{animation:tgsPulsa 1.4s ease-in-out infinite}
 @keyframes tgsPulsa{50%{opacity:.55}}
-.tgs-tela{position:fixed;inset:0;z-index:8000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px max(20px,env(safe-area-inset-right)) 24px max(20px,env(safe-area-inset-left));text-align:center;background:radial-gradient(120% 70% at 50% 10%,#2a0a0e 0,#111 60%);color:#F7F3EF;font-family:'Libre Franklin',Arial,sans-serif;box-sizing:border-box}
+.tgs-tela{position:fixed;inset:0;z-index:8000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px max(20px,env(safe-area-inset-right)) 24px max(20px,env(safe-area-inset-left));text-align:center;background:radial-gradient(120% 70% at 50% 10%,#2a0a0e 0,#111 60%);color:#F7F3EF;font-family:'Montserrat',Arial,sans-serif;box-sizing:border-box}
 .tgs-tela h1{font-family:'Big Shoulders Display','Arial Narrow',Arial,sans-serif;font-weight:900;font-size:30px;text-transform:uppercase;margin:0}
 .tgs-tela p{margin:0;color:#B8ACA9;max-width:36ch;line-height:1.5;font-size:15px}
 .tgs-caixa{width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
@@ -90,7 +90,7 @@ html{background:#111111}
   }
   function aviso() { // chegou coisa nova enquanto o painel aberto estava com a cópia
     var d = document.createElement('div'); d.id = 'tg-novo';
-    d.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom));z-index:90;background:#E00018;color:#fff;border-radius:999px;padding:10px 16px;font:700 13px "Libre Franklin",sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5);display:flex;gap:10px;align-items:center';
+    d.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom));z-index:90;background:#E00018;color:#fff;border-radius:999px;padding:10px 16px;font:700 13px "Montserrat",sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5);display:flex;gap:10px;align-items:center';
     d.innerHTML = 'Dados novos chegaram <button type="button" style="border:0;border-radius:999px;background:#fff;color:#B0001A;font:800 12px sans-serif;padding:6px 12px;cursor:pointer">Atualizar</button>';
     d.querySelector('button').onclick = function () { location.reload(); };
     document.body.appendChild(d);
