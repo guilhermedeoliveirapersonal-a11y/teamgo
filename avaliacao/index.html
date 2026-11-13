@@ -418,6 +418,17 @@ box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -3px 0 rgba(0,0,0,.22),0 4
 .bt.sec{font-family:var(--disp,"Big Shoulders Display",sans-serif);font-weight:800;font-size:19px;letter-spacing:.07em;text-transform:uppercase;border-radius:14px 14px 14px 5px;border-width:2px;box-shadow:0 3px 0 rgba(0,0,0,.35)}
 @media (hover:hover){.bt:not([disabled]):not(.sec):hover{background:linear-gradient(180deg,rgba(255,255,255,.34) 0,rgba(255,255,255,.08) 49%,rgba(0,0,0,0) 50%),linear-gradient(180deg,#ff7d88,#ff3347 40%,#df1a30 62%,#a8101c)}}
 @media (prefers-reduced-motion:reduce){.bt{transition:none}}
+/* v66: depoimento no fim da ficha */
+.dep{margin:26px 0 22px;padding:20px 0 4px;border-top:1px solid var(--line2);text-align:left}.dep h2{margin:0 0 12px;font-size:24px;line-height:1.15}
+.dep-k{margin:0 0 6px!important;font-size:13.5px;color:var(--ink3)!important}.dep textarea{width:100%;box-sizing:border-box;margin:0 0 8px}
+.dep p.small{margin:8px 0 14px!important;max-width:none!important}.dep-l{display:block;width:100%;min-height:48px;margin-top:6px;background:none;border:0;color:var(--ink2);font-size:15px;text-decoration:underline;text-underline-offset:3px}
+.dep-q{margin:0 0 16px;padding:12px 14px;border-left:3px solid var(--red);background:var(--sf2);border-radius:0 8px 8px 0;font-size:16px;line-height:1.45;overflow-wrap:anywhere}.dep-q cite{display:block;margin-top:6px;font-size:13.5px;color:var(--ink2);font-style:normal}
+.dep-pv{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}.dep-pv figure{margin:0}.dep-f{position:relative;aspect-ratio:3/4;border-radius:8px;overflow:hidden;background:var(--sf2)}
+.dep-f img{width:100%;height:100%;object-fit:cover;display:block}.dep-f i{position:absolute;left:18%;right:18%;top:5%;height:13%;background:#111;border-radius:4px}.dep-pv figcaption{margin-top:6px;font-size:13px;color:var(--ink2)}
+.dep-ok{margin:0!important;padding:14px;border-radius:8px;background:var(--okt);color:var(--ink)!important;max-width:none!important}.dep .bt:disabled{opacity:.45}
+
+/* v68: treinos que o app já contou */
+.ck-app{margin:0 0 12px!important;padding:10px 12px;border-radius:8px;background:var(--okt);color:var(--ink)!important}
 </style>
 </head>
 <body>
@@ -458,7 +469,7 @@ function iniciar(){limparRascunhos();if(qs('f')=='protocolo')return iniciarProto
   document.getElementById('fxsh').innerHTML='<div class="fx-msg"><div class="fx-spin"></div><p class="mut">Abrindo sua ficha…</p></div>';
   google.script.run.withSuccessHandler(function(r){
     if(!r||r.erro)return telaMsg('Link não encontrado','Abra a atualização pelo botão "Fazer minha atualização", no seu app TEAM GO!.');
-    D={codigo:c,primeiro:r.primeiro||'',f:!!r.f,ciclo:{n:r.ciclo||''},evolucao:r.evolucao||[],links:{whats:r.whats||''},fotos:r.fotos||'',rosto:r.rosto!==false,roupa:r.roupa||''};iniciarFicha();
+    D={codigo:c,primeiro:r.primeiro||'',f:!!r.f,ciclo:{n:r.ciclo||''},evolucao:r.evolucao||[],links:{whats:r.whats||''},fotos:r.fotos||'',rosto:r.rosto!==false,roupa:r.roupa||'',depo:r.depo||null};iniciarFicha();
   }).withFailureHandler(function(){telaMsg('Não consegui conectar','Confere a internet e tenta de novo. O que você já preencheu continua salvo neste celular.',true);}).alunoFichaInicio(c);}
 // v58: área "Enviar as fotos da anamnese" (?f=fotos&a=código). Só abre pra quem deixou as fotos pra depois; o resto vê uma mensagem simples.
 function iniciarFotosAnamnese(){var c=codigoAqui();
@@ -614,7 +625,7 @@ function fxRevCard(t,n,ir,linhas,extra){return '<div class="fx-rc"><div class="f
 function fxCorpo(p){var ev=D.evolucao||[],u=ev[ev.length-1],h='',o=D.f?'a':'o';
   if(SF){var sc=sfCorpo(p);if(sc!==null)return sc;}
   if(FX.fim){var z=function(x){return ('0'+x).slice(-2);},t=new Date();
-    return '<div class="fx-fim"><div class="fx-okc">'+fxSvg('<path d="M8.5 16.5l5 5 10-11" stroke-width="2.6"/>',44)+'</div><h1>Recebi tudo'+(D.primeiro?', '+e(D.primeiro):'')+'!</h1><p>Seu relatório de evolução e o treino novo chegam em até 72 horas úteis. As moedas do ciclo já entraram no seu TEAM GO!.</p>'+
+    return '<div class="fx-fim"><div class="fx-okc">'+fxSvg('<path d="M8.5 16.5l5 5 10-11" stroke-width="2.6"/>',44)+'</div><h1>Recebi tudo'+(D.primeiro?', '+e(D.primeiro):'')+'!</h1><p>Seu relatório de evolução e o treino novo chegam em até 72 horas úteis. As moedas do ciclo já entraram no seu TEAM GO!.</p>'+depHtml()+
       '<dl class="fx-recibo"><div><dt>Ciclo</dt><dd>'+e(D.ciclo&&D.ciclo.n||'')+'</dd></div><div><dt>Enviado</dt><dd>'+z(t.getDate())+'/'+z(t.getMonth()+1)+' às '+t.getHours()+'h'+z(t.getMinutes())+'</dd></div></dl><button type="button" class="bt" data-x="j">Ver no TEAM GO!</button></div>';}
   if(FX.env)return '<div class="fx-env"><div class="fx-spin"></div><b>Enviando e montando seu relatório…</b><p class="small mut">Leva uns 20 segundos. Não feche esta página.</p></div>';
   if(p=='intro'){var sem=FX.modo=='sem';return '<h1>Fim do ciclo'+(D.ciclo&&D.ciclo.n?' '+D.ciclo.n:'')+'</h1><p class="fx-lead">'+(D.primeiro?e(D.primeiro)+', com':'Com')+' isso eu ajusto seu protocolo e monto seu relatório de evolução, em até 72 horas úteis. Quanto mais detalhe, melhor.</p>'+
@@ -702,6 +713,7 @@ function fxVoltar(){if(!FX||!document.getElementById('fxsh'))return false;
   if(FXR){FXR=null;fxTela();fxHist();return true;}
   if(!FX.fim&&!FX.env&&FX.p>0){FX.rv=0;fxIr(FX.p-1,-1);fxHist();return true;}return false;}
 function fxClique(ev){var t=ev.target,sx=t.closest&&t.closest('[data-x]');if(sx){sair(sx.dataset.x=='j');return;}
+  var bd=t.closest&&t.closest('[data-dep]');if(bd&&DEP){if(!bd.disabled)depClique(bd);return;} // v66: depoimento no fim
   var b=t.closest&&t.closest('button');if(!b||b.disabled)return;var d=b.dataset;
   if(d.fxcx){fxCamFechar();return;}if(d.fxtira){fxCamTirar();return;}if(d.fxvira){FXC.fac=FXC.fac=='user'?'environment':'user';fxCamTela();fxCamLigar();return;}
   if(d.fxgh){FXC.ghost=!FXC.ghost;var gi=document.querySelector('#fxsh .fx-gh');if(gi)gi.hidden=!FXC.ghost;b.classList.toggle('on',FXC.ghost);return;}
@@ -1301,7 +1313,7 @@ var CKESC={energia:[['Muito baixa','Sem disposição nenhuma'],['Baixa','Treinei
   gosto:[['Nada','Não está funcionando pra mim'],['Pouco','Tem coisa pra ajustar'],['Mais ou menos','Algumas coisas sim, outras não'],['Bastante','Estou curtindo'],['Muito','Amando o treino']]};
 function ckKey(){return 'tg_ck_'+D.codigo;}
 function ckSalvar(){try{CK.t=Date.now();localStorage.setItem(ckKey(),JSON.stringify(CK));}catch(x){}}
-function ckNovo(){return {v:1,ps:'',pd:'',fc:'',t:Date.now(),p:0,ref:Date.now().toString(36)+Math.random().toString(36).slice(2,8),sem:CKI.semana,treinos:null,energia:null,sono:null,dor:'',onde:'',gosto:null,facil:'',peso:'',recado:'',mud:[],mudt:''};}
+function ckNovo(){return {v:1,ps:'',pd:'',fc:'',t:Date.now(),p:0,ref:Date.now().toString(36)+Math.random().toString(36).slice(2,8),sem:CKI.semana,treinos:CKI.noApp>0?Math.min(7,CKI.noApp):null,energia:null,sono:null,dor:'',onde:'',gosto:null,facil:'',peso:'',recado:'',mud:[],mudt:''};}
 function ckA(s){return String(s).replace(/@/g,CKI&&CKI.f?'a':'o');}
 function ckEtapa(p){for(var i=0;i<CKE.length;i++){var j=CKE[i][1].indexOf(p);if(j>=0)return {i:i,j:j,n:CKE[i][1].length};}return {i:0,j:0,n:1};}
 // v28: pressão e batimentos (só pra quem o Gui ligou no painel); tudo opcional, mas o que vier tem que fazer sentido
@@ -1326,7 +1338,7 @@ function ckRegua(k,esq,dir){var a=CK[k],w=ckEsc(k,a);
 function ckCorpo(p){var o=CKI.f?'a':'o',h='';
   if(CK.fim)return ckFim();
   if(p=='treinos'){var m=CKI.meta||3,t=CK.treinos;
-    h=(CKI.primeiro?'<p class="ck-oi">Oi, '+e(CKI.primeiro)+'! '+(CKI.modo=='direto'?'Vamos registrar a sua semana.':'Bora fechar a semana?')+'</p>':'')+ckH('Quantos treinos você fez?')+'<p class="fx-q">Na semana de '+e(CK.sem)+'.</p><p class="small mut">Conta os treinos de musculação e os outros que estavam no seu plano.</p>'+(CKI.ant&&CKI.ant.treinos!=null?'<p class="ck-ant">Semana passada: <b>'+CKI.ant.treinos+' treino'+(CKI.ant.treinos==1?'':'s')+'</b>.</p>':'');
+    h=(CKI.primeiro?'<p class="ck-oi">Oi, '+e(CKI.primeiro)+'! '+(CKI.modo=='direto'?'Vamos registrar a sua semana.':'Bora fechar a semana?')+'</p>':'')+ckH('Quantos treinos você fez?')+'<p class="fx-q">Na semana de '+e(CK.sem)+'.</p>'+(CKI.noApp>0?'<p class="small ck-app">O app já contou '+CKI.noApp+' treino'+(CKI.noApp>1?'s seus':' seu')+' nesta semana. Fez outros fora do app? É só mudar o número.</p>':'')+'<p class="small mut">Conta os treinos de musculação e os outros que estavam no seu plano.</p>'+(CKI.ant&&CKI.ant.treinos!=null?'<p class="ck-ant">Semana passada: <b>'+CKI.ant.treinos+' treino'+(CKI.ant.treinos==1?'':'s')+'</b>.</p>':'');
     h+='<div class="ck-tr" role="group" aria-label="Treinos na semana">';for(var i=0;i<=7;i++)h+='<button type="button" class="'+(t===i?'on':'')+(i>=m?' meta':'')+'" data-ckn="treinos" data-ckv="'+i+'" aria-pressed="'+(t===i)+'"><b>'+i+'</b>'+(i==m?'<small>meta</small>':'')+'</button>';h+='</div>';
     if(t!=null)h+='<p class="ck-fala'+(t>=m?' ok':'')+'">'+(t>=m?ico('ok',18)+' Meta da semana batida. É assim que o resultado aparece.':t>0?'Cada treino conta. Semana que vem a gente busca '+m+'.':'Semana difícil acontece. Me conta no fim o que pegou, que eu ajusto o plano.')+'</p>';
     return h;}
@@ -1405,6 +1417,36 @@ function iniciarCheckin(){MODO='ck';letraLigar();document.documentElement.classL
     if(r.ja&&!g){sh.innerHTML='<div class="fx2-body"><div class="fx-msg"><h1>Check-in da semana já feito</h1><p>A semana de '+e(r.semana)+' já está com o Gui. Se esqueceu algo, pode mandar de novo: a devolutiva considera as duas respostas.</p><button type="button" class="bt" data-cknovo="1" style="margin-top:18px">Mandar outra resposta</button><button type="button" class="bt sec" style="margin-top:10px" data-ckapp="1">Voltar pro app</button></div></div>';return;}
     CKU=-1;ckSalvar();ckTela();fxHist();
   }).withFailureHandler(function(){telaMsg('Não consegui conectar','Confere a internet e tenta de novo. O que você já respondeu continua salvo neste celular.',true);}).alunoCheckinInicio(c);}
+// v66: depoimento no fim da atualização do físico. Opcional, sem moeda nem prêmio. Nada vai a público sozinho: o Gui vê no painel.
+// O servidor só manda D.depo pra quem pode responder (plano ativo e 18 anos ou mais).
+var DEP=null;
+function depPose(){if(!FX||FX.modo=='sem')return '';var a=FX.ant||{};return ['frente','lado','costas'].filter(function(k){return a[k]&&FX.th&&FX.th[k];})[0]||'';}
+function depHtml(){if(SF||!D.depo)return '';if(!DEP)DEP={p:0,txt:D.depo.ja||'',aut:''};var mx=D.depo.max||200,h='<section class="dep" aria-live="polite">';
+  if(DEP.p==0)h+='<p class="dep-k">Uma última pergunta, só se você quiser</p><h2 id="deph">Como você resumiria o seu processo até aqui?</h2>'+
+    '<textarea class="fx-in" id="deptx" rows="3" maxlength="'+mx+'" aria-labelledby="deph" placeholder="Do seu jeito, em uma ou duas frases.">'+e(DEP.txt)+'</textarea>'+
+    '<p class="small mut">Eu leio todas. Não vale moeda nem prêmio: é só a sua história.</p><button type="button" class="bt" data-dep="seguir">Continuar</button><button type="button" class="dep-l" data-dep="pular">Agora não</button>';
+  else if(DEP.p==1){var op=function(k,t,s){return '<button type="button" class="fx-op'+(DEP.aut==k?' on':'')+'" data-dep="op" data-depk="'+k+'" aria-pressed="'+(DEP.aut==k)+'"><i class="fx-opr"></i><span><b>'+t+'</b>'+(s?'<small class="mut" style="display:block">'+s+'</small>':'')+'</span></button>';};
+    h+='<blockquote class="dep-q">'+e(DEP.txt)+'</blockquote><h2>Posso mostrar isso pra inspirar outras pessoas?</h2>'+op('frase','Só a minha frase','Com o seu primeiro nome e as suas marcas de treino: tempo de time, treinos e constância.')+
+      (depPose()?op('fotos','A frase e as minhas fotos de antes e agora','Sempre com o rosto coberto. Você vê como fica antes de autorizar.'):'')+op('nao','Não, é só pra mim e pro Gui','')+
+      '<p class="small mut">Você decide, e pode mudar de ideia quando quiser no app, em "Seu plano".</p><button type="button" class="bt" data-dep="enviar"'+(DEP.aut?'':' disabled')+'>'+(DEP.aut=='fotos'?'Ver como fica':'Guardar')+'</button><button type="button" class="dep-l" data-dep="volta">Mudar a frase</button>';}
+  else if(DEP.p==2){var p=depPose(),a=FX.ant||{},f=function(src,r){return '<figure><div class="dep-f"><img src="'+src+'" alt=""><i></i></div><figcaption>'+r+'</figcaption></figure>';};
+    h+='<h2>É assim que as suas fotos aparecem</h2><div class="dep-pv">'+f(a[p],'Antes'+(FX.antD?' · '+e(FX.antD):''))+f(FX.th[p],'Agora')+'</div><blockquote class="dep-q">'+e(DEP.txt)+'<cite>'+e(D.primeiro||'')+'</cite></blockquote>'+
+      '<p class="small mut">O rosto sai sempre coberto por uma faixa. Junto vão o seu primeiro nome e as suas marcas de treino (tempo de time, treinos e constância). Peso, medidas e saúde nunca aparecem. Tatuagens e marcas do corpo ficam visíveis. Antes de qualquer publicação o Gui confere, e você pode tirar a autorização quando quiser.</p>'+
+      '<button type="button" class="bt" data-dep="aut">Autorizo esta imagem</button><button type="button" class="dep-l" data-dep="sofrase">Prefiro só a frase</button>';}
+  else if(DEP.p==3)h+='<div class="fx-env" style="padding:8px 0"><div class="fx-spin"></div><b>Guardando…</b></div>';
+  else h+='<p class="dep-ok"><b>'+(DEP.aut=='nao'?'Guardado. Fica só entre nós.':'Obrigado! Guardei a sua frase.')+'</b> '+e(DEP.aviso||(DEP.aut=='fotos'?'Autorizado: frase e fotos com o rosto coberto.':DEP.aut=='frase'?'Autorizado: só a frase, com o primeiro nome.':''))+'</p>';
+  return h+'</section>';}
+function depClique(b){var d=b.dataset,tx=document.getElementById('deptx');if(tx)DEP.txt=tx.value.replace(/\s+/g,' ').trim();
+  if(d.dep=='pular'){DEP.p=5;DEP.aut='';DEP.pulou=1;D.depo=null;fxTela();return;}
+  if(d.dep=='seguir'){if(DEP.txt.length<3){toast('Escreva uma frase curta, ou toque em "Agora não".','erro');if(tx)tx.focus();return;}DEP.p=1;}
+  else if(d.dep=='volta')DEP.p=0;
+  else if(d.dep=='op'){DEP.aut=d.depk;}
+  else if(d.dep=='enviar'){if(!DEP.aut)return;if(DEP.aut=='fotos')DEP.p=2;else return depEnviar(false);}
+  else if(d.dep=='sofrase'){DEP.aut='frase';return depEnviar(false);}
+  else if(d.dep=='aut')return depEnviar(true);
+  fxTela();var s=document.querySelector('#fxsh .dep');if(s&&s.scrollIntoView)s.scrollIntoView({block:'nearest'});}
+function depEnviar(visto){if(DEP.p==3)return;var ant=DEP.p;DEP.p=3;fxTela();
+  call('alunoDepoimento',[{txt:DEP.txt,aut:DEP.aut,visto:visto===true}],function(r){DEP.aut=r.aut||DEP.aut;DEP.aviso=r.aviso||'';DEP.p=4;fxVibra();fxTela();},function(){DEP.p=ant;fxTela();});}
 iniciar();
 </script>
 </body>
