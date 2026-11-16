@@ -109,7 +109,9 @@ html{background:#111111}
     P.montar(base.split(MARCA_D).join(dados), $('tgs-abre')); sai(); window.TG_MODO = 'direto'; montado = true; instalador();
   }
   if (rapido) { window.TG_VELHO = cd.t; mostrar(cg.html, cd.s); if (Date.now() - cd.t > 30 * 6e4) seloAtu(true); }
-  P.porta('cascaPainel', [t ? k + '.' + t : k, cg ? cg.v : '']).then(function (r) {
+  // v92: cópia de menos de 2 minutos (acabou de ser baixada, por exemplo logo depois da troca automática) não confere de novo com o Google
+  var pular = rapido && Date.now() - cd.t < 120000;
+  if (!pular) P.porta('cascaPainel', [t ? k + '.' + t : k, cg ? cg.v : '']).then(function (r) {
     if (typeof r.dados !== 'string') { // servidor antigo: painel inteiro de uma vez
       if (!montado) { P.montar(r.html, $('tgs-abre')); sai(); window.TG_MODO = 'direto'; montado = true; instalador(); }
       return;
