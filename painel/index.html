@@ -76,8 +76,11 @@ html{background:#111111}
   var CASCA = 'tg_painel_casca', DADOS = 'tg_painel_dados', MARCA_D = '/*@@TGDADOS@@*/', cg = null, cd = null, fresco = false;
   try { cg = JSON.parse(guarda.ler(CASCA) || 'null'); if (!cg || !cg.v || !cg.html || cg.html.indexOf(MARCA_D) < 0) cg = null; } catch (e) { cg = null; }
   try { fresco = sessionStorage.getItem('tg_fresco') === '1'; sessionStorage.removeItem('tg_fresco'); } catch (e) { }
-  try { cd = JSON.parse(guarda.ler(DADOS) || 'null'); if (!cd || cd.k !== k || !cd.s || !cd.t || Date.now() - cd.t > 12 * 36e5 || !cg || cd.v !== cg.v) cd = null; } catch (e) { cd = null; }
-  var rapido = !!(cg && cd && !fresco), montado = false;
+  try { cd = JSON.parse(guarda.ler(DADOS) || 'null'); if (!cd || cd.k !== k || !cd.s || !cd.t || Date.now() - cd.t > 7 * 864e5 || !cg || cd.v !== cg.v) cd = null; } catch (e) { cd = null; }
+  var rapido = !!(cg && cd && !fresco), montado = false, tocou = false, selo = null;
+  // v91: o painel abre sempre da cópia guardada (mesmo velha) e confere com o Google por trás. Se chegar coisa nova e a pessoa ainda
+  // não tocou em nada, a tela troca sozinha pelos dados novos; se já tocou, aparece o aviso "Dados novos chegaram" (nunca tira a tela de baixo do dedo).
+  ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(function (ev) { window.addEventListener(ev, function () { tocou = true; }, { passive: true, capture: true }); });
   if (navigator.onLine === false && !(cg && cd)) return semInternet();
   P.instalarGoogle();
   // v27: com a liberação de aparelho ligada, cada chamada leva também a senha deste aparelho (chave.senha)
@@ -95,10 +98,17 @@ html{background:#111111}
     d.querySelector('button').onclick = function () { location.reload(); };
     document.body.appendChild(d);
   }
+  function seloAtu(on) { // faixa fininha "Atualizando…" só quando a cópia tem mais de 30 minutos
+    if (!on) { if (selo && selo.parentNode) selo.parentNode.removeChild(selo); selo = null; return; }
+    if (selo) return;
+    selo = document.createElement('div'); selo.setAttribute('role', 'status');
+    selo.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);top:calc(8px + env(safe-area-inset-top));z-index:95;background:rgba(21,16,16,.94);color:#FBEBD3;border:1px solid #2B2020;border-radius:999px;padding:5px 12px;font:700 12px "Montserrat",sans-serif;pointer-events:none';
+    selo.textContent = 'Atualizando os dados…'; document.body.appendChild(selo);
+  }
   function mostrar(base, dados) {
     P.montar(base.split(MARCA_D).join(dados), $('tgs-abre')); sai(); window.TG_MODO = 'direto'; montado = true; instalador();
   }
-  if (rapido) { window.TG_VELHO = cd.t; mostrar(cg.html, cd.s); }
+  if (rapido) { window.TG_VELHO = cd.t; mostrar(cg.html, cd.s); if (Date.now() - cd.t > 30 * 6e4) seloAtu(true); }
   P.porta('cascaPainel', [t ? k + '.' + t : k, cg ? cg.v : '']).then(function (r) {
     if (typeof r.dados !== 'string') { // servidor antigo: painel inteiro de uma vez
       if (!montado) { P.montar(r.html, $('tgs-abre')); sai(); window.TG_MODO = 'direto'; montado = true; instalador(); }
@@ -106,11 +116,16 @@ html{background:#111111}
     }
     if (r.html) { if (!guarda.por(CASCA, JSON.stringify({ v: r.v, html: r.html }))) guarda.tira(CASCA); }
     guarda.por(DADOS, JSON.stringify({ k: k, v: r.v, t: Date.now(), s: r.dados }));
-    if (montado) { if (cd && r.dados !== cd.s && Date.now() - cd.t > 120000) aviso(); return; }
+    if (montado) {
+      seloAtu(false);
+      if (cd && r.dados !== cd.s && Date.now() - cd.t > 120000) { if (!tocou) location.reload(); else aviso(); } // depois do reload a cópia é nova (< 2 min): não repete
+      return;
+    }
     var base = r.html || (cg && cg.html);
     if (!base) { guarda.tira(CASCA); return location.reload(); }
     mostrar(base, r.dados);
   }, function (e) {
+    seloAtu(false);
     if (montado && !(e && e.servidor)) return; // sem sinal: continua com a cópia
     if (e && e.servidor && /Aparelho não liberado/.test(e.message)) { guarda.tira(APAR); guarda.tira(DADOS); return montado ? location.reload() : liberar(); }
     if (e && e.servidor) { guarda.tira(CHAVE); guarda.tira(DADOS); return montado ? location.reload() : pedirLink('Essa chave não abre o painel. Cole o link do painel mais recente.'); }
