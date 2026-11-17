@@ -120,7 +120,7 @@ html{background:#111111}
     guarda.por(DADOS, JSON.stringify({ k: k, v: r.v, t: Date.now(), s: r.dados }));
     if (montado) {
       seloAtu(false);
-      if (cd && r.dados !== cd.s && Date.now() - cd.t > 120000) { if (!tocou) location.reload(); else aviso(); } // depois do reload a cópia é nova (< 2 min): não repete
+      if (r.html || (cd && r.dados !== cd.s && Date.now() - cd.t > 120000)) { if (!tocou) location.reload(); else aviso(); } // v97: visual novo (r.html) também recarrega, mesmo com os mesmos dados // depois do reload a cópia é nova (< 2 min): não repete
       return;
     }
     var base = r.html || (cg && cg.html);
