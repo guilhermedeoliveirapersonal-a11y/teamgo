@@ -940,8 +940,9 @@ function fxRascunho(o,fora){var c={};for(var k in o)if(fora.indexOf(k)<0)c[k]=o[
 // Alimentação: só retrato de hábitos, não é dieta (prescrever dieta é só pra nutricionista).
 var AN=null,MODO='',ANU=-1,ANDIR=0,ANPCT=0,ANA={},ANNUM='',ANULT=null,ANPD=null;
 var ANE=[['Você',['boas','nome','contato','acesso','plano']],['Objetivo',['objetivo','prioridade','agenda']],['Treino',['pratica','onde','treinoatual','cardio','nivel','aparelhos']],['Saúde',['corpo','condicoes','parq','dores','horm','habitos']],
-  ['Rotina',['sono','estresse','rotina','alim1','alim2','preferencias']],['Enviar',['postura','protocolo','fotos','regras','revisar']]];
+  ['Rotina',['sono','estresse','rotina','alim1','alim2','preferencias']],['Enviar',['resp','postura','protocolo','fotos','regras','revisar']]];
 var ANP=[].concat.apply([],ANE.map(function(x){return x[1];}));
+var ANRESP='Versão 1.0 de 17/11/2026',ANPAR=['Mãe','Pai','Avó ou avô','Outro responsável legal']; // v99: igual a RESP.versao no Código
 var ANKEY='tg_anamnese',ANWA='5565993497692',ANCK='tg_anconv',ANPL={go:'Consultoria GO!',premium:'GO! Premium',presencial:'Presencial',planilha:'Planilha com vídeos'};
 var ANPLANOS=[['Consultoria GO!','Online, treino no app e acompanhamento'],['GO! Premium','Online, com acompanhamento mais de perto'],['Presencial','Personal presencial em Cuiabá'],['Planilha com vídeos','Treino em planilha, com vídeos dos exercícios'],['Ainda não fechei','Tudo bem: a gente conversa depois']];
 var ANATIV=['Musculação','Corrida ou caminhada','Funcional ou CrossFit','Lutas','Esporte coletivo','Pilates ou yoga','Bike','Natação'];
@@ -957,7 +958,7 @@ var ANACESSO=['Uso cadeira de rodas','Uso bengala, muleta ou andador','Tenho bai
 var ANEQUIP=['Halteres','Barra e anilhas','Elásticos ou faixas','Banco','Kettlebell','Barra fixa','Esteira ou bicicleta','Colchonete','Nenhum equipamento'];
 var ANBARR=['Falta de tempo','Cansaço no fim do dia','Falta de motivação','Dor ou lesão','Treinar sem acompanhamento','Não sabia o que fazer','Custo','Nada, sempre fui constante'];
 var ANEXCL=['Nenhum equipamento','Nada, sempre fui constante']; // escolhas que cancelam as outras da mesma lista
-var ANVF=3; // versão desta anamnese pro servidor: 2 = condições de saúde, remédio, horário e responsável; 3 = tempo de treino, dias e horário livres, cardio, rotina, alergia, pesagem e sono (16/11)
+var ANVF=4; // versão desta anamnese pro servidor: 4 = autorização do responsável (menor de 18, 17/11); 2 = condições de saúde, remédio, horário e responsável; 3 = tempo de treino, dias e horário livres, cardio, rotina, alergia, pesagem e sono (16/11)
 var ANDIAS=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
 var ANTEMPOT=['Menos de 6 meses','6 meses a 1 ano','1 a 3 anos','3 a 5 anos','Mais de 5 anos'],ANPAROU=['Menos de 3 meses','3 a 6 meses','6 meses a 1 ano','Mais de 1 ano'];
 var ANHORT=['Manhã cedo (antes das 8h)','Manhã','Meio-dia','Tarde','Noite','Varia muito'];
@@ -977,7 +978,7 @@ function anNovo(){return {v:1,t:Date.now(),t0:Date.now(),p:0,ref:'an'+Date.now()
   horario:'',respNome:'',respWhats:'',rotinaDia:'',objTxt:'',barreira:[],pn:'',
   tempoTreina:'',horTreino:'',diasDisp:[],cardioFaz:'',cardioTipo:[],cardioVezes:null,cardioMin:'',cardioGosta:'',cardioPre:false,pesoQuando:'',pesoTend:'',mais:{},alergia:'',alergiaTxt:'',sonoObs:[],sonoTxt:'',suplTxt:'',objNum:'',profissao:'',trabPer:'',diaTipico:'',
   sono:null,horas:7,estresse:null,energia:'',dias:null,tempo:'',nutri:'',refeicoes:'',frutas:'',proteina:'',ultra:'',agua:'',supl:[],
-  objetivo:'',prio:[],naoGosta:'',modo:'',rosto:true,fotos:{},th:{},st:{},q:{},ant:{},fotosDepois:false,aut:null,chk:{},regras:'',priv:'',termos:''};}
+  objetivo:'',prio:[],naoGosta:'',modo:'',rosto:true,fotos:{},th:{},st:{},q:{},ant:{},fotosDepois:false,aut:null,chk:{},regras:'',priv:'',termos:'',respParent:'',respAceite:'',respFotos:''};}
 // Política de Privacidade (…/teamgo/privacidade/): a versão aceita vai junto com a anamnese
 var ANPRIV='Versão 1.1 de 31/10/2026';
 // v32: contrato e termo de consentimento (…/teamgo/termos/): igual a TERMOS_VERSAO no Código e à data da página
@@ -997,7 +998,9 @@ function anDiasTxt(){return ANDIAS.filter(function(d){return AN.diasDisp.indexOf
 function anPrimeiro(){var n=String(AN.nome||'').trim().split(/\s+/)[0]||'';return n?n.charAt(0).toUpperCase()+n.slice(1).toLowerCase():'';}
 function anMusc(){return AN.ativ.indexOf('Musculação')>=0;}
 // passos que só aparecem quando fazem sentido
-function anPula(p){if(p=='protocolo'||p=='fotos')return !(AN.modo=='banho'||AN.modo=='treino')||!!AN.fotosDepois;
+function anSemF(){return anMenor()&&AN.respFotos!='sim';} // v99: menor sem a autorização das fotos do responsável segue sem fotos (postura ao vivo)
+function anPula(p){if(p=='resp')return !anMenor();if(anSemF()&&(p=='postura'||p=='protocolo'||p=='fotos'))return true;
+  if(p=='protocolo'||p=='fotos')return !(AN.modo=='banho'||AN.modo=='treino')||!!AN.fotosDepois;
   if(p=='treinoatual')return !(anMusc()&&(AN.sit=='Treino regularmente'||AN.sit=='Treino às vezes'));
   if(p=='aparelhos')return !(AN.onde=='Academia de bairro'||AN.onde=='Em casa'||AN.onde=='Academia de condomínio');return false;}
 function anVisiveis(){return ANP.filter(function(p){return !anPula(p);});}
@@ -1037,6 +1040,7 @@ function anPode(p){var A=AN;
   if(p=='alim2')return !!A.proteina&&!!A.ultra&&!!A.agua;
   if(p=='objetivo')return !!A.objetivo;
   if(p=='prioridade')return A.prio.length>0;
+  if(p=='resp')return ANPAR.indexOf(A.respParent)>=0&&A.respAceite===ANRESP&&(A.respFotos=='sim'||A.respFotos=='nao');
   if(p=='postura')return FXMODOS.indexOf(A.modo)>=0&&(A.modo=='sem'||A.aut=='sim');
   if(p=='protocolo')return fxCheckOk(A,A.modo,A.versao=='f');
   if(p=='fotos')return A.aut=='sim'&&['frente','costas','lado'].every(function(k){return A.st[k]=='ok'&&!!A.fotos[k];});
@@ -1058,6 +1062,7 @@ function anFalta(p){var A=AN;
   if(p=='agenda')return !A.diasDisp.length?'Marque os dias em que você consegue treinar.':'Responda o tempo por treino e o horário.';
   if(p=='sono')return 'Toque numa nota de 0 a 10.';
   if(p=='prioridade')return 'Escolha até 2 músculos, ou "Sem prioridade".';
+  if(p=='resp')return ANPAR.indexOf(A.respParent)<0?'Toque em quem é o responsável.':A.respAceite!==ANRESP?'Marque a autorização do responsável pra continuar.':'Responda sobre as fotos de avaliação.';
   if(p=='postura')return FXMODOS.indexOf(A.modo)<0?'Escolha como prefere ser avaliad'+(A.versao=='f'?'a':'o')+'.':'Responda a autorização de uso das fotos.';
   if(p=='protocolo')return 'Confira e marque os 5 itens do preparo.';
   if(p=='fotos'){if(['frente','costas','lado'].some(function(k){return A.st[k]=='env';}))return 'Esperando a foto subir…';var n=['frente','costas','lado'].filter(function(k){return !(A.st[k]=='ok'&&A.fotos[k]);}).length;return n==1?'Falta 1 foto.':'Faltam '+n+' fotos.';}
@@ -1176,6 +1181,15 @@ function anCorpo(p){var A=AN,a=anA(),pn=anPrimeiro();
     '<button type="button" class="an-sem'+(A.prio[0]=='Não tenho prioridade específica'?' on':'')+'" data-anprio="Não tenho prioridade específica">Sem prioridade</button></div>';
   if(p=='preferencias')return anH('Do seu jeito')+anGrupoQ('O que mais já atrapalhou você de treinar? <span class="mut">(opcional)</span>','Pode marcar mais de um. Assim eu já penso no plano pra isso não te derrubar de novo.')+'<div class="fx-ops an-dupla" role="group">'+ANBARR.map(function(x){return anMul('barreira',x);}).join('')+'</div>'+anTxt('naoGosta','Tem algum exercício que você não gosta ou não quer fazer? <span class="mut">(opcional)</span>','Ex.: não gosto de burpee');
   // 22/10 noite (Gui): avaliação séria. Escolha + autorização, depois o preparo conferido item por item, depois as fotos
+  if(p=='resp'){var rn=String(A.respNome||'').trim(),nn=String(A.nome||'').trim();
+    return anH('Autorização do responsável')+'<p class="fx-lead"><b>Esta tela é do responsável.</b> Passe o celular pra '+e(rn||'ele ou ela')+' ler com calma. Como o treino é de uma pessoa menor de 18 anos, só começo com a autorização de quem responde por ela.</p>'+
+    anGrupoQ('Quem é '+e(rn||'o responsável')+' de '+e(anPrimeiro()||'quem vai treinar')+'?')+'<div class="fx-ops" role="group">'+ANPAR.map(function(x){return anOpc('respParent',x);}).join('')+'</div>'+
+    '<div class="fx-box an-priv"><b>O que você autoriza</b><ol class="an-regras"><li><b>Contrato e pagamento.</b> Quem contrata e paga é você. Valem os combinados do contrato (valores, cancelamento e arrependimento de 7 dias).</li><li><b>Exercício.</b> Autoriza treinar comigo, sabendo dos benefícios e dos riscos que o termo explica.</li><li><b>Saúde.</b> As respostas de saúde foram dadas com a verdade. Os dados são usados só pra montar e ajustar o treino. Se algo mudar (remédio novo, lesão, diagnóstico), você me avisa. Se a triagem indicar, a liberação médica vem antes do começo.</li><li><b>Dados.</b> Guardo só pro treino, sem vender, como diz a Política de Privacidade. Você pode pedir pra ver, corrigir ou apagar quando quiser.</li></ol>'+
+    '<p class="small mut">Sem dieta, sem suplemento, sem meta de peso ou de aparência. O foco é força, hábito e saúde. Nada é divulgado sem uma autorização por escrito, à parte.</p><a href="../termos/" target="_blank" rel="noopener">Ler o contrato e o termo</a> · <a href="../privacidade/" target="_blank" rel="noopener">Ler a Política de Privacidade</a></div>'+
+    '<div class="fx-ops" role="group">'+anOpc('respAceite',ANRESP,'Sou o responsável legal e autorizo','Li o contrato, o termo e a Política de Privacidade. Quem está respondendo aqui sou eu, não o aluno ou a aluna')+'</div>'+
+    anGrupoQ('Fotos de avaliação da postura','Opcional. Com o rosto coberto, só o Gui vê.')+'<div class="fx-ops" role="group">'+anOpc('respFotos','sim','Autorizo as fotos de avaliação','Frente, costas e lado, pra avaliar a postura. Só eu e o Gui vemos')+anOpc('respFotos','nao','Prefiro sem fotos','Tudo bem: a postura é avaliada ao vivo, na chamada de início')+'</div>'+
+    '<div class="fx-box"><b>Pra quem vai treinar</b><p>Entendi que vou treinar com o Gui, que posso falar se algo doer ou me deixar desconfortável e que meu responsável acompanha. Posso parar quando quiser.</p></div>'+
+    '<p class="small mut">O Gui vai confirmar esta autorização com você pelo WhatsApp ('+e(A.respWhats||'o número informado')+') antes de liberar as fotos.</p>';}
   if(p=='postura'){var vf=A.versao=='f',fm=A.modo=='banho'||A.modo=='treino';
     return anH('Sua postura')+fxPostura(1)+anGrupoQ('Como você prefere ser avaliad'+(vf?'a':'o')+'?','A roupa é escolha sua; o protocolo das fotos é um só.')+fxModoOps(vf,1)+
     (A.modo=='sem'?fxSemNota(1):'')+
@@ -1206,7 +1220,8 @@ function anCorpo(p){var A=AN,a=anA(),pn=anPrimeiro();
     sec('Saúde',3,'corpo',[['Altura e peso',fxNum(anAltura())+' m · '+fxNum(A.peso)+' kg'+(A.pesoQuando?' ('+A.pesoQuando.toLowerCase()+')':'')],['Peso nos 3 meses',A.pesoTend],['Alergia',A.alergia=='Sim'?'Sim: '+A.alergiaTxt:A.alergia],['O que o médico já falou',A.condNada?'Nenhuma':A.cond.map(function(x){return x=='Outra condição'?'Outra: '+A.outra:x.split(' (')[0];}).join(', ')],['Remédio contínuo',A.remedio=='Sim'?'Sim'+(A.remedioTxt?': '+A.remedioTxt:''):A.remedio],['Triagem de saúde',A.parqNada?'Nenhum item':A.parq.length+' item(ns)'],['Dores',A.doresNada?'Nenhuma':A.dores.join(', ')],['Cirurgia ou lesão',A.cirurgia],['Hormônios',A.horm],['Cigarro',A.fuma],['Bebida',A.alcool.split(' (')[0]]])+
     sec('Rotina',4,'sono',[['Sono',A.sono+' de 10 · '+fxNum(A.horas)+' h'],['Estresse',A.estresse+' de 10'],['Disposição',A.energia.split(' -')[0]],['Dias pra treinar',anDiasTxt()],['Horário',A.horTreino],['Tempo por treino',A.tempo],['Trabalho ou estudo',A.trabPer],['Dia a dia',A.rotinaDia],['Nutricionista',A.nutri]])+
     sec('Objetivo',5,'objetivo',[['Objetivo',A.objetivo.split(' (')[0]],['Em uma frase',A.objTxt],['Meta em números',A.objNum],['Prioridades',A.prio.join(' e ')],['Já atrapalhou',A.barreira.join(', ')],['Não gosta de',A.naoGosta]])+
-    sec('Fotos e combinados',6,'postura',(A.modo=='sem'?[['Postura','Sem fotos: avaliação ao vivo na chamada']]:[['Jeito',fxModoNome(A.modo)+(A.rosto!==false?', rosto coberto':'')],['Fotos',A.fotosDepois?'Vai mandar depois':['frente','costas','lado'].filter(function(k){return A.fotos[k];}).length+' de 3'],['Uso das fotos',A.aut=='sim'?'Autorizado':'Não autorizado']]).concat([['Combinados',A.regras.split(',')[0]],['Privacidade',A.priv?'Autorizado ('+A.priv+')':''],['Contrato',A.termos?'Aceito ('+A.termos+')':'']]))+
+    (anMenor()?sec('Responsável',6,'resp',[['Quem',A.respNome+' ('+A.respParent+')'],['WhatsApp',A.respWhats],['Autorização',A.respAceite===ANRESP?'Dada ('+A.respAceite+')':''],['Fotos',A.respFotos=='sim'?'Autorizadas':'Sem fotos']]):'')+
+    sec('Fotos e combinados',6,'postura',(anSemF()||A.modo=='sem'?[['Postura','Sem fotos: avaliação ao vivo na chamada']]:[['Jeito',fxModoNome(A.modo)+(A.rosto!==false?', rosto coberto':'')],['Fotos',A.fotosDepois?'Vai mandar depois':['frente','costas','lado'].filter(function(k){return A.fotos[k];}).length+' de 3'],['Uso das fotos',A.aut=='sim'?'Autorizado':'Não autorizado']]).concat([['Combinados',A.regras.split(',')[0]],['Privacidade',A.priv?'Autorizado ('+A.priv+')':''],['Contrato',A.termos?'Aceito ('+A.termos+')':'']]))+
     '</div><p class="small mut fx-dica">Ao enviar, te chamo no WhatsApp pra marcar a chamada de início.</p>';}
 
 function anTela(){var b=document.getElementById('fxsh');if(!b||!AN)return;if(FXC)return fxCamTela();if(FXR)return fxRostoTela();
@@ -1278,7 +1293,7 @@ function anEnviar(){var pe=anPendente();if(pe){AN.rv=0;toast('Faltou responder u
     aparelhos:anApar(),faltaMaq:anPula('aparelhos')?'':c.faltaMaq,altura:anAltura(),peso:c.peso,cond:c.condNada?[]:c.cond,acesso:c.acessoNada?[]:c.acesso,acessoNada:!!c.acessoNada,acessoTxt:c.acessoTxt,apelido:c.apelido,condNada:!!c.condNada,outra:c.outra,condTxt:c.condTxt,remedio:c.remedio,remedioTxt:c.remedio=='Sim'?c.remedioTxt:'',famCor:c.famCor,parq:c.parq,parqTxt:c.parqTxt,dores:c.dores,doresTxt:c.doresTxt,cirurgia:c.cirurgia,
     horario:c.horario,respNome:anMenor()?c.respNome:'',respWhats:anMenor()?c.respWhats:'',rotinaDia:c.rotinaDia,objTxt:c.objTxt,barreira:c.barreira,horm:c.horm,hormTxt:c.hormTxt,fuma:c.fuma,alcool:c.alcool,
     sono:c.sono,horas:c.horas,estresse:c.estresse,energia:c.energia,dias:c.diasDisp.length,diasDisp:ANDIAS.filter(function(d){return c.diasDisp.indexOf(d)>=0;}),horTreino:c.horTreino,tempo:c.tempo,tempoTreina:c.sit=='Nunca treinei'?'':c.tempoTreina,cardioFaz:c.cardioFaz,cardioTipo:c.cardioFaz=='Sim'?c.cardioTipo:[],cardioVezes:c.cardioFaz=='Sim'?c.cardioVezes:null,cardioMin:c.cardioFaz=='Sim'?c.cardioMin:'',cardioGosta:c.cardioGosta,pesoQuando:c.pesoQuando,pesoTend:c.pesoTend,alergia:c.alergia,alergiaTxt:c.alergia=='Sim'?c.alergiaTxt:'',sonoObs:c.sonoObs,sonoTxt:c.sonoTxt,suplTxt:c.supl.length?c.suplTxt:'',objNum:c.objNum,profissao:c.profissao,trabPer:c.trabPer,diaTipico:c.diaTipico,nutri:c.nutri,refeicoes:c.refeicoes,frutas:c.frutas,proteina:c.proteina,ultra:c.ultra,agua:c.agua,supl:c.supl,
-    objetivo:c.objetivo,prio:c.prio,naoGosta:c.naoGosta,fotosModo:c.modo,rosto:c.rosto!==false,fotos:c.fotosDepois||c.modo=='sem'?{}:c.fotos,fotosDepois:!!c.fotosDepois&&c.modo!='sem',aut:c.modo=='sem'?'nao':c.aut,regras:c.regras,priv:c.priv,termos:c.termos};
+    objetivo:c.objetivo,prio:c.prio,naoGosta:c.naoGosta,fotosModo:anSemF()?'sem':c.modo,rosto:c.rosto!==false,fotos:anSemF()||c.fotosDepois||c.modo=='sem'?{}:c.fotos,fotosDepois:!anSemF()&&!!c.fotosDepois&&c.modo!='sem',aut:anSemF()||c.modo=='sem'?'nao':c.aut,regras:c.regras,priv:c.priv,termos:c.termos,respParent:anMenor()?c.respParent:'',respAceite:anMenor()?c.respAceite:'',respFotos:anMenor()?c.respFotos:''};
   google.script.run.withSuccessHandler(function(r){if(!AN)return;AN.env=false;
       if(r&&r.ok){AN.fim=true;AN.fimNome=r.primeiro||anPrimeiro();AN.fimApp=/^https:\/\/[\w.-]+\/teamgo\/app\/\?a=[A-Za-z0-9_-]{4,60}$/.test(r.app||'')?r.app:'';if(AN.fimApp&&/^[A-Za-z0-9_-]{4,60}$/.test(r.cod||'')){try{localStorage.setItem('tg_codigo',r.cod);}catch(x){}}fxVibra([20,40,20]);try{localStorage.removeItem(ANKEY);}catch(x){}anTela();return;}
       if(r&&r.conv){anSalvar();if(r.conv=='vencido')return anVenceu(AN.conv,{});if(r.conv=='usado')return anUsado();return anPortaria('nao');}
