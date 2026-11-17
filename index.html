@@ -548,7 +548,9 @@
 .faixa-aluno:focus-visible{outline:2px solid var(--accent-text);outline-offset:-4px}
 @media (max-width:820px){.faixa-aluno{display:flex}}
 .navcta{gap:10px}.btn-aluno{white-space:nowrap}
-@media (min-width:821px) and (max-width:1100px){nav.links{gap:16px}nav.links a{font-size:.8rem}.navcta .btn-sm{padding:9px 12px;font-size:.8rem}.nav-inner{gap:12px;padding-left:16px;padding-right:16px}}
+/* 16/11: o menu de computador não cabia entre 821 e ~965 px (iPad em pé de 834 px, iPhone deitado) nem perto de 1180 px (iPad Air deitado): até 1000 px usa o menu de botão (o mesmo do celular, que funciona em qualquer largura); de 1001 a 1260 px fica compacto */
+@media (min-width:821px) and (max-width:1260px){nav.links{gap:16px}nav.links a{font-size:.8rem}.navcta .btn-sm{padding:9px 12px;font-size:.8rem}.nav-inner{gap:12px;padding-left:16px;padding-right:16px}}
+@media (min-width:821px) and (max-width:1000px){nav.links,.navcta{display:none}.menu-toggle{display:inline-flex;min-height:44px;min-width:44px}.mobile-menu a{min-height:44px;display:flex;align-items:center}}
 .mobile-menu a.mm-aluno{color:var(--accent-text)}
 .hero-cred{display:flex;gap:10px;align-items:center;margin:16px 0 0;font-size:.92rem;color:var(--text-muted);max-width:52ch;line-height:1.35}.hero-cred i{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center}.hero-cred svg{width:17px;height:17px;fill:none;stroke:var(--accent-text);stroke-width:1.8;stroke-linejoin:round}
 .hero-preco{margin:14px 0 0;font-size:.98rem;color:var(--text-muted)}.hero-preco b{color:var(--text)}
@@ -944,6 +946,7 @@ nav.links a{white-space:nowrap}
   <nav id="mobile-menu" class="mobile-menu">
     <a href="aluno/" class="mm-aluno" data-so-site>Área do aluno →</a>
     <a href="#depoimentos" onclick="document.getElementById('mobile-menu').classList.remove('open')">Resultados</a>
+    <a href="#app" onclick="document.getElementById('mobile-menu').classList.remove('open')">O app</a>
     <a href="#consultoria" onclick="document.getElementById('mobile-menu').classList.remove('open')">Consultoria</a>
     <a href="#personal" onclick="document.getElementById('mobile-menu').classList.remove('open')">Personal</a>
     <a href="#loja" onclick="document.getElementById('mobile-menu').classList.remove('open')">Loja</a>
