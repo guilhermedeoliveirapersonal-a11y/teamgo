@@ -1141,7 +1141,7 @@ nav.links a{white-space:nowrap}
       <div class="cam-l" role="group" aria-label="Tamanho" id="cam-t"></div>
       <a class="btn btn-primary btn-sm" id="cam-wa" href="#" target="_blank" rel="noopener" aria-disabled="true" style="max-width:100%;white-space:normal">Escolha o tamanho</a>
     </div>
-    <p class="shop-note">Tradicional R$ 129 (P ao GG), babylook R$ 119 (P ao G), oversized R$ 139 no lançamento (depois R$ 149) e regata machão R$ 109 (P ao GG). Levando 2, R$ 20 de desconto. Toque em "Quero esta" e escolha a sua: eu confirmo tudo no WhatsApp. Dúvida de tamanho? Me chama que eu te ajudo.</p>
+    <p class="shop-note" id="cam-nota"><span id="cam-precos">Tradicional R$ 129 (P ao GG), babylook R$ 119 (P ao G), oversized R$ 139 no lançamento (depois R$ 149) e regata machão R$ 109 (P ao GG). Levando 2, R$ 20 de desconto.</span> Toque em "Quero esta" e escolha a sua: eu confirmo tudo no WhatsApp. Dúvida de tamanho? Me chama que eu te ajudo.</p>
     <a class="btn btn-sm" style="margin-top:12px;max-width:100%;white-space:normal" href="https://wa.me/5565993497692?text=Oi%21%20Vim%20pelo%20site%20e%20quero%20encomendar%20uma%20camiseta%20TEAM%20GO%21" target="_blank" rel="noopener">Tirar dúvida no WhatsApp</a>
   </div>
 </section>
@@ -1469,7 +1469,18 @@ var w=document.getElementById('cam-wa');if(S.t){w.href='https://wa.me/5565993497
 document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('[data-sc],[data-cm],[data-ct],#cam-wa');if(!b)return;
 if(b.id=='cam-wa'){if(!S.t)ev.preventDefault();return;}
 if(b.dataset.sc){S.a=b.dataset.sc;S.t='';E.hidden=false;pinta();E.scrollIntoView({block:'nearest',behavior:'smooth'});try{document.getElementById('cam-n').focus({preventScroll:true});}catch(x){}return;}
-if(b.dataset.cm){S.m=b.dataset.cm;if(T[S.m].indexOf(S.t)<0)S.t='';}else S.t=b.dataset.ct;pinta();});})();
+if(b.dataset.cm){S.m=b.dataset.cm;if(T[S.m].indexOf(S.t)<0)S.t='';}else S.t=b.dataset.ct;pinta();});
+/* v122: preços e modelos à venda vêm do servidor (o que o Gui salva na sala Loja), conferidos a cada visita; a cópia do celular só pinta antes; sem resposta, ficam os de cima */
+function rs(v){v=Number(v)||0;return 'R$ '+(v%1?v.toFixed(2).replace('.',','):String(v));}
+function esc(x){return String(x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function usa(r){if(!r||!r.m||!r.m.length)return;var T2={},P2={},D2={};r.m.forEach(function(x){if(!x||!x.n||!Array.isArray(x.tam)||!(Number(x.p)>0))return;T2[x.n]=x.tam;P2[x.n]=Number(x.p);if(Number(x.pd)>0)D2[x.n]=Number(x.pd);});var ks=Object.keys(T2);if(!ks.length)return;T=T2;PR=P2;PD=D2;if(!T[S.m]){S.m=ks[0];S.t='';}
+document.getElementById('cam-m').innerHTML=ks.map(function(k){return '<button type="button" data-cm="'+esc(k)+'" aria-pressed="'+(S.m==k)+'">'+esc(k)+' · '+rs(PR[k])+'</button>';}).join('');
+var pr=ks.map(function(k,i){var t=T[k];return (i?k.toLowerCase():k)+' '+rs(PR[k])+(PD[k]?' no lançamento (depois '+rs(PD[k])+')':' ('+t[0]+' ao '+t[t.length-1]+')');}),fr=pr.length>1?pr.slice(0,-1).join(', ')+' e '+pr[pr.length-1]:pr[0];
+var sp=document.getElementById('cam-precos');if(sp)sp.textContent=fr+'.'+(Number(r.par)>0?' Levando 2, '+rs(r.par)+' de desconto.':'');if(!E.hidden)pinta();}
+var APP='https://script.google.com/macros/s/AKfycbx0Nq7NgEz5-_1kDIpmm-yf4k_HPLKCGJ4eCAELk3SKQgDJ-_yGpruULFlOK1RsEPi9/exec',c=null;try{c=JSON.parse(localStorage.getItem('tg_loja')||'null');}catch(x){}
+if(c&&c.r&&Date.now()-c.t<864e5)usa(c.r);{var foi=false,busca=function(){if(foi||!window.fetch)return;foi=true;fetch(APP,{method:'POST',body:JSON.stringify({f:'lojaSite',a:[]}),credentials:'omit'}).then(function(x){return x.json();}).then(function(j){if(j&&j.ok&&j.r){usa(j.r);try{localStorage.setItem('tg_loja',JSON.stringify({t:Date.now(),r:j.r}));}catch(x){}}}).catch(function(){});};
+var alvo=document.getElementById('loja');if('IntersectionObserver' in window&&alvo){var io=new IntersectionObserver(function(es){if(es.some(function(x){return x.isIntersecting;})){io.disconnect();busca();}},{rootMargin:'900px'});io.observe(alvo);}else setTimeout(busca,3000);}
+})();
 // indicação: o link que o aluno manda pelo app traz ?ind=Nome; as mensagens de WhatsApp já vão com quem indicou
 (function(){try{
   var n=new URLSearchParams(location.search).get('ind')||'';
