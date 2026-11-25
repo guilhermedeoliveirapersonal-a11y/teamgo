@@ -349,7 +349,7 @@
   .cam-q{margin-top:12px;width:100%;min-height:44px}.cam-e{margin-top:22px;padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--bg-elevated)}
   .cam-e h3{margin:0 0 4px;font-size:1.15rem}.cam-l{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
   .cam-l button{min-height:44px;min-width:52px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--text);font:inherit;font-weight:700;cursor:pointer}
-  .cam-l button[aria-pressed=true]{background:var(--accent-btn);border-color:var(--accent-btn);color:#fff}.cam-e .mono{font-size:.88rem;color:var(--text-muted)}
+  .cam-l button[aria-pressed=true]{background:var(--accent-btn);border-color:var(--accent-btn);color:#fff}.cam-e .mono{font-size:.88rem;color:var(--text-muted)}.cam-p{margin:0 0 10px;font-weight:700}
   .tag-card{
     background:var(--bg-elevated);
     padding:0;
@@ -1136,11 +1136,12 @@ nav.links a{white-space:nowrap}
     </div>
     <div class="cam-e" id="cam-e" hidden>
       <h3 id="cam-n" tabindex="-1"></h3><span class="mono">Escolha o modelo e o tamanho: a mensagem já vai pronta pro meu WhatsApp.</span>
-      <div class="cam-l" role="group" aria-label="Modelo" id="cam-m"><button type="button" data-cm="Tradicional" aria-pressed="true">Tradicional</button><button type="button" data-cm="Babylook" aria-pressed="false">Babylook</button></div>
+      <div class="cam-l" role="group" aria-label="Modelo" id="cam-m"><button type="button" data-cm="Tradicional" aria-pressed="true">Tradicional · R$ 129</button><button type="button" data-cm="Babylook" aria-pressed="false">Babylook · R$ 119</button><button type="button" data-cm="Oversized" aria-pressed="false">Oversized · R$ 139</button><button type="button" data-cm="Regata machão" aria-pressed="false">Regata machão · R$ 109</button></div>
+      <p class="cam-p" id="cam-p" aria-live="polite"></p>
       <div class="cam-l" role="group" aria-label="Tamanho" id="cam-t"></div>
       <a class="btn btn-primary btn-sm" id="cam-wa" href="#" target="_blank" rel="noopener" aria-disabled="true" style="max-width:100%;white-space:normal">Escolha o tamanho</a>
     </div>
-    <p class="shop-note">Tradicional do P ao GG e babylook do P ao G. Toque em "Quero esta" e escolha o seu: eu confirmo tudo no WhatsApp. Dúvida de tamanho? Me chama que eu te ajudo.</p>
+    <p class="shop-note">Tradicional R$ 129 (P ao GG), babylook R$ 119 (P ao G), oversized R$ 139 no lançamento (depois R$ 149) e regata machão R$ 109 (P ao GG). Levando 2, R$ 20 de desconto. Toque em "Quero esta" e escolha a sua: eu confirmo tudo no WhatsApp. Dúvida de tamanho? Me chama que eu te ajudo.</p>
     <a class="btn btn-sm" style="margin-top:12px;max-width:100%;white-space:normal" href="https://wa.me/5565993497692?text=Oi%21%20Vim%20pelo%20site%20e%20quero%20encomendar%20uma%20camiseta%20TEAM%20GO%21" target="_blank" rel="noopener">Tirar dúvida no WhatsApp</a>
   </div>
 </section>
@@ -1460,11 +1461,11 @@ else(function(){var w=document.getElementById(innerWidth<821?'tg-barra':'tg-what
   new IntersectionObserver(function(e){vh=e[0].isIntersecting;at();}).observe(h);
   if(fim)new IntersectionObserver(function(e){vf=e[0].isIntersecting;at();}).observe(fim);})();
 // v119: camisetas: "Quero esta" → modelo e tamanho → mensagem pronta no WhatsApp (com quem indicou)
-(function(){var E=document.getElementById('cam-e');if(!E)return;var T={Tradicional:['P','M','G','GG'],Babylook:['P','M','G']},S={a:'',m:'Tradicional',t:''};
+(function(){var E=document.getElementById('cam-e');if(!E)return;var T={Tradicional:['P','M','G','GG'],Babylook:['P','M','G'],Oversized:['P','M','G','GG'],'Regata machão':['P','M','G','GG']},PR={Tradicional:129,Babylook:119,Oversized:139,'Regata machão':109},PD={Oversized:149},S={a:'',m:'Tradicional',t:''};
 var ind=(new URLSearchParams(location.search).get('ind')||'').replace(/[^A-Za-zÀ-ÿ' -]/g,'').trim().slice(0,30);
-function pinta(){document.getElementById('cam-n').textContent=S.a;document.getElementById('cam-t').innerHTML=T[S.m].map(function(t){return '<button type="button" data-ct="'+t+'" aria-pressed="'+(S.t==t)+'">'+t+'</button>';}).join('');
+function pinta(){document.getElementById('cam-n').textContent=S.a;var cp=document.getElementById('cam-p');if(cp)cp.textContent=S.m+': R$ '+PR[S.m]+(PD[S.m]?' no lançamento (depois R$ '+PD[S.m]+')':'')+'.';document.getElementById('cam-t').innerHTML=T[S.m].map(function(t){return '<button type="button" data-ct="'+t+'" aria-pressed="'+(S.t==t)+'">'+t+'</button>';}).join('');
 [].forEach.call(document.querySelectorAll('#cam-m button'),function(b){b.setAttribute('aria-pressed',String(b.dataset.cm==S.m));});
-var w=document.getElementById('cam-wa');if(S.t){w.href='https://wa.me/5565993497692?text='+encodeURIComponent('Oi Gui! Vim pelo site'+(ind?', por indicação de '+ind+',':'')+' e quero a camiseta '+S.a+' ('+S.m+' '+S.t+'). Como faço?');w.textContent='Pedir pelo WhatsApp';w.removeAttribute('aria-disabled');}else{w.href='#cam-e';w.textContent='Escolha o tamanho';w.setAttribute('aria-disabled','true');}}
+var w=document.getElementById('cam-wa');if(S.t){w.href='https://wa.me/5565993497692?text='+encodeURIComponent('Oi Gui! Vim pelo site'+(ind?', por indicação de '+ind+',':'')+' e quero a camiseta '+S.a+' ('+S.m+' '+S.t+', R$ '+PR[S.m]+'). Como faço?');w.textContent='Pedir pelo WhatsApp';w.removeAttribute('aria-disabled');}else{w.href='#cam-e';w.textContent='Escolha o tamanho';w.setAttribute('aria-disabled','true');}}
 document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('[data-sc],[data-cm],[data-ct],#cam-wa');if(!b)return;
 if(b.id=='cam-wa'){if(!S.t)ev.preventDefault();return;}
 if(b.dataset.sc){S.a=b.dataset.sc;S.t='';E.hidden=false;pinta();E.scrollIntoView({block:'nearest',behavior:'smooth'});try{document.getElementById('cam-n').focus({preventScroll:true});}catch(x){}return;}
@@ -1513,7 +1514,7 @@ window.tgDepMostrar=function(lista){var el=document.getElementById('dep-lista');
  el.innerHTML=ok.map(function(d,k){var ini=esc(String(d.nome).trim().charAt(0).toUpperCase()),fotos=img(d.antesImg)&&img(d.depoisImg),ang=(d.angulos||[]).filter(function(a){return a&&img(a[1])&&img(a[2]);});
   var foto=img(d.foto)?'<img data-f="'+d.foto+'" alt="" loading="lazy" width="48" height="48">':'<span class="dep-in" aria-hidden="true">'+ini+'</span>';
   var h='<figure class="dep vv'+(fotos?' dep-ad2':'')+(ang.length?' dep-ang2':'')+(fotos&&mov?' dep-pre':'')+'" data-k="'+k+'">';
-  if(fotos)h+='<div class="dep-fotos">'+(d.marca?'<b class="dep-marca">'+esc(d.marca)+'</b>':'')+'<div><img data-f="'+d.antesImg+'" alt="'+esc(d.nome)+', antes" loading="lazy"><span>Antes</span></div><div class="dep-dep"><img data-f="'+d.depoisImg+'" alt="'+esc(d.nome)+', '+esc((d.tempoFoto||'depois').toLowerCase())+'"><span>'+esc(d.tempoFoto||'Depois')+'</span></div></div>';
+  if(fotos)h+='<div class="dep-fotos">'+(d.marca?'<b class="dep-marca">'+esc(d.marca)+'</b>':'')+'<div><img data-f="'+d.antesImg+'" alt="'+esc(d.nome)+', antes" loading="lazy"><span>Antes</span></div><div class="dep-dep"><img data-f="'+d.depoisImg+'" alt="'+esc(d.nome)+', '+esc((d.tempoFoto||'depois').toLowerCase())+'" loading="lazy"><span>'+esc(d.tempoFoto||'Depois')+'</span></div></div>';
   if(ang.length>1)h+='<div class="dep-ang" role="group" aria-label="Escolher o ângulo da foto">'+ang.map(function(a,i){return '<button type="button" data-i="'+i+'" aria-pressed="'+(i?'false':'true')+'">'+esc(a[0])+'</button>';}).join('')+'</div>';
   if(d.selo)h+='<p class="dep-selo"><i aria-hidden="true">🏆</i><span><b>'+esc(d.selo)+'</b>'+esc(d.selo2||'')+'</span></p>';
   if(d.frase)h+='<blockquote class="dep-fr">'+esc(d.frase)+'</blockquote>';
