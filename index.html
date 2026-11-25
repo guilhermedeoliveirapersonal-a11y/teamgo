@@ -343,8 +343,13 @@
   @media (max-width:760px){.services-grid{grid-template-columns:1fr;}}
 
   /* ============ LOJA / PRODUCT TAGS ============ */
-  .shop-grid{grid-template-columns:repeat(3,1fr);}
-  @media (max-width:900px){.shop-grid{grid-template-columns:1fr;}}
+  .shop-grid{grid-template-columns:repeat(4,1fr);}
+  @media (max-width:1100px){.shop-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:600px){.shop-grid{grid-template-columns:1fr;}}
+  .cam-q{margin-top:12px;width:100%;min-height:44px}.cam-e{margin-top:22px;padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--bg-elevated)}
+  .cam-e h3{margin:0 0 4px;font-size:1.15rem}.cam-l{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+  .cam-l button{min-height:44px;min-width:52px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--text);font:inherit;font-weight:700;cursor:pointer}
+  .cam-l button[aria-pressed=true]{background:var(--accent-btn);border-color:var(--accent-btn);color:#fff}.cam-e .mono{font-size:.88rem;color:var(--text-muted)}
   .tag-card{
     background:var(--bg-elevated);
     padding:0;
@@ -1086,6 +1091,7 @@ nav.links a{white-space:nowrap}
             <span class="badge">Arte oficial</span>
             <span class="mono" style="font-size:0.88rem;color:var(--text-muted)">Sob encomenda</span>
           </div>
+          <button type="button" class="btn btn-sm cam-q" data-sc="No Brain No Gain!">Quero esta</button>
         </div>
       </div>
       <div class="tag-card">
@@ -1098,6 +1104,7 @@ nav.links a{white-space:nowrap}
             <span class="badge">Arte oficial</span>
             <span class="mono" style="font-size:0.88rem;color:var(--text-muted)">Sob encomenda</span>
           </div>
+          <button type="button" class="btn btn-sm cam-q" data-sc="Forever Young">Quero esta</button>
         </div>
       </div>
       <div class="tag-card">
@@ -1110,11 +1117,31 @@ nav.links a{white-space:nowrap}
             <span class="badge">Arte oficial</span>
             <span class="mono" style="font-size:0.88rem;color:var(--text-muted)">Sob encomenda</span>
           </div>
+          <button type="button" class="btn btn-sm cam-q" data-sc="Queen of Quads">Quero esta</button>
+        </div>
+      </div>
+      <div class="tag-card">
+        <div class="tag-visual tag-art-wrap">
+          <img class="tag-art tag-art-contain" src="site/img/camisetas/muscle-mommy.webp" alt="Estampa Muscle Mommy — personagem feminina levantando a barra no fundo do agachamento" width="640" height="800" loading="lazy" decoding="async">
+        </div>
+        <div class="tag-body">
+          <p>Personagem feminina levantando a barra no fundo do agachamento — força que não pede licença.</p>
+          <div class="tag-foot">
+            <span class="badge">Nova</span>
+            <span class="mono" style="font-size:0.88rem;color:var(--text-muted)">Sob encomenda</span>
+          </div>
+          <button type="button" class="btn btn-sm cam-q" data-sc="Muscle Mommy">Quero esta</button>
         </div>
       </div>
     </div>
-    <p class="shop-note">Ainda não tenho loja online. Quer a sua? Me chama no WhatsApp ou no Instagram que eu separo.</p>
-    <a class="btn btn-primary btn-sm" style="margin-top:18px" href="https://wa.me/5565993497692?text=Oi%21%20Vim%20pelo%20site%20e%20quero%20encomendar%20uma%20camiseta%20TEAM%20GO%21" target="_blank" rel="noopener">Encomendar pelo WhatsApp</a>
+    <div class="cam-e" id="cam-e" hidden>
+      <h3 id="cam-n" tabindex="-1"></h3><span class="mono">Escolha o modelo e o tamanho: a mensagem já vai pronta pro meu WhatsApp.</span>
+      <div class="cam-l" role="group" aria-label="Modelo" id="cam-m"><button type="button" data-cm="Tradicional" aria-pressed="true">Tradicional</button><button type="button" data-cm="Babylook" aria-pressed="false">Babylook</button></div>
+      <div class="cam-l" role="group" aria-label="Tamanho" id="cam-t"></div>
+      <a class="btn btn-primary btn-sm" id="cam-wa" href="#" target="_blank" rel="noopener" aria-disabled="true" style="max-width:100%;white-space:normal">Escolha o tamanho</a>
+    </div>
+    <p class="shop-note">Tradicional do P ao GG e babylook do P ao G. Toque em "Quero esta" e escolha o seu: eu confirmo tudo no WhatsApp. Dúvida de tamanho? Me chama que eu te ajudo.</p>
+    <a class="btn btn-sm" style="margin-top:12px;max-width:100%;white-space:normal" href="https://wa.me/5565993497692?text=Oi%21%20Vim%20pelo%20site%20e%20quero%20encomendar%20uma%20camiseta%20TEAM%20GO%21" target="_blank" rel="noopener">Tirar dúvida no WhatsApp</a>
   </div>
 </section>
 <section class="fase-sec  sec sec-res" id="depoimentos" data-fase="4"><div class="wrap marco-wrap"><div class="marco"><span class="marco-pino" aria-hidden="true"></span><span class="marco-n">Fase 4</span><span class="marco-t">Resultados reais</span></div></div>
@@ -1432,6 +1459,16 @@ else(function(){var w=document.getElementById(innerWidth<821?'tg-barra':'tg-what
   if(pl&&w.id==='tg-barra')new IntersectionObserver(function(e){vp=e[0].isIntersecting;at();},{rootMargin:'-30% 0px -30% 0px'}).observe(pl);
   new IntersectionObserver(function(e){vh=e[0].isIntersecting;at();}).observe(h);
   if(fim)new IntersectionObserver(function(e){vf=e[0].isIntersecting;at();}).observe(fim);})();
+// v119: camisetas: "Quero esta" → modelo e tamanho → mensagem pronta no WhatsApp (com quem indicou)
+(function(){var E=document.getElementById('cam-e');if(!E)return;var T={Tradicional:['P','M','G','GG'],Babylook:['P','M','G']},S={a:'',m:'Tradicional',t:''};
+var ind=(new URLSearchParams(location.search).get('ind')||'').replace(/[^A-Za-zÀ-ÿ' -]/g,'').trim().slice(0,30);
+function pinta(){document.getElementById('cam-n').textContent=S.a;document.getElementById('cam-t').innerHTML=T[S.m].map(function(t){return '<button type="button" data-ct="'+t+'" aria-pressed="'+(S.t==t)+'">'+t+'</button>';}).join('');
+[].forEach.call(document.querySelectorAll('#cam-m button'),function(b){b.setAttribute('aria-pressed',String(b.dataset.cm==S.m));});
+var w=document.getElementById('cam-wa');if(S.t){w.href='https://wa.me/5565993497692?text='+encodeURIComponent('Oi Gui! Vim pelo site'+(ind?', por indicação de '+ind+',':'')+' e quero a camiseta '+S.a+' ('+S.m+' '+S.t+'). Como faço?');w.textContent='Pedir pelo WhatsApp';w.removeAttribute('aria-disabled');}else{w.href='#cam-e';w.textContent='Escolha o tamanho';w.setAttribute('aria-disabled','true');}}
+document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('[data-sc],[data-cm],[data-ct],#cam-wa');if(!b)return;
+if(b.id=='cam-wa'){if(!S.t)ev.preventDefault();return;}
+if(b.dataset.sc){S.a=b.dataset.sc;S.t='';E.hidden=false;pinta();E.scrollIntoView({block:'nearest',behavior:'smooth'});try{document.getElementById('cam-n').focus({preventScroll:true});}catch(x){}return;}
+if(b.dataset.cm){S.m=b.dataset.cm;if(T[S.m].indexOf(S.t)<0)S.t='';}else S.t=b.dataset.ct;pinta();});})();
 // indicação: o link que o aluno manda pelo app traz ?ind=Nome; as mensagens de WhatsApp já vão com quem indicou
 (function(){try{
   var n=new URLSearchParams(location.search).get('ind')||'';
