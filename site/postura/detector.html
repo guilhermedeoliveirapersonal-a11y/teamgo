@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<!-- v124: marcador de pontos do corpo (MediaPipe Pose, Apache 2.0). Abre dentro de um quadro isolado do painel (sandbox só com scripts):
+     não enxerga o painel nem a chave. A regra abaixo só deixa buscar arquivos do próprio site, então a foto não tem como ser enviada pra fora. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src https://guilhermedeoliveirapersonal-a11y.github.io 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob:; connect-src https://guilhermedeoliveirapersonal-a11y.github.io; worker-src blob:; img-src data: blob:; base-uri 'none'; form-action 'none'">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Marcador de pontos</title>
+</head>
+<body>
+<script src="motor/pose.js"></script>
+<script>
+(function () {
+  var pai = window.parent, fila = Promise.resolve(), pose, resp;
+  var diz = function (m) { m.tg = 'postura'; pai.postMessage(m, '*'); };
+  try {
+    pose = new window.Pose({ locateFile: function (f) { return 'motor/' + f; } });
+    pose.setOptions({ modelComplexity: 1, smoothLandmarks: false, enableSegmentation: false, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5, selfieMode: false });
+    pose.onResults(function (r) { resp = r; });
+    pose.initialize().then(function () { diz({ pronto: true }); }, function (e) { diz({ falhou: String(e) }); });
+  } catch (e) { diz({ falhou: String(e) }); return; }
+  window.addEventListener('message', function (ev) {
+    var m = ev.data; if (ev.source !== pai || !m || m.tg !== 'postura' || typeof m.img !== 'string' || m.img.indexOf('data:image/') !== 0) return;
+    fila = fila.then(function () {
+      return new Promise(function (ok, falha) { var im = new Image(); im.onload = function () { ok(im); }; im.onerror = falha; im.src = m.img; })
+        .then(function (im) { resp = null; pose.reset(); return pose.send({ image: im }); })
+        .then(function () { diz({ id: m.id, lm: resp && resp.poseLandmarks ? resp.poseLandmarks.map(function (p) { return { x: p.x, y: p.y, v: p.visibility }; }) : null }); })
+        .catch(function (e) { diz({ id: m.id, erro: String(e) }); });
+    });
+  });
+})();
+</script>
+</body>
+</html>
